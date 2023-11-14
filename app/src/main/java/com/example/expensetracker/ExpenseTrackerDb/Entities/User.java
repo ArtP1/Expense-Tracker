@@ -3,18 +3,28 @@ package com.example.expensetracker.ExpenseTrackerDb.Entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 
-@Entity(tableName = ExpenseTrackerDatabase.USER_TABLE)
+@Entity(tableName = ExpenseTrackerDatabase.USER_TABLE,
+        foreignKeys = @ForeignKey(entity = Currency.class,
+                        parentColumns = "ISO",
+                        childColumns = "currency",
+                        onDelete = ForeignKey.SET_NULL,
+                        onUpdate = ForeignKey.CASCADE),
+        indices = @Index("currency")
+)
 public class User {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     // FOREIGN KEY(s)
-    private Integer currency_id;
+    private String currency;
 
     // COLUMNS
     @NonNull
@@ -24,11 +34,9 @@ public class User {
     private String password;
 
     @NonNull
-    private String first_name;
+    private String firstName;
 
-    private String last_name;
-
-    private double budget;
+    private Double budget;
 
     public enum UserRole {
         USER, ADMIN, SUPER_ADMIN
@@ -38,14 +46,20 @@ public class User {
     @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
     private UserRole role;
 
-    public User(int id, Integer currency_id, String username, String password, String first_name, String last_name, double budget, UserRole role) {
+    @Ignore
+    public User(int id, String currency, @NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull UserRole role) {
         this.id = id;
-        this.currency_id = currency_id;
+        this.currency = currency;
         this.username = username;
         this.password = password;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.budget = budget;
+        this.firstName = firstName;
+        this.role = role;
+    }
+
+    public User(@NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull UserRole role) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
         this.role = role;
     }
 
@@ -57,59 +71,55 @@ public class User {
         this.id = id;
     }
 
-    public Integer getCurrency() {
-        return currency_id;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setCurrency(Integer currency_id) {
-        this.currency_id = currency_id;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
+    @NonNull
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(@NonNull String username) {
         this.username = username;
     }
 
+    @NonNull
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NonNull String password) {
         this.password = password;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    @NonNull
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(@NonNull String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public double getBudget() {
+    public Double getBudget() {
         return budget;
     }
 
-    public void setBudget(double budget) {
+    public void setBudget(Double budget) {
         this.budget = budget;
     }
 
+    @NonNull
     public UserRole getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(@NonNull UserRole role) {
         this.role = role;
     }
 }

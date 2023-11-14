@@ -1,5 +1,6 @@
 package com.example.expensetracker.ExpenseTrackerDb.DAOs;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -9,15 +10,18 @@ import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
 
 import java.util.List;
 
-
+@Dao
 public interface PaymentMethodDAO {
     // Batch Operations
     @Insert
-    void insertExpense(PaymentMethod... paymentMethods);
+    void insertPaymentMethod(PaymentMethod... paymentMethods);
+    @Insert
+    void insertAll(PaymentMethod[] paymentMethods);
+
     @Update
-    void updateExpense(PaymentMethod... paymentMethods);
+    void updatePaymentMethod(PaymentMethod... paymentMethods);
     @Delete
-    void deleteExpense(PaymentMethod... paymentMethods);
+    void deletePaymentMethod(PaymentMethod... paymentMethods);
 
     @Query("SELECT * FROM payment_method_table")
     List<PaymentMethod> getAllPaymentMethods();

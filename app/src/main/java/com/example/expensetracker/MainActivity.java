@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     Button signUpBtn;
     Button loginBtn;
-    ImageView mainImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
         signUpBtn = mMainActivityBinding.signUpBtn;
         loginBtn = mMainActivityBinding.loginBtn;
-        mainImg = mMainActivityBinding.mainImg;
 
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,14 +40,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = LoginActivity.getIntent(getApplicationContext());
-                startActivity(intent);
-            }
-        });
-
-        mainImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = LandingPageActivity.getIntent(getApplicationContext());
                 startActivity(intent);
             }
         });

@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.expensetracker.ExpenseTrackerDb.Entities.Expense;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 
 import java.util.List;
@@ -15,6 +14,9 @@ import java.util.List;
 public interface UserDAO {
     @Insert
     void insertUser(User... users);
+    @Insert
+    void insertAll(User[] users);
+
     @Update
     void updateUser(User... users);
     @Delete
@@ -25,7 +27,9 @@ public interface UserDAO {
     List<User> getAllUsers();
 
     @Query("SELECT * FROM user_table WHERE id==:userId")
-    Expense getUserById(int userId);
+    User getUserById(int userId);
 
+    @Query("SELECT * FROM user_table WHERE username==:username")
+    User getUserByUsername(String username);
 
 }

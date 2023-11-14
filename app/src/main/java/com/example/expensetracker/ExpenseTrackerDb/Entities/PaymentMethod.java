@@ -1,6 +1,7 @@
 package com.example.expensetracker.ExpenseTrackerDb.Entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
@@ -15,8 +16,14 @@ public class PaymentMethod {
     private String method;
     private String icon;
 
+    @Ignore
     public PaymentMethod(int id, String method, String icon) {
         this.id = id;
+        this.method = method;
+        this.icon = icon;
+    }
+
+    public PaymentMethod(String method, String icon) {
         this.method = method;
         this.icon = icon;
     }
@@ -45,11 +52,3 @@ public class PaymentMethod {
         this.icon = icon;
     }
 }
-
-//    create table PaymentMethods ( -- Inserts, Updates
-//        id int auto_increment,
-//        method varchar(50) not null,
-//        icon varchar(255) not null,
-//        primary key(id),
-//        constraint PAY_METHOD_CHECK check(method regexp '^[a-zA-Z ]+$')
-//        );

@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface CategoryDAO {
     // Batch Operations
     @Insert
     void insertCategory(Category... categories);
+    @Insert
+    void insertAll(Category[] categories);
+
     @Update
     void updateCategory(Category... categories);
     @Delete

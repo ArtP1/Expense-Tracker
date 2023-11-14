@@ -3,13 +3,51 @@ package com.example.expensetracker.ExpenseTrackerDb.Entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+import com.example.expensetracker.ExpenseTrackerDb.DateConverter;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 
 import java.util.Date;
 
-@Entity(tableName = ExpenseTrackerDatabase.EXPENSE_TABLE)
+@Entity(tableName = ExpenseTrackerDatabase.EXPENSE_TABLE,
+        foreignKeys = {
+                @ForeignKey(
+                        entity = User.class,
+                        parentColumns = "id",
+                        childColumns = "user_id",
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE
+                ),
+                @ForeignKey(
+                        entity = Category.class,
+                        parentColumns = "id",
+                        childColumns = "category_id",
+                        onUpdate = ForeignKey.CASCADE
+                ),
+                @ForeignKey(
+                        entity = PaymentMethod.class,
+                        parentColumns = "id",
+                        childColumns = "payment_method_id",
+                        onUpdate = ForeignKey.CASCADE
+                ),
+                @ForeignKey(entity = Currency.class,
+                        parentColumns = "ISO",
+                        childColumns = "currency_type",
+                        onUpdate = ForeignKey.CASCADE
+                )
+        },
+        indices = {
+                @Index("user_id"),
+                @Index("category_id"),
+                @Index("payment_method_id"),
+                @Index("currency_type")
+        }
+)
 public class Expense {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
@@ -31,9 +69,25 @@ public class Expense {
 
     // COLUMNS
     private double amount;
+
+    @TypeConverters(DateConverter.class)
     private Date date;
+
     private String description;
     private String location;
+
+    @Ignore
+    public Expense(int id, int user_id, int category_id, int payment_method_id, @NonNull String currency_type, double amount, Date date, String description, String location) {
+        this.id = id;
+        this.user_id = user_id;
+        this.category_id = category_id;
+        this.payment_method_id = payment_method_id;
+        this.currency_type = currency_type;
+        this.amount = amount;
+        this.date = date;
+        this.description = description;
+        this.location = location;
+    }
 
     public Expense(double amount, Date date, String description, String location) {
         this.amount = amount;

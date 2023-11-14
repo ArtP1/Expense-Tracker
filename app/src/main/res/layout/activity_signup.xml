@@ -7,9 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".SignupActivity">
 
+    <ImageView
+        android:id="@+id/signupImg"
+        android:layout_width="271dp"
+        android:layout_height="221dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.111"
+        app:srcCompat="@drawable/signup_img" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/usernameSignup"
         android:layout_width="275dp"
         android:layout_height="64dp"
         android:gravity="center"
@@ -18,9 +28,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/signupImg"
         app:layout_constraintVertical_bias="0.098"
         android:inputType="text" />
+
+
+    <EditText
+        android:id="@+id/firstnameSignup"
+        android:layout_width="275dp"
+        android:layout_height="65dp"
+        android:gravity="center"
+        android:hint="@string/first_name"
+        android:inputType="textPersonName"
+        android:autofillHints="name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameSignup"
+        app:layout_constraintVertical_bias="0.092" />
 
     <EditText
         android:id="@+id/passwordSignup"
@@ -33,25 +58,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullnameSignup"
+        app:layout_constraintTop_toBottomOf="@+id/firstnameSignup"
         app:layout_constraintVertical_bias="0.148" />
 
-    <EditText
-        android:id="@+id/fullnameSignup"
-        android:layout_width="275dp"
-        android:layout_height="65dp"
-        android:gravity="center"
-        android:hint="@string/full_name"
-        android:inputType="textPersonName"
-        android:autofillHints="name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3"
-        app:layout_constraintVertical_bias="0.092" />
-
     <Button
-        android:id="@+id/button"
+        android:id="@+id/signUpBtn"
         android:layout_width="324dp"
         android:layout_height="40dp"
         android:background="@drawable/black_main_btn"
@@ -61,18 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullnameSignup"
+        app:layout_constraintTop_toBottomOf="@+id/firstnameSignup"
         app:layout_constraintVertical_bias="0.714" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="271dp"
-        android:layout_height="221dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.111"
-        app:srcCompat="@drawable/signup_img" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.example.expensetracker.ExpenseTrackerDb.Entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
@@ -12,19 +13,25 @@ public class Category {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    // FOREIGN KEY
-    private Integer color_id;
-
     // COLUMNS
+    private String color_hex;
+
     @NonNull
     private String name;
 
     @NonNull
     private String icon;
 
-    public Category(int id, Integer color_id, @NonNull String name, @NonNull String icon) {
+    @Ignore
+    public Category(int id, String color_hex, @NonNull String name, @NonNull String icon) {
         this.id = id;
-        this.color_id = color_id;
+        this.color_hex = color_hex;
+        this.name = name;
+        this.icon = icon;
+    }
+
+    public Category(String color_hex, @NonNull String name, @NonNull String icon) {
+        this.color_hex = color_hex;
         this.name = name;
         this.icon = icon;
     }
@@ -37,12 +44,12 @@ public class Category {
         this.id = id;
     }
 
-    public Integer getColor_id() {
-        return color_id;
+    public String getColor_hex() {
+        return color_hex;
     }
 
-    public void setColor_id(Integer color_id) {
-        this.color_id = color_id;
+    public void setColor_hex(String color_hex) {
+        this.color_hex = color_hex;
     }
 
     @NonNull

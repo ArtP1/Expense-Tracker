@@ -6,4 +6,8 @@
     <string name="full_name">Full Name</string>
     <string name="signup">Signup</string>
     <string name="login">Login</string>
+    <string name="home">Home</string>
+    <string name="transactions">Transactions</string>
+    <string name="wallet">Wallet</string>
+    <string name="account">Account</string>
 </resources>

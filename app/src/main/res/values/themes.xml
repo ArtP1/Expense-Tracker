@@ -22,7 +22,7 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.ExpenseTracker.HomeActivity" parent="Base.Theme.ExpenseTracker">
+    <style name="Theme.ExpenseTracker.LandingPageActivity" parent="Base.Theme.ExpenseTracker">
         <item name="android:statusBarColor">@color/lightgreen</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>

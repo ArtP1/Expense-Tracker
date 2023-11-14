@@ -4,4 +4,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lightgrey">#F9F9F9</color>
     <color name="lightgreen">#3CBD7E</color>
+    <color name="lighttransp">#8CD8B2</color>
+    <color name="adminGreen">#97CC5F</color>
+    <color name="adminRed">#E44E5D</color>
+    <color name="adminYellow">#FCC74C</color>
+    <color name="adminBlue">#5695E6</color>
+    <color name="adminPurple">#7F00FF</color>
+    <color name="adminBrown">#C4A484</color>
 </resources>

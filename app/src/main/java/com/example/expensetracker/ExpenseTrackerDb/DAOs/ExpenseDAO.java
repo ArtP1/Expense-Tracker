@@ -11,8 +11,7 @@ import androidx.room.Update;
 import com.example.expensetracker.ExpenseTrackerDb.DateConverter;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Expense;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Dao
@@ -21,6 +20,9 @@ public interface ExpenseDAO {
     // Batch Operations
     @Insert
     void insertExpense(Expense... expenses);
+    @Insert
+    void insertAll(Expense[] expenses);
+
     @Update
     void updateExpense(Expense... expenses);
     @Delete
@@ -36,8 +38,8 @@ public interface ExpenseDAO {
     @Query("SELECT * FROM expense_table WHERE category_id==:category_id")
     List<Expense> getExpensesByCategory(int category_id);
 
-    @Query("SELECT * FROM expense_table WHERE date BETWEEN :startDate AND :endDate")
-    List<Expense> getExpensesByDateRange(Date startDate, Date endDate);
+    @Query("SELECT * FROM expense_table WHERE dateSubmitted BETWEEN :startDate AND :endDate")
+    List<Expense> getExpensesByDateRange(LocalDate startDate, LocalDate endDate);
 
     // Aggregate methods
     @Query("SELECT SUM(e.amount) AS TotalExpenses FROM expense_table e WHERE user_id==:user_id")
@@ -47,7 +49,7 @@ public interface ExpenseDAO {
 //    List<Object[]> getUserTotalExpensesByCategory(int user_id, int category_id);
 
     // Other methods
-    @Query("SELECT * FROM expense_table WHERE user_id==:userId ORDER BY date DESC LIMIT :limit")
+    @Query("SELECT * FROM expense_table WHERE user_id==:userId ORDER BY dateSubmitted DESC LIMIT :limit")
     List<Expense> getRecentExpenses(int userId, int limit);
 
 }

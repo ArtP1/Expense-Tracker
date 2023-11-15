@@ -7,7 +7,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
 
 import java.util.List;
 
@@ -24,7 +23,9 @@ public interface CategoryDAO {
     @Delete
     void deleteCategory(Category... categories);
 
-    // Retrieve methods
+    @Query("SELECT COUNT(*) AS NumberOfCategories FROM category_table")
+    Integer numberOfCategories();
+
     @Query("SELECT * FROM category_table WHERE id = :categoryId")
     Category getCategoryById(int categoryId);
 

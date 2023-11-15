@@ -1,9 +1,12 @@
 package com.example.expensetracker.ExpenseTrackerDb;
 
+
 import androidx.annotation.NonNull;
 
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.ExpenseDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Expense;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 
@@ -43,7 +46,6 @@ public class PrepopulateDb {
                 new Currency("GTQ", "Quetzal","Q"),
                 new Currency("GYD", "Guyana dollar","$"),
                 new Currency("HKD", "Hong Kong dollar","$"),
-                new Currency("HNL", "Lempira",""),
                 new Currency("HUF", "Hungarian forint","Ft"),
                 new Currency("IDR", "Indonesian rupiah","Rp"),
                 new Currency("ILS", "Israeli sheqel","₪"),
@@ -114,9 +116,9 @@ public class PrepopulateDb {
 
     public static User[] populateUsersData() {
         return new User[] {
-                new User("user123", "12", "John", User.UserRole.USER),
+                new User("user123", "123", "John", User.UserRole.USER),
                 new User("admin123", "secret", "Admin",User.UserRole.ADMIN),
-                new User("superadmin", "s3cr3t", "Super", User.UserRole.SUPER_ADMIN)
+                new User("superadmin", "s3cr3t", "SuperJaime", User.UserRole.SUPER_ADMIN)
         };
     }
 
@@ -148,6 +150,15 @@ public class PrepopulateDb {
                 new Category("#FF0000", "Education", "https://drive.google.com/file/d/1lcIVh3nKrxWDRJMkecmncTDBS1AqLCmn/view?usp=sharing"),
                 new Category("#FF0000", "Taxes", "https://drive.google.com/file/d/1klXRiB2B5JJ2B0M3kA--7MoYo5EaD10b/view?usp=sharing"),
                 new Category("#FF0000", "Debt", "https://drive.google.com/file/d/1ycfztcRgcevLigPr_9Qv9ajpjpF9DD1r/view?usp=sharing"),
+        };
+    }
+
+    public static Expense[] populateExpenseData() {
+        return new Expense[] {
+                new Expense(1, 3, 3, "Popeyes", "USD", 16.75, "Purchased lunch for the day", "590 Auto Center Dr Unit 1A"),
+                new Expense(1, 4, 5, "Fuel", "USD", 70.0, "Refilled gas for the car", "Gas station"),
+                new Expense(1, 6, 7, "Movie Night", "USD", 25.0, "Tickets for movie night", "Cinema"),
+                new Expense(1, 8, 9, "Dinner", "USD", 40.0, "Dinner with friends", "Restaurant")
         };
     }
 }

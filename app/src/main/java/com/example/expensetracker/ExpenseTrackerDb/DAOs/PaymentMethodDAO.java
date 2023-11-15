@@ -23,6 +23,9 @@ public interface PaymentMethodDAO {
     @Delete
     void deletePaymentMethod(PaymentMethod... paymentMethods);
 
+    @Query("SELECT COUNT(*) AS NumberOfPaymentMethods FROM payment_method_table")
+    Integer numberOfPaymentMethods();
+
     @Query("SELECT * FROM payment_method_table")
     List<PaymentMethod> getAllPaymentMethods();
 }

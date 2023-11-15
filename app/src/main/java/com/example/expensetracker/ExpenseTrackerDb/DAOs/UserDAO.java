@@ -23,6 +23,9 @@ public interface UserDAO {
     void deleteUser(User... users);
 
     // These will most often be used by admins ---------------
+    @Query("SELECT COUNT(*) AS NumberOfUsers FROM user_table")
+    Integer numberOfUsers();
+
     @Query("SELECT * FROM user_table")
     List<User> getAllUsers();
 
@@ -31,5 +34,8 @@ public interface UserDAO {
 
     @Query("SELECT * FROM user_table WHERE username==:username")
     User getUserByUsername(String username);
+
+    @Query("SELECT EXISTS (SELECT 1 FROM user_table WHERE username==:username)")
+    Boolean userExists(String username);
 
 }

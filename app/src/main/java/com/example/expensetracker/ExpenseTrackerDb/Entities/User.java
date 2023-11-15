@@ -7,8 +7,12 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+import com.example.expensetracker.ExpenseTrackerDb.DateConverter;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
+
+import java.time.LocalDate;
 
 @Entity(tableName = ExpenseTrackerDatabase.USER_TABLE,
         foreignKeys = @ForeignKey(entity = Currency.class,
@@ -36,6 +40,10 @@ public class User {
     @NonNull
     private String firstName;
 
+    @NonNull
+    @TypeConverters(DateConverter.class)
+    private LocalDate dateJoined;
+
     private Double budget;
 
     public enum UserRole {
@@ -48,19 +56,23 @@ public class User {
 
     @Ignore
     public User(int id, String currency, @NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull UserRole role) {
+        LocalDate currDate = LocalDate.now();
         this.id = id;
         this.currency = currency;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.role = role;
+        this.dateJoined = currDate;
     }
 
     public User(@NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull UserRole role) {
+        LocalDate currDate = LocalDate.now();
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.role = role;
+        this.dateJoined = currDate;
     }
 
     public int getId() {
@@ -121,5 +133,14 @@ public class User {
 
     public void setRole(@NonNull UserRole role) {
         this.role = role;
+    }
+
+    @NonNull
+    public LocalDate getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(@NonNull LocalDate dateJoined) {
+        this.dateJoined = dateJoined;
     }
 }

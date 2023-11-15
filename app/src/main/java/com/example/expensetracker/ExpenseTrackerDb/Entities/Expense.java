@@ -12,7 +12,8 @@ import androidx.room.TypeConverters;
 import com.example.expensetracker.ExpenseTrackerDb.DateConverter;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Entity(tableName = ExpenseTrackerDatabase.EXPENSE_TABLE,
         foreignKeys = {
@@ -37,7 +38,7 @@ import java.util.Date;
                 ),
                 @ForeignKey(entity = Currency.class,
                         parentColumns = "ISO",
-                        childColumns = "currency_type",
+                        childColumns = "currency",
                         onUpdate = ForeignKey.CASCADE
                 )
         },
@@ -45,7 +46,7 @@ import java.util.Date;
                 @Index("user_id"),
                 @Index("category_id"),
                 @Index("payment_method_id"),
-                @Index("currency_type")
+                @Index("currency")
         }
 )
 public class Expense {
@@ -54,44 +55,51 @@ public class Expense {
     private int id;
 
     // FOREIGN KEY(s)
-    @NonNull
-    private int user_id; // CANNOT BE NULL
+    private int user_id;
 
-    @NonNull
     private int category_id;
 
-    @NonNull
     private int payment_method_id;
 
-    @NonNull
     @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
-    private String currency_type;
+    private String currency;
 
     // COLUMNS
     private double amount;
 
+    @NonNull
+    private String title;
+
     @TypeConverters(DateConverter.class)
-    private Date date;
+    private LocalDate dateSubmitted;
 
     private String description;
     private String location;
 
     @Ignore
-    public Expense(int id, int user_id, int category_id, int payment_method_id, @NonNull String currency_type, double amount, Date date, String description, String location) {
+    public Expense(int id, int user_id, int category_id, int payment_method_id, @NonNull String title, String currency, double amount, String description, String location) {
+        LocalDate currDate = LocalDate.now();
         this.id = id;
         this.user_id = user_id;
         this.category_id = category_id;
         this.payment_method_id = payment_method_id;
-        this.currency_type = currency_type;
+        this.title = title;
+        this.currency = currency;
         this.amount = amount;
-        this.date = date;
+        this.dateSubmitted = currDate;
         this.description = description;
         this.location = location;
     }
 
-    public Expense(double amount, Date date, String description, String location) {
+    public Expense(int user_id, int category_id, int payment_method_id, @NonNull String title, String currency, double amount, String description, String location) {
+        LocalDate currDate = LocalDate.now();
+        this.user_id = user_id;
+        this.category_id = category_id;
+        this.payment_method_id = payment_method_id;
+        this.title = title;
+        this.currency = currency;
         this.amount = amount;
-        this.date = date;
+        this.dateSubmitted = currDate;
         this.description = description;
         this.location = location;
     }
@@ -104,12 +112,12 @@ public class Expense {
         this.amount = amount;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDate getDateSubmitted() {
+        return dateSubmitted;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateSubmitted(LocalDate dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
     }
 
     public String getDescription() {
@@ -160,11 +168,20 @@ public class Expense {
         this.payment_method_id = payment_method_id;
     }
 
-    public String getCurrency_type() {
-        return currency_type;
+    @NonNull
+    public String getTitle() {
+        return title;
     }
 
-    public void setCurrency_type(String currency_type) {
-        this.currency_type = currency_type;
+    public void setTitle(@NonNull String title) {
+        this.title = title;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

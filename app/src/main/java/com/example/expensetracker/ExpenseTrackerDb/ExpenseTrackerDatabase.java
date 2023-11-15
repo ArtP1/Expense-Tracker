@@ -53,16 +53,23 @@ public abstract class ExpenseTrackerDatabase extends RoomDatabase {
     public static void initializeDatabase(final Context context) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // Get database instance
-            ExpenseTrackerDatabase db = getInstance(context);
+            try {
+                // Get database instance
+                ExpenseTrackerDatabase db = getInstance(context);
 
-            // Populate tables with predefined data
-            db.runInTransaction(() -> db.currencyDAO().insertAll(PrepopulateDb.populateCurrencyData()));
-            db.runInTransaction(() -> db.userDAO().insertAll(PrepopulateDb.populateUsersData()));
-            db.runInTransaction(() -> db.paymentMethodDAO().insertAll(PrepopulateDb.populatePaymentMethodData()));
-            db.runInTransaction(() -> db.categoryDAO().insertAll(PrepopulateDb.populateCategoryData()));
+                // Populate tables with predefined data
+                db.runInTransaction(() -> db.currencyDAO().insertAll(PrepopulateDb.populateCurrencyData()));
+                db.runInTransaction(() -> db.userDAO().insertAll(PrepopulateDb.populateUsersData()));
+                db.runInTransaction(() -> db.paymentMethodDAO().insertAll(PrepopulateDb.populatePaymentMethodData()));
+                db.runInTransaction(() -> db.categoryDAO().insertAll(PrepopulateDb.populateCategoryData()));
+                db.runInTransaction(() -> db.expenseDAO().insertAll(PrepopulateDb.populateExpenseData()));
 
+                executor.shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                executor.shutdown();
+            }
         });
-        executor.shutdown();
     }
 }

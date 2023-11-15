@@ -7,7 +7,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 
 import java.util.List;
 
@@ -22,6 +21,10 @@ public interface CurrencyDAO {
     void updateCurrency(Currency... currencies);
     @Delete
     void deleteCurrency(Currency... currencies);
+
+    // These will most often be used by admins ---------------
+    @Query("SELECT COUNT(*) AS NumberOfCurrencies FROM currency_table")
+    Integer numberOfCurrencies();
 
     @Query("SELECT * FROM currency_table")
     List<Currency> getAllCurrencies();

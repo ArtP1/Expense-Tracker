@@ -5,9 +5,7 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,12 +19,7 @@ import com.example.expensetracker.databinding.ActivitySignupBinding;
 
 public class SignupActivity extends AppCompatActivity {
     ActivitySignupBinding mSignupBinding;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
     UserDAO userDAO;
-
-    public static final String SHARED_PREFS = "ExpenseTrackerPrefs";
-
 
     EditText mUsername;
     EditText mFirstname;
@@ -42,7 +35,6 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
 
         userDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().userDAO();
 
@@ -64,23 +56,24 @@ public class SignupActivity extends AppCompatActivity {
                 String firstName = mFirstname.getText().toString();
                 String password = mPassword.getText().toString();
 
-                User userExists = userDAO.getUserByUsername(username);
+                if(!username.isEmpty() && !password.isEmpty()) {
+                    Boolean userExists = userDAO.userExists(username);
 
-                if(userExists == null) {
-                    if(!isAdmin) {
-                        userDAO.insertUser(new User(username, password, firstName, User.UserRole.USER));
+                    if(!userExists) { // User with username already exists
+                        if(!isAdmin) {
+                            userDAO.insertUser(new User(username, password, firstName, User.UserRole.USER));
+                            startActivity(new Intent(SignupActivity.this, LandingPageActivity.class));
+                        } else {
+                            userDAO.insertUser(new User(username, password, firstName, User.UserRole.ADMIN));
+                            startActivity(new Intent(SignupActivity.this, AdminsLandingPageActivity.class));
+                        }
+
+                        finish();
                     } else {
-                        userDAO.insertUser(new User(username, password, firstName, User.UserRole.ADMIN));
+                        Toast.makeText(SignupActivity.this, "Username is taken!", Toast.LENGTH_SHORT).show();
                     }
-
-                    Intent intent = new Intent(SignupActivity.this, LandingPageActivity.class);
-                    startActivity(intent);
-                    finish();
                 } else {
-                    Toast.makeText(SignupActivity.this, "Username is taken", Toast.LENGTH_SHORT).show();
-                    mUsername.setText("");
-                    mPassword.setText("");
-                    mFirstname.setText("");
+                    Toast.makeText(SignupActivity.this, "Enter username and password!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

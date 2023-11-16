@@ -1,10 +1,15 @@
 package com.example.expensetracker;
 
+import static com.example.expensetracker.Preferences.EXPENSE_TRACKER_PREFERENCES;
+import static com.example.expensetracker.Preferences.USER_FIRST_NAME_KEY;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.room.Room;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +23,8 @@ import com.example.expensetracker.databinding.ActivityAdminsLandingPageBinding;
 
 public class AdminsLandingPageActivity extends AppCompatActivity {
     ActivityAdminsLandingPageBinding  mAdminLandingPageBinding;
+
+    SharedPreferences sharedPreferences;
 
     CardView mActiveUsersCard;
     TextView mUserQuantity;
@@ -34,26 +41,11 @@ public class AdminsLandingPageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().userDAO();
-        currencyDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().currencyDAO();
-        categoryDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().categoryDAO();
-        paymentMethodDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().paymentMethodDAO();
+        sharedPreferences = getSharedPreferences(EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
 
-        mAdminLandingPageBinding = ActivityAdminsLandingPageBinding.inflate(getLayoutInflater());
-        setContentView(mAdminLandingPageBinding.getRoot());
-
-        mActiveUsersCard = mAdminLandingPageBinding.activeUsersCard;
-        mUserQuantity = mAdminLandingPageBinding.userQuantity;
-        mCurrenciesQuantity = mAdminLandingPageBinding.currenciesQuantity;
-        mCategoryQuantity = mAdminLandingPageBinding.categoryQuantity;
-        mPaymentMethodsQuantity = mAdminLandingPageBinding.paymentMethodsQuantity;
-        mAdminName = mAdminLandingPageBinding.adminName;
-
-        mUserQuantity.setText(userDAO.numberOfUsers() + "");
-        mCurrenciesQuantity.setText(currencyDAO.numberOfCurrencies() + "");
-        mCategoryQuantity.setText(categoryDAO.numberOfCategories() + "");
-        mPaymentMethodsQuantity.setText(paymentMethodDAO.numberOfPaymentMethods() + "");
-//        mAdminName.setText();
+        initializeDatabase();
+        initializeViews();
+        displayData();
 
         mActiveUsersCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,5 +54,39 @@ public class AdminsLandingPageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void initializeDatabase() {
+        ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
+                this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
+
+        userDAO = expenseTrackerDatabase.userDAO();
+        currencyDAO = expenseTrackerDatabase.currencyDAO();
+        categoryDAO = expenseTrackerDatabase.categoryDAO();
+        paymentMethodDAO = expenseTrackerDatabase.paymentMethodDAO();
+    }
+
+    public void initializeViews() {
+        mAdminLandingPageBinding = ActivityAdminsLandingPageBinding.inflate(getLayoutInflater());
+        setContentView(mAdminLandingPageBinding.getRoot());
+        mActiveUsersCard = mAdminLandingPageBinding.activeUsersCard;
+        mUserQuantity = mAdminLandingPageBinding.userQuantity;
+        mCurrenciesQuantity = mAdminLandingPageBinding.currenciesQuantity;
+        mCategoryQuantity = mAdminLandingPageBinding.categoryQuantity;
+        mPaymentMethodsQuantity = mAdminLandingPageBinding.paymentMethodsQuantity;
+        mAdminName = mAdminLandingPageBinding.adminName;
+    }
+
+    private void displayData() {
+        mUserQuantity.setText(String.valueOf(userDAO.numberOfUsers()));
+        mCurrenciesQuantity.setText(String.valueOf(currencyDAO.numberOfCurrencies()));
+        mCategoryQuantity.setText(String.valueOf(categoryDAO.numberOfCategories()));
+        mPaymentMethodsQuantity.setText(String.valueOf(paymentMethodDAO.numberOfPaymentMethods()));
+
+        mAdminName.setText(sharedPreferences.getString(USER_FIRST_NAME_KEY, "Anonymous"));
+    }
+
+    public static Intent getIntent(Context context) {
+        return new Intent(context, AdminsLandingPageActivity.class);
     }
 }

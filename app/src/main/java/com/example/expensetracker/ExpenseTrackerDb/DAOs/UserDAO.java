@@ -12,8 +12,12 @@ import java.util.List;
 
 @Dao
 public interface UserDAO {
+
     @Insert
     void insertUser(User... users);
+    @Insert
+    long insertUserAndReturnId(User user);
+
     @Insert
     void insertAll(User[] users);
 

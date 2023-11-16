@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <application
         android:name=".ExpenseTrackerDb.Application"
@@ -12,16 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ExpenseTracker"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".UserSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseTracker.UserSettingsActivity"/>
         <activity
             android:name=".EntityTableActivity"
             android:exported="false" />
         <activity
             android:name=".SuperAdminsLandingPageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseTracker.SuperAdminsLandingPageActivity"/>
         <activity
             android:name=".AdminsLandingPageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseTracker.AdminsLandingPageActivity"/>
         <activity
             android:name=".LandingPageActivity"
             android:exported="false"
@@ -37,7 +43,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.ExpenseTracker.MainActivity">
+            android:theme="@style/Theme.ExpenseTracker.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

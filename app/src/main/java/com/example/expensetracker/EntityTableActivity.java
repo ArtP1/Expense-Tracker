@@ -22,7 +22,6 @@ public class EntityTableActivity extends AppCompatActivity {
         setContentView(mEntityTableBinding.getRoot());
 
 
-//        Log.e("TableType: ", getIntent().getStringExtra(EntityTableActivity.DASHBOARD_TABLE_SELECTED));
 
     }
 

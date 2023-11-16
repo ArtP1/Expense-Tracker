@@ -1,10 +1,16 @@
 package com.example.expensetracker;
 
+import static com.example.expensetracker.Preferences.EXPENSE_TRACKER_PREFERENCES;
+import static com.example.expensetracker.Preferences.IS_LOGGED_IN_KEY;
+import static com.example.expensetracker.Preferences.TYPE_OF_USER_KEY;
+import static com.example.expensetracker.Preferences.USER_ID_KEY;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +24,10 @@ import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.databinding.ActivitySignupBinding;
 
 public class SignupActivity extends AppCompatActivity {
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     ActivitySignupBinding mSignupBinding;
+
     UserDAO userDAO;
 
     EditText mUsername;
@@ -35,19 +44,18 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences(EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
 
-        userDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().userDAO();
+        checkLoggedInState();
 
-        mSignupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
-        setContentView(mSignupBinding.getRoot());
+        editor = sharedPreferences.edit();
 
-        mUsername = mSignupBinding.usernameSignup;
-        mFirstname = mSignupBinding.firstnameSignup;
-        mPassword = mSignupBinding.passwordSignup;
+        userDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME)
+                    .allowMainThreadQueries()
+                    .build()
+                    .userDAO();
 
-        mSignupBtn = mSignupBinding.signUpBtn;
-
-        mSignupImg = mSignupBinding.signupImg;
+        initializeViews();
 
         mSignupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,13 +68,25 @@ public class SignupActivity extends AppCompatActivity {
                     Boolean userExists = userDAO.userExists(username);
 
                     if(!userExists) { // User with username already exists
+                        long insertedUserId;
+
                         if(!isAdmin) {
-                            userDAO.insertUser(new User(username, password, firstName, User.UserRole.USER));
+                            editor.putString(TYPE_OF_USER_KEY, User.UserRole.USER.toString());
+
+                            insertedUserId = userDAO.insertUserAndReturnId(new User(username, password, firstName, User.UserRole.USER));
+
+                            editor.putLong(USER_ID_KEY, insertedUserId);
+
                             startActivity(new Intent(SignupActivity.this, LandingPageActivity.class));
                         } else {
+                            editor.putString(TYPE_OF_USER_KEY, User.UserRole.ADMIN.toString());
+
                             userDAO.insertUser(new User(username, password, firstName, User.UserRole.ADMIN));
                             startActivity(new Intent(SignupActivity.this, AdminsLandingPageActivity.class));
                         }
+
+                        editor.putBoolean(IS_LOGGED_IN_KEY, true);
+                        editor.apply();
 
                         finish();
                     } else {
@@ -90,6 +110,42 @@ public class SignupActivity extends AppCompatActivity {
        });
 
     }
+
+    private void checkLoggedInState() {
+        if (sharedPreferences.getBoolean(IS_LOGGED_IN_KEY, false)) {
+            redirectToAppropriateActivity();
+            finish();
+        }
+    }
+
+    private void redirectToAppropriateActivity() {
+        String userType = sharedPreferences.getString(TYPE_OF_USER_KEY, "");
+
+        Class<?> targetActivity = null;
+        if (User.UserRole.USER.toString().equals(userType)) {
+            targetActivity = LandingPageActivity.class;
+        } else if (User.UserRole.ADMIN.toString().equals(userType)) {
+            targetActivity = AdminsLandingPageActivity.class;
+        } else if (User.UserRole.SUPER_ADMIN.toString().equals(userType)) {
+            targetActivity = SuperAdminsLandingPageActivity.class;
+        }
+
+        startActivity(new Intent(SignupActivity.this, targetActivity));
+    }
+
+    private void initializeViews() {
+        mSignupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
+        setContentView(mSignupBinding.getRoot());
+
+        mUsername = mSignupBinding.usernameSignup;
+        mFirstname = mSignupBinding.firstnameSignup;
+        mPassword = mSignupBinding.passwordSignup;
+
+        mSignupBtn = mSignupBinding.signUpBtn;
+
+        mSignupImg = mSignupBinding.signupImg;
+    }
+
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context, SignupActivity.class);
         return intent;

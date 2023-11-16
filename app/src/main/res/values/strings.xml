@@ -10,4 +10,6 @@
     <string name="transactions">Transactions</string>
     <string name="wallet">Wallet</string>
     <string name="account">Account</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="remember_me">Remember me</string>
 </resources>

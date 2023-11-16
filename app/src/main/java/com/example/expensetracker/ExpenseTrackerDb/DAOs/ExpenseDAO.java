@@ -43,7 +43,7 @@ public interface ExpenseDAO {
 
     // Aggregate methods
     @Query("SELECT SUM(e.amount) AS TotalExpenses FROM expense_table e WHERE user_id==:user_id")
-    Double getTotalExpensesByUser(int user_id);
+    Double getTotalExpensesByUser(long user_id);
 
 //    @Query("SELECT e.category_id, SUM(e.amount) AS TotalExpenses FROM expense_table e WHERE user_id==:user_id AND category_id==:category_id")
 //    List<Object[]> getUserTotalExpensesByCategory(int user_id, int category_id);

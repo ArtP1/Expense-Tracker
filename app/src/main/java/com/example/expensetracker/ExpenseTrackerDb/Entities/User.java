@@ -25,7 +25,7 @@ import java.time.LocalDate;
 public class User {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
     // FOREIGN KEY(s)
     private String currency;
@@ -55,7 +55,7 @@ public class User {
     private UserRole role;
 
     @Ignore
-    public User(int id, String currency, @NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull UserRole role) {
+    public User(long id, String currency, @NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull UserRole role) {
         LocalDate currDate = LocalDate.now();
         this.id = id;
         this.currency = currency;
@@ -75,11 +75,11 @@ public class User {
         this.dateJoined = currDate;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

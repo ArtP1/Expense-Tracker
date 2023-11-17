@@ -33,7 +33,7 @@ public interface ExpenseDAO {
     Expense getExpenseById(int expenseId);
 
     @Query("SELECT * FROM expense_table WHERE user_id==:userId")
-    List<Expense> getExpensesByUser(int userId);
+    List<Expense> getExpensesByUser(long userId);
 
     @Query("SELECT * FROM expense_table WHERE category_id==:category_id")
     List<Expense> getExpensesByCategory(int category_id);
@@ -50,6 +50,6 @@ public interface ExpenseDAO {
 
     // Other methods
     @Query("SELECT * FROM expense_table WHERE user_id==:userId ORDER BY dateSubmitted DESC LIMIT :limit")
-    List<Expense> getRecentExpenses(int userId, int limit);
+    List<Expense> getRecentExpenses(long userId, int limit);
 
 }

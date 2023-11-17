@@ -11,7 +11,7 @@
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="270dp"
         android:background="@color/lightgreen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +90,7 @@
         android:id="@+id/monthsExpenses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$313.31"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="37sp"
         android:textStyle="bold"
@@ -109,19 +109,21 @@
 
     <View
         android:id="@+id/spendingWallet"
-        android:layout_width="357dp"
+        android:layout_width="350dp"
         android:layout_height="50dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.36" />
 
     <TextView
         android:id="@+id/spendingWalletText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Spending Wallet"
+        android:text="Spending Wallet/Budget"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
         app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
@@ -169,26 +171,6 @@
         app:srcCompat="@drawable/right_arrow_icon" />
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="357dp"
-        android:layout_height="285dp"
-        android:layout_marginTop="28dp"
-        android:elevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.518"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-        app:layout_constraintVertical_bias="0.466">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/expensesRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.cardview.widget.CardView>
-
     <TextView
         android:id="@+id/recentTransactionsText1"
         android:layout_width="wrap_content"
@@ -196,84 +178,74 @@
         android:layout_marginTop="24dp"
         android:text="RECENT TRANSACTIONS"
         android:textColor="#bcbcbc"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintBottom_toTopOf="@+id/expensesRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintHorizontal_bias="0.118"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-        app:layout_constraintVertical_bias="0.617" />
-
-    <LinearLayout
-        android:id="@+id/bottomNavBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageButton
-            android:id="@+id/homeBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/home_icon"
-            android:background="?android:attr/selectableItemBackground"
-            android:scaleType="centerInside"
-            android:contentDescription="Home" />
-
-        <ImageButton
-            android:id="@+id/transactionsBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/home_icon"
-            android:background="?android:attr/selectableItemBackground"
-            android:scaleType="centerInside"
-            android:contentDescription="Search" />
-
-        <ImageButton
-            android:id="@+id/plusBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/home_icon"
-            android:background="?android:attr/selectableItemBackground"
-            android:scaleType="centerInside"
-            android:contentDescription="Profile" />
-
-        <ImageButton
-            android:id="@+id/walletBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/home_icon"
-            android:background="?android:attr/selectableItemBackground"
-            android:scaleType="centerInside"
-            android:contentDescription="Settings" />
-
-        <ImageButton
-            android:id="@+id/accountBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/home_icon"
-            android:background="?android:attr/selectableItemBackground"
-            android:scaleType="centerInside"
-            android:contentDescription="Settings" />
-    </LinearLayout>
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/recentTransactionsText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="See all.."
         android:textColor="@color/lightgreen"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintBottom_toTopOf="@+id/expensesRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.928"
+        app:layout_constraintHorizontal_bias="0.914"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-        app:layout_constraintVertical_bias="0.775" />
+        app:layout_constraintVertical_bias="1.0" />
+
+
+    <TextView
+        android:id="@+id/emptyExpensesTextView"
+        android:layout_width="350dp"
+        android:layout_height="295dp"
+        android:layout_marginTop="68dp"
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:gravity="center"
+        android:text="@string/no_expenses"
+        app:layout_constraintBottom_toTopOf="@+id/userNavbarWrapper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
+        app:layout_constraintVertical_bias="0.294" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/expensesRecyclerView"
+        android:layout_width="350dp"
+        android:layout_height="320dp"
+        android:background="@color/white"
+        android:elevation="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/userNavbarWrapper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
+        app:layout_constraintVertical_bias="0.623" />
+
+    <LinearLayout
+        android:id="@+id/userNavbarWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.998">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/userNavbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:itemIconTint="@color/black"
+            app:itemTextColor="@color/black"
+            app:menu="@menu/users_bottom_nav" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

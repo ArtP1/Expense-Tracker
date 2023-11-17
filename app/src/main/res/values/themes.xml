@@ -26,7 +26,7 @@
         <item name="android:statusBarColor">@color/lightgreen</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
-
+    
     <style name="Theme.ExpenseTracker.UserSettingsActivity" parent="Base.Theme.ExpenseTracker">
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>

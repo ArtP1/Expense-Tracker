@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString(TYPE_OF_USER_KEY, User.UserRole.USER.toString());
 
                             Toast.makeText(LoginActivity.this, "Welcome back " + foundUser.getFirstName() + "!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, LandingPageActivity.class));
+                            startActivity(new Intent(LoginActivity.this, FragmentContainerActivity.class));
                         } else  {
                             editor.putString(USER_FIRST_NAME_KEY, foundUser.getFirstName());
 
@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Class<?> targetActivity = null;
         if (User.UserRole.USER.toString().equals(userType)) {
-            targetActivity = LandingPageActivity.class;
+            targetActivity = FragmentContainerActivity.class;
         } else if (User.UserRole.ADMIN.toString().equals(userType)) {
             targetActivity = AdminsLandingPageActivity.class;
         } else if (User.UserRole.SUPER_ADMIN.toString().equals(userType)) {

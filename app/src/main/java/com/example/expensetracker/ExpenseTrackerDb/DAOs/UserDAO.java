@@ -34,7 +34,7 @@ public interface UserDAO {
     List<User> getAllUsers();
 
     @Query("SELECT * FROM user_table WHERE id==:userId")
-    User getUserById(int userId);
+    User getUserById(long userId);
 
     @Query("SELECT * FROM user_table WHERE username==:username")
     User getUserByUsername(String username);

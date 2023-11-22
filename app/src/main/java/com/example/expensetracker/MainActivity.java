@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         Class<?> targetActivity = null;
         if (User.UserRole.USER.toString().equals(userType)) {
-            targetActivity = LandingPageActivity.class;
+            targetActivity = FragmentContainerActivity.class;
         } else if (User.UserRole.ADMIN.toString().equals(userType)) {
             targetActivity = AdminsLandingPageActivity.class;
         } else if (User.UserRole.SUPER_ADMIN.toString().equals(userType)) {
@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static Intent getIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
+        return new Intent(context, MainActivity.class);
     }
 }

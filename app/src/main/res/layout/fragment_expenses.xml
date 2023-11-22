@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.ExpensesFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/combinedInsightsGroup"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="expenseInsightsGroup, incomeInsightsGroup" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/expenseInsightsGroup"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="expenseInsights,expenseText,expenseIcon,expenseAmount, expenseArrow, expenseDetails" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:background="@color/lightgreen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/expenseInsights"
+            android:layout_width="350dp"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/incomeInsights"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/incomeInsights"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+        <TextView
+            android:id="@+id/expenseText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense"
+            android:elevation="3dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/expenseInsights"
+            app:layout_constraintHorizontal_bias="0.252"
+            app:layout_constraintStart_toStartOf="@+id/expenseInsights"
+            app:layout_constraintTop_toTopOf="@+id/expenseInsights"
+            app:layout_constraintVertical_bias="0.361" />
+
+        <TextView
+            android:id="@+id/expenseDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.7"
+            android:text="$215 more than June"
+            android:elevation="3dp"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/expenseInsights"
+            app:layout_constraintHorizontal_bias="0.294"
+            app:layout_constraintStart_toStartOf="@+id/expenseInsights"
+            app:layout_constraintTop_toTopOf="@+id/expenseInsights"
+            app:layout_constraintVertical_bias="0.761" />
+
+        <ImageView
+            android:id="@+id/expenseIcon"
+            android:layout_width="17.5dp"
+            android:elevation="3dp"
+            android:layout_height="17.5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/expenseInsights"
+            app:layout_constraintHorizontal_bias="0.096"
+            app:layout_constraintStart_toStartOf="@+id/expenseInsights"
+            app:layout_constraintTop_toTopOf="@+id/expenseInsights"
+            app:layout_constraintVertical_bias="0.578"
+            app:srcCompat="@drawable/green_wallet_icon" />
+
+        <TextView
+            android:id="@+id/expenseAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:text="$120.31"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/expenseInsights"
+            app:layout_constraintHorizontal_bias="0.895"
+            app:layout_constraintStart_toStartOf="@+id/expenseInsights"
+            app:layout_constraintTop_toTopOf="@+id/expenseInsights"
+            app:layout_constraintVertical_bias="0.611" />
+
+        <ImageView
+            android:id="@+id/expenseArrow"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:elevation="3dp"
+            app:layout_constraintBottom_toBottomOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/expenseInsights"
+            app:layout_constraintHorizontal_bias="0.97"
+            app:layout_constraintStart_toStartOf="@+id/expenseInsights"
+            app:layout_constraintTop_toTopOf="@+id/expenseInsights"
+            app:layout_constraintVertical_bias="0.5"
+            app:srcCompat="@drawable/right_arrow_icon" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/incomeInsightsGroup"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="incomeIcon,incomeText,incomeDetails,incomeAmount, incomeArrow" />
+
+        <ImageView
+            android:id="@+id/incomeIcon"
+            android:layout_width="17.5dp"
+            android:layout_height="17.5dp"
+            android:elevation="3dp"
+            android:src="@drawable/expense_icon"
+            app:layout_constraintBottom_toTopOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/incomeArrow"
+            app:layout_constraintHorizontal_bias="0.099"
+            app:layout_constraintStart_toStartOf="@+id/incomeInsights"
+            app:layout_constraintTop_toTopOf="@+id/incomeInsights"
+            app:layout_constraintVertical_bias="0.354" />
+
+        <TextView
+            android:id="@+id/incomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:text="Income"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/incomeInsights"
+            app:layout_constraintEnd_toEndOf="@+id/incomeInsights"
+            app:layout_constraintHorizontal_bias="0.247"
+            app:layout_constraintStart_toStartOf="@+id/incomeInsights"
+            app:layout_constraintTop_toTopOf="@+id/incomeInsights"
+            app:layout_constraintVertical_bias="0.341" />
+
+        <TextView
+            android:id="@+id/incomeDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.7"
+            android:elevation="3dp"
+            android:text="$120 more than June"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/incomeInsights"
+            app:layout_constraintHorizontal_bias="0.294"
+            app:layout_constraintStart_toStartOf="@+id/incomeInsights"
+            app:layout_constraintTop_toTopOf="@+id/incomeInsights"
+            app:layout_constraintVertical_bias="0.744" />
+
+        <TextView
+            android:id="@+id/incomeAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:text="$192.22"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/expenseInsights"
+            app:layout_constraintEnd_toEndOf="@+id/incomeInsights"
+            app:layout_constraintHorizontal_bias="0.895"
+            app:layout_constraintStart_toStartOf="@+id/incomeInsights"
+            app:layout_constraintTop_toTopOf="@+id/incomeInsights"
+            app:layout_constraintVertical_bias="0.609" />
+
+        <ImageView
+            android:id="@+id/incomeArrow"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:elevation="3dp"
+            android:src="@drawable/right_arrow_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/incomeInsights"
+            app:layout_constraintEnd_toEndOf="@+id/incomeInsights"
+            app:layout_constraintHorizontal_bias="0.97"
+            app:layout_constraintStart_toStartOf="@+id/incomeInsights"
+            app:layout_constraintTop_toTopOf="@+id/incomeInsights"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ScrollView
+            android:layout_width="350dp"
+            android:layout_height="310dp"
+            android:background="@color/white"
+            android:elevation="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/expenseInsights"
+            app:layout_constraintVertical_bias="1.0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/fragmentTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transactions"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.064" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

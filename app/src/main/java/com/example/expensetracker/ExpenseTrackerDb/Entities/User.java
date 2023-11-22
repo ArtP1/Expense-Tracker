@@ -44,7 +44,7 @@ public class User {
     @TypeConverters(DateConverter.class)
     private LocalDate dateJoined;
 
-    private Double budget;
+    private double budget;
 
     public enum UserRole {
         USER, ADMIN, SUPER_ADMIN
@@ -62,6 +62,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
+        this.budget = 0.0;
         this.role = role;
         this.dateJoined = currDate;
     }
@@ -72,6 +73,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.role = role;
+        this.budget = 0.0;
         this.dateJoined = currDate;
     }
 

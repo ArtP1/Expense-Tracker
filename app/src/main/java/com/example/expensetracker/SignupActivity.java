@@ -77,7 +77,7 @@ public class SignupActivity extends AppCompatActivity {
 
                             editor.putLong(USER_ID_KEY, insertedUserId);
 
-                            startActivity(new Intent(SignupActivity.this, LandingPageActivity.class));
+                            startActivity(new Intent(SignupActivity.this, FragmentContainerActivity.class));
                         } else {
                             editor.putString(TYPE_OF_USER_KEY, User.UserRole.ADMIN.toString());
 
@@ -123,7 +123,7 @@ public class SignupActivity extends AppCompatActivity {
 
         Class<?> targetActivity = null;
         if (User.UserRole.USER.toString().equals(userType)) {
-            targetActivity = LandingPageActivity.class;
+            targetActivity = FragmentContainerActivity.class;
         } else if (User.UserRole.ADMIN.toString().equals(userType)) {
             targetActivity = AdminsLandingPageActivity.class;
         } else if (User.UserRole.SUPER_ADMIN.toString().equals(userType)) {
@@ -147,7 +147,6 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public static Intent getIntent(Context context) {
-        Intent intent = new Intent(context, SignupActivity.class);
-        return intent;
+        return new Intent(context, SignupActivity.class);
     }
 }

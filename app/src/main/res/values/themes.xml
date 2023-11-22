@@ -17,13 +17,17 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="Theme.ExpenseTracker.EntityTableActivity" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/lightgrey</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
     <style name="Theme.ExpenseTracker.SignupActivity" parent="Base.Theme.ExpenseTracker">
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.ExpenseTracker.LandingPageActivity" parent="Base.Theme.ExpenseTracker">
-        <item name="android:statusBarColor">@color/lightgreen</item>
+    <style name="Theme.ExpenseTracker.FragmentContainerActivity" parent="Base.Theme.ExpenseTracker">
         <item name="android:windowLightStatusBar">true</item>
     </style>
     

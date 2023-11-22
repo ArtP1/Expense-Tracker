@@ -15,4 +15,10 @@
     <string name="expense">expense</string>
     <string name="wallet_item">Wallet</string>
     <string name="no_expenses">No Expenses</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="this_month_s_spend">THIS MONTH\'S SPEND</string>
+    <string name="today_is">TODAY IS</string>
+    <string name="spending_wallet_budget">Spending Wallet/Budget</string>
+    <string name="see_all">See all..</string>
 </resources>

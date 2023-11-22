@@ -4,14 +4,12 @@ import static com.example.expensetracker.Preferences.EXPENSE_TRACKER_PREFERENCES
 import static com.example.expensetracker.Preferences.USER_FIRST_NAME_KEY;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
@@ -26,7 +24,6 @@ public class AdminsLandingPageActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
 
-    CardView mActiveUsersCard;
     TextView mUserQuantity;
     TextView mCurrenciesQuantity;
     TextView mCategoryQuantity;
@@ -47,13 +44,6 @@ public class AdminsLandingPageActivity extends AppCompatActivity {
         initializeViews();
         displayData();
 
-        mActiveUsersCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = EntityTableActivity.intentFactory(AdminsLandingPageActivity.this, "ActiveUsers");
-                startActivity(intent);
-            }
-        });
     }
 
     public void initializeDatabase() {
@@ -69,7 +59,6 @@ public class AdminsLandingPageActivity extends AppCompatActivity {
     public void initializeViews() {
         mAdminLandingPageBinding = ActivityAdminsLandingPageBinding.inflate(getLayoutInflater());
         setContentView(mAdminLandingPageBinding.getRoot());
-        mActiveUsersCard = mAdminLandingPageBinding.activeUsersCard;
         mUserQuantity = mAdminLandingPageBinding.userQuantity;
         mCurrenciesQuantity = mAdminLandingPageBinding.currenciesQuantity;
         mCategoryQuantity = mAdminLandingPageBinding.categoryQuantity;

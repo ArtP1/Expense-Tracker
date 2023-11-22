@@ -1,24 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeActivity"
+        android:id="@+id/home"
         android:enabled="true"
         android:icon="@drawable/black_home_icon"
         android:title="@string/home_item"/>
 
     <item
-        android:id="@+id/expensesActivity"
+        android:id="@+id/expenses"
         android:enabled="true"
-        android:icon="@drawable/expense_img"
+        android:icon="@drawable/expense_nav_icon"
         android:title="@string/expense_item"/>
 
     <item
-        android:id="@+id/walletActivity"
+        android:id="@+id/wallet"
         android:enabled="true"
-        android:icon="@drawable/wallet_icon"
+        android:icon="@drawable/wallet_nav_icon"
         android:title="@string/wallet_item"/>
 
     <item
-        android:id="@+id/accountActivity"
+        android:id="@+id/account"
         android:enabled="true"
         android:icon="@drawable/account_icon"
         android:title="@string/account_item" />

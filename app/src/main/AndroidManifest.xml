@@ -14,21 +14,9 @@
         android:theme="@style/Theme.ExpenseTracker"
         tools:targetApi="31">
         <activity
-            android:name=".AccountActivity"
-            android:exported="false" />
-        <activity
-            android:name=".WalletActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ExpensesActivity"
-            android:exported="false" />
-        <activity
             android:name=".UserSettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.ExpenseTracker.UserSettingsActivity" />
-        <activity
-            android:name=".EntityTableActivity"
-            android:exported="false" />
         <activity
             android:name=".SuperAdminsLandingPageActivity"
             android:exported="false"
@@ -38,9 +26,9 @@
             android:exported="false"
             android:theme="@style/Theme.ExpenseTracker.AdminsLandingPageActivity" />
         <activity
-            android:name=".LandingPageActivity"
+            android:name=".FragmentContainerActivity"
             android:exported="false"
-            android:theme="@style/Theme.ExpenseTracker.LandingPageActivity" />
+            android:theme="@style/Theme.ExpenseTracker.FragmentContainerActivity" />
         <activity
             android:name=".SignupActivity"
             android:exported="false"

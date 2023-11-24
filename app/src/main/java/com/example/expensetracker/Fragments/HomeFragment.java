@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,13 +18,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.expensetracker.Components.ExpenseAdapter;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.ExpenseDAO;
+import com.example.expensetracker.Components.TransactionAdapter;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.Expense;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
+import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.Preferences;
+import com.example.expensetracker.R;
 import com.example.expensetracker.UserSettingsActivity;
 import com.example.expensetracker.databinding.FragmentHomeBinding;
 
@@ -44,7 +47,7 @@ public class HomeFragment extends Fragment {
     private TextView mBudget;
     private RecyclerView mExpensesRecyclerView;
     private ImageView mSettingsImg;
-    private ExpenseDAO expenseDAO;
+    private TransactionDAO transactionDAO;
     private UserDAO userDAO;
 
     private final LocalDate currDate = LocalDate.now();
@@ -92,19 +95,22 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int statusBarColor = ContextCompat.getColor(requireContext(), R.color.black);
+        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
+        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(0);
 
-        FragmentHomeBinding mHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
-        View view = mHomeBinding.getRoot();
+        FragmentHomeBinding mHomeFragmentBinding = FragmentHomeBinding.inflate(inflater, container, false);
+        View view = mHomeFragmentBinding.getRoot();
 
         initializeDatabase();
 
-        mMonthsExpenses = mHomeBinding.monthsExpenses;
-        mCurrentDate = mHomeBinding.currentDate;
-        mSettingsImg = mHomeBinding.settingsImg;
-        mBudget = mHomeBinding.budget;
-        mExpensesRecyclerView = mHomeBinding.expensesRecyclerView;
+        mMonthsExpenses = mHomeFragmentBinding.monthsExpenses;
+        mCurrentDate = mHomeFragmentBinding.currentDate;
+        mSettingsImg = mHomeFragmentBinding.settingsImg;
+        mBudget = mHomeFragmentBinding.budget;
+        mExpensesRecyclerView = mHomeFragmentBinding.expensesRecyclerView;
 
-        mEmptyExpensesTextView = mHomeBinding.emptyExpensesTextView;
+        mEmptyExpensesTextView = mHomeFragmentBinding.emptyExpensesTextView;
 
         mSettingsImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,12 +124,13 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+
     private void initializeDatabase() {
         ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         userDAO = expenseTrackerDatabase.userDAO();
-        expenseDAO = expenseTrackerDatabase.expenseDAO();
+        transactionDAO = expenseTrackerDatabase.transactionDAO();
     }
 
     private void displayData() {
@@ -133,16 +140,16 @@ public class HomeFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        Double loggedInUserTotalExpenses = expenseDAO.getTotalExpensesByUser(currUserID);
+        Double loggedInUserTotalExpenses = transactionDAO.getTotalExpensesByUser(currUserID);
 
-        List<Expense> expenseList = expenseDAO.getExpensesByUser(currUserID);
+        List<Transaction> transactionList = transactionDAO.getExpensesByUser(currUserID);
 
-        if (!expenseList.isEmpty()) {
+        if (!transactionList.isEmpty()) {
             mEmptyExpensesTextView.setVisibility(View.GONE);
 
             mExpensesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-            mExpensesRecyclerView.setAdapter(new ExpenseAdapter(requireContext(), expenseList));
+            mExpensesRecyclerView.setAdapter(new TransactionAdapter(requireContext(), transactionList));
             mMonthsExpenses.setText("$" + Double.toString(loggedInUserTotalExpenses));
         } else {
             mExpensesRecyclerView.setVisibility(View.GONE);

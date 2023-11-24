@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/expenseView"
+    android:id="@+id/transactionView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
-    <!-- Expense Image -->
     <ImageView
-        android:id="@+id/expenseImage"
+        android:id="@+id/transactionImage"
         android:layout_width="51dp"
         android:layout_height="46dp"
         android:layout_alignParentStart="true"
@@ -18,37 +18,37 @@
 
 
     <TextView
-        android:id="@+id/expenseTitle"
+        android:id="@+id/transactionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/expenseImage"
+        android:layout_alignTop="@id/transactionImage"
         android:layout_marginStart="8dp"
         android:layout_marginTop="6dp"
-        android:layout_toEndOf="@id/expenseImage"
+        android:layout_toEndOf="@id/transactionImage"
         android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/expenseDate"
+        android:id="@+id/transactionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/expenseTitle"
+        android:layout_below="@id/transactionTitle"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
-        android:layout_toEndOf="@id/expenseImage"
+        android:layout_toEndOf="@id/transactionImage"
         android:text=""
         android:textColor="@color/black"
         android:textSize="11sp" />
 
     <TextView
-        android:id="@+id/expenseAmount"
+        android:id="@+id/transactionAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="25dp"
         android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
@@ -62,7 +62,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="34dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="5dp"
         app:srcCompat="@drawable/right_arrow_icon" />
-
 </RelativeLayout>

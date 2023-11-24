@@ -15,7 +15,7 @@ import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import java.time.LocalDate;
 
 
-@Entity(tableName = ExpenseTrackerDatabase.EXPENSE_TABLE,
+@Entity(tableName = ExpenseTrackerDatabase.TRANSACTION_TABLE,
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
@@ -49,7 +49,7 @@ import java.time.LocalDate;
                 @Index("currency")
         }
 )
-public class Expense {
+public class Transaction {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -65,6 +65,7 @@ public class Expense {
     private String currency;
 
     // COLUMNS
+    @NonNull
     private double amount;
 
     @NonNull
@@ -76,22 +77,30 @@ public class Expense {
     private String description;
     private String location;
 
+    public enum Type {
+        EARNING,
+        EXPENSE
+    }
+
+    @NonNull
+    @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
+    private Type transType;
+
     @Ignore
-    public Expense(int id, int user_id, int category_id, int payment_method_id, @NonNull String title, String currency, double amount, String description, String location) {
+    public Transaction(int id, int user_id, int category_id, int payment_method_id, @NonNull double amount, @NonNull String title, LocalDate dateSubmitted, String description, String location, @NonNull Type transType) {
         LocalDate currDate = LocalDate.now();
         this.id = id;
         this.user_id = user_id;
         this.category_id = category_id;
         this.payment_method_id = payment_method_id;
-        this.title = title;
-        this.currency = currency;
         this.amount = amount;
+        this.title = title;
         this.dateSubmitted = currDate;
         this.description = description;
         this.location = location;
+        this.transType = transType;
     }
-
-    public Expense(int user_id, int category_id, int payment_method_id, @NonNull String title, String currency, double amount, String description, String location) {
+    public Transaction(int user_id, int category_id, int payment_method_id, @NonNull String title, String currency, @NonNull double amount, String description, String location, @NonNull Type transType) {
         LocalDate currDate = LocalDate.now();
         this.user_id = user_id;
         this.category_id = category_id;
@@ -102,6 +111,7 @@ public class Expense {
         this.dateSubmitted = currDate;
         this.description = description;
         this.location = location;
+        this.transType = transType;
     }
 
     public double getAmount() {
@@ -183,5 +193,14 @@ public class Expense {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    @NonNull
+    public Type getTransType() {
+        return transType;
+    }
+
+    public void setTransType(@NonNull Type transType) {
+        this.transType = transType;
     }
 }

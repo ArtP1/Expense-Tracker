@@ -11,4 +11,9 @@
     <color name="adminBlue">#5695E6</color>
     <color name="adminPurple">#7F00FF</color>
     <color name="adminBrown">#C4A484</color>
+    <color name="expense_color">#FF0000</color>
+    <color name="earning_color">#00FF00</color>
+    <color name="progressGreen">#00FF00</color>
+    <color name="progressYellow">#FFFF00</color>
+    <color name="progressRed">#FF0000</color>
 </resources>

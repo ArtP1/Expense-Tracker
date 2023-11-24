@@ -54,4 +54,9 @@ public class Currency {
     public void setSymbol(@NonNull String symbol) {
         this.symbol = symbol;
     }
+
+    @Override
+    public String toString() {
+        return name + " - " + ISO;
+    }
 }

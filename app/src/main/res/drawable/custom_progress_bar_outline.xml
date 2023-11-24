@@ -1,0 +1,5 @@
+<!-- custom_progress_bar_outline.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This rectangle will be the outline color -->
+    <item android:drawable="@android:color/black" />
+</layer-list>

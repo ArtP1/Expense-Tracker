@@ -16,8 +16,8 @@
         <View
             android:id="@+id/view2"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
-            android:background="@color/lightgreen"
+            android:layout_height="290dp"
+            android:background="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/today_is"
-            android:textColor="@color/lighttransp"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/view2"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/this_month_s_spend"
-            android:textColor="@color/lighttransp"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/view2"
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="37sp"
+            android:textSize="40sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -106,131 +106,161 @@
             app:layout_constraintTop_toBottomOf="@+id/stats4"
             app:layout_constraintVertical_bias="0.081" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_spending_wallet"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="visible"
-            app:constraint_referenced_ids="spendingWallet,spendingWalletText,spendingWalletIcon,budget" />
 
-        <View
-            android:id="@+id/spendingWallet"
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:background="@color/white"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="8dp"
+            app:cardCornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.36" />
+            tools:layout_editor_absoluteX="0dp">
 
-        <TextView
-            android:id="@+id/spendingWalletText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/spending_wallet_budget"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-            app:layout_constraintHorizontal_bias="0.262"
-            app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-            app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="0.483" />
+            <!--            <androidx.constraintlayout.widget.Group-->
+            <!--                android:id="@+id/group_spending_wallet"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:visibility="visible"-->
+            <!--                app:constraint_referenced_ids="spendingWallet,spendingWalletText,spendingWalletIcon,budget" />-->
 
-        <ImageView
-            android:id="@+id/spendingWalletIcon"
-            android:layout_width="17.5dp"
-            android:layout_height="17.5dp"
-            app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-            app:layout_constraintHorizontal_bias="0.071"
-            app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-            app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="0.484"
-            app:srcCompat="@drawable/green_wallet_icon" />
+            <LinearLayout
+                android:id="@+id/spendingWallet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="18dp">
 
-        <TextView
-            android:id="@+id/budget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-            app:layout_constraintHorizontal_bias="0.874"
-            app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-            app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="0.5" />
+                <ImageView
+                    android:id="@+id/spendingWalletIcon"
+                    android:layout_width="17.5dp"
+                    android:layout_height="17.5dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                    app:layout_constraintHorizontal_bias="0.071"
+                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                    app:layout_constraintVertical_bias="0.484"
+                    app:srcCompat="@drawable/green_wallet_icon"
+                    android:layout_marginRight="10dp"/>
 
-
-        <ImageView
-            android:id="@+id/rightArrow"
-            android:layout_width="9dp"
-            android:layout_height="9dp"
-            app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-            app:layout_constraintHorizontal_bias="0.96"
-            app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-            app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="0.5"
-            app:srcCompat="@drawable/right_arrow_icon" />
+                <TextView
+                    android:id="@+id/spendingWalletText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/spending_wallet_budget"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                    app:layout_constraintHorizontal_bias="0.262"
+                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                    app:layout_constraintVertical_bias="0.483" />
 
 
-        <TextView
-            android:id="@+id/recentTransactionsText1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="RECENT TRANSACTIONS"
-            android:textColor="#bcbcbc"
-            app:layout_constraintBottom_toTopOf="@+id/expensesRecyclerView"
+                <TextView
+                    android:id="@+id/budget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$5000000"
+                    android:textStyle="bold"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                    app:layout_constraintHorizontal_bias="0.874"
+                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                    app:layout_constraintVertical_bias="0.5" />
+
+
+                <ImageView
+                    android:id="@+id/rightArrow"
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_gravity="center_vertical"
+                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                    app:layout_constraintHorizontal_bias="0.96"
+                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                    app:layout_constraintVertical_bias="0.5"
+                    app:srcCompat="@drawable/right_arrow_icon" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/recentTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.118"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView3"
+            app:layout_constraintVertical_bias="0.836">
 
-        <TextView
-            android:id="@+id/recentTransactionsText2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/see_all"
-            android:textColor="@color/lightgreen"
-            app:layout_constraintBottom_toTopOf="@+id/expensesRecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.914"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="1.0" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="13dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Recent transactions"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="See all.."
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/expensesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:elevation="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.491"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
+                        app:layout_constraintVertical_bias="0.529" />
+                </ScrollView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/emptyExpensesTextView"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="320dp"
-            android:layout_marginTop="68dp"
-            android:background="@color/white"
-            android:elevation="1dp"
-            android:gravity="center"
-            android:text="@string/no_expenses"
+            android:text="No Transactions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="0.294" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/expensesRecyclerView"
-            android:layout_width="350dp"
-            android:layout_height="320dp"
-            android:background="@color/white"
-            android:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-            app:layout_constraintVertical_bias="0.529" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.959" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
+

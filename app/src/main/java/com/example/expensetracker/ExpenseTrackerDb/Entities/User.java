@@ -50,6 +50,8 @@ public class User {
         USER, ADMIN, SUPER_ADMIN
     }
 
+    private boolean hasNotifications;
+
     @NonNull
     @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
     private UserRole role;
@@ -62,6 +64,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
+        this.hasNotifications = false;
         this.budget = 0.0;
         this.role = role;
         this.dateJoined = currDate;
@@ -74,6 +77,7 @@ public class User {
         this.firstName = firstName;
         this.role = role;
         this.budget = 0.0;
+        this.hasNotifications = false;
         this.dateJoined = currDate;
     }
 
@@ -120,11 +124,11 @@ public class User {
         this.firstName = firstName;
     }
 
-    public Double getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public void setBudget(Double budget) {
+    public void setBudget(double budget) {
         this.budget = budget;
     }
 
@@ -144,5 +148,13 @@ public class User {
 
     public void setDateJoined(@NonNull LocalDate dateJoined) {
         this.dateJoined = dateJoined;
+    }
+
+    public boolean hasNotifications() {
+        return hasNotifications;
+    }
+
+    public void setHasNotifications(boolean hasNotifications) {
+        this.hasNotifications = hasNotifications;
     }
 }

@@ -13,8 +13,9 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.expensetracker.Fragments.AccountFragment;
-import com.example.expensetracker.Fragments.ExpensesFragment;
 import com.example.expensetracker.Fragments.HomeFragment;
+import com.example.expensetracker.Fragments.NewTransactionFragment;
+import com.example.expensetracker.Fragments.TransactionsFragment;
 import com.example.expensetracker.Fragments.WalletsFragment;
 import com.example.expensetracker.databinding.ActivityFragmentContainerBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,8 +35,6 @@ public class FragmentContainerActivity extends AppCompatActivity {
         mBottomNavigation = mFragmentContainerBinding.userNavbar;
         mFrameLayout = mFragmentContainerBinding.frameLayout;
 
-        loadFragment(new HomeFragment(), true);
-
         mBottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -44,8 +43,8 @@ public class FragmentContainerActivity extends AppCompatActivity {
                 if(itemId == R.id.home) {
                     loadFragment(new HomeFragment(), false);
 
-                } else if(itemId == R.id.expenses) {
-                    loadFragment(new ExpensesFragment(), false);
+                } else if(itemId == R.id.transaction) {
+                    loadFragment(new TransactionsFragment(), false);
 
                 } else if(itemId == R.id.wallet) {
                     loadFragment(new WalletsFragment(), false);
@@ -53,6 +52,8 @@ public class FragmentContainerActivity extends AppCompatActivity {
                 } else if (itemId == R.id.account) {
                     loadFragment(new AccountFragment(), false);
 
+                } else if(itemId == R.id.newTransaction) {
+                    loadFragment(new NewTransactionFragment(), false);
                 }
 
                 return true;
@@ -61,13 +62,18 @@ public class FragmentContainerActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFragment(new HomeFragment(), true);
+    }
     private void loadFragment(Fragment fragment, boolean isAppInitialized) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if(isAppInitialized) {
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentTransaction.add(R.id.frameLayout, fragment);
-
         } else {
             fragmentTransaction.replace(R.id.frameLayout, fragment);
 

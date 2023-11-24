@@ -4,7 +4,7 @@ package com.example.expensetracker.ExpenseTrackerDb;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.Expense;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 
@@ -152,13 +152,13 @@ public class PrepopulateDb {
         };
     }
 
-    public static Expense[] populateExpenseData() {
-        return new Expense[] {
-                new Expense(1, 3, 3, "Popeyes", "USD", 16.75, "Purchased lunch for the day", "590 Auto Center Dr Unit 1A"),
-                new Expense(1, 4, 5, "Fuel", "USD", 70.0, "Refilled gas for the car", "853 Abbott St"),
-                new Expense(1, 6, 7, "Movie Night", "USD", 25.0, "Tickets for movie night", "350 Northridge Shopping Ctr"),
-                new Expense(1, 8, 9, "Dinner", "USD", 40.0, "Dinner with friends", "1465 N Main St"),
-                new Expense(1, 5, 9, "Comedy Station", "USD", 100.0, "Comedy night with friends", "2115 N Fremont St")
+    public static Transaction[] populateTransactionData() {
+        return new Transaction[] {
+                new Transaction(1, 3, 3, "Popeyes", "USD", 16.75, "Purchased lunch for the day", "590 Auto Center Dr Unit 1A", Transaction.Type.EXPENSE),
+                new Transaction(1, 4, 5, "Fuel", "USD", 70.0, "Refilled gas for the car", "853 Abbott St", Transaction.Type.EXPENSE),
+                new Transaction(1, 6, 7, "Movie Night", "USD", 25.0, "Tickets for movie night", "350 Northridge Shopping Ctr", Transaction.Type.EXPENSE),
+                new Transaction(1, 8, 9, "Dinner", "USD", 40.0, "Dinner with friends", "1465 N Main St", Transaction.Type.EXPENSE),
+                new Transaction(1, 5, 9, "Comedy Station", "USD", 100.0, "Comedy night with friends", "2115 N Fremont St", Transaction.Type.EXPENSE)
 
         };
     }

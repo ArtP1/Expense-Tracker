@@ -30,6 +30,11 @@ public class Category {
         this.icon = icon;
     }
 
+    @Ignore
+    public Category(@NonNull String name) {
+        this.name = name;
+    }
+
     public Category(String color_hex, @NonNull String name, @NonNull String icon) {
         this.color_hex = color_hex;
         this.name = name;
@@ -68,5 +73,10 @@ public class Category {
 
     public void setIcon(@NonNull String icon) {
         this.icon = icon;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

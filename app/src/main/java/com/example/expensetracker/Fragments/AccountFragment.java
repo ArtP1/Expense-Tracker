@@ -1,13 +1,27 @@
 package com.example.expensetracker.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
+import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
+import com.example.expensetracker.FragmentContainerActivity;
+import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentAccountBinding;
 import com.github.mikephil.charting.charts.PieChart;
@@ -26,6 +40,17 @@ import java.util.ArrayList;
 public class AccountFragment extends Fragment {
 
     private PieChart mExpensesPieChart;
+
+    private TextView mWelcomeMsg;
+
+    private TextView mBudgetAmount;
+    private TextView mExpensesAmount;
+
+    private ProgressBar mTransactionsProgressBar;
+
+    private TransactionDAO transactionDAO;
+    private UserDAO userDAO;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -68,11 +93,75 @@ public class AccountFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int statusBarColor = ContextCompat.getColor(requireContext(), R.color.white);
+        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
+        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        FragmentAccountBinding mAccountBinding = FragmentAccountBinding.inflate(inflater, container, false);
-        View view = mAccountBinding.getRoot();
 
-        mExpensesPieChart = mAccountBinding.transactionsPieChart;
+        FragmentAccountBinding mAccountFragmentBinding = FragmentAccountBinding.inflate(inflater, container, false);
+        View view = mAccountFragmentBinding.getRoot();
+
+        initializeDatabase();
+
+        mExpensesPieChart = mAccountFragmentBinding.transactionsPieChart;
+        mWelcomeMsg = mAccountFragmentBinding.welcomeMsg;
+        mBudgetAmount = mAccountFragmentBinding.budgetAmount;
+        mExpensesAmount = mAccountFragmentBinding.expensesAmount;
+        mTransactionsProgressBar = mAccountFragmentBinding.transactionsProgressBar;
+
+        displayData();
+
+        return view;
+    }
+
+    private void initializeDatabase() {
+        ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
+                requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
+
+        userDAO = expenseTrackerDatabase.userDAO();
+        transactionDAO = expenseTrackerDatabase.transactionDAO();
+    }
+
+    private void displayData() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
+
+        long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
+
+        User currUser = userDAO.getUserById(currUserID);
+
+        Double loggedInUserTotalExpenses = transactionDAO.getTotalExpensesByUser(currUserID);
+
+        mWelcomeMsg.setText(getString(R.string.welcome_message, currUser.getUsername()));
+
+        if (currUser.getBudget() == 0.0) {
+            mBudgetAmount.setText("N/A");
+        } else {
+            mBudgetAmount.setText(String.valueOf(currUser.getBudget()));
+        }
+
+        mExpensesAmount.setText(getString(R.string.money_symbol, String.valueOf(loggedInUserTotalExpenses)));
+
+        double expensesPercentage = (loggedInUserTotalExpenses / currUser.getBudget()) * 100;
+
+        // Find the ProgressBar and set its progress based on the expenses percentage
+        mTransactionsProgressBar.setMax(100); // Set the maximum value of the progress bar
+
+        // Set the progress based on the expenses percentage
+        if (expensesPercentage <= 100) {
+            mTransactionsProgressBar.setProgress((int) expensesPercentage);
+
+            // Change color based on percentage ranges
+            if (expensesPercentage <= 45) {
+                mTransactionsProgressBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.progressGreen)));
+            } else if (expensesPercentage <= 75) {
+                mTransactionsProgressBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.progressYellow)));
+            } else {
+                mTransactionsProgressBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.progressRed)));
+            }
+        } else {
+            mTransactionsProgressBar.setProgress(100);
+            mTransactionsProgressBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.progressRed)));
+        }
 
         ArrayList<PieEntry> expensesPieChartEntries = new ArrayList<>();
         expensesPieChartEntries.add(new PieEntry(80f, "Food"));
@@ -99,7 +188,5 @@ public class AccountFragment extends Fragment {
         mExpensesPieChart.setRotationEnabled(false);
 
         mExpensesPieChart.invalidate();
-
-        return view;
     }
 }

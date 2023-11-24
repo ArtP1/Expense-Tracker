@@ -2,20 +2,23 @@ package com.example.expensetracker.Fragments;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.R;
+import com.example.expensetracker.databinding.FragmentTransactionsBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ExpensesFragment#newInstance} factory method to
+ * Use the {@link TransactionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExpensesFragment extends Fragment {
+public class TransactionsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +29,7 @@ public class ExpensesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ExpensesFragment() {
+    public TransactionsFragment() {
         // Required empty public constructor
     }
 
@@ -39,8 +42,8 @@ public class ExpensesFragment extends Fragment {
      * @return A new instance of fragment ExpensesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ExpensesFragment newInstance(String param1, String param2) {
-        ExpensesFragment fragment = new ExpensesFragment();
+    public static TransactionsFragment newInstance(String param1, String param2) {
+        TransactionsFragment fragment = new TransactionsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,9 +61,15 @@ public class ExpensesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_expenses, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int statusBarColor = ContextCompat.getColor(requireContext(), R.color.black);
+        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
+        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(0);
+
+        FragmentTransactionsBinding mExpressBinding = FragmentTransactionsBinding.inflate(inflater, container, false);
+        View view = mExpressBinding.getRoot();
+
+
+        return view;
     }
 }

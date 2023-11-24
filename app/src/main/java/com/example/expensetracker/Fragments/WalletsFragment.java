@@ -2,13 +2,16 @@ package com.example.expensetracker.Fragments;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.R;
+import com.example.expensetracker.databinding.FragmentWalletsBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,9 +61,15 @@ public class WalletsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int statusBarColor = ContextCompat.getColor(requireContext(), R.color.black);
+        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
+        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(0);
+
+        FragmentWalletsBinding mWalletFragmentBinding = FragmentWalletsBinding.inflate(inflater, container, false);
+        View view = mWalletFragmentBinding.getRoot();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_wallets, container, false);
+        return view;
     }
 }

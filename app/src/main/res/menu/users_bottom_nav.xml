@@ -6,10 +6,16 @@
         android:title="@string/home_item"/>
 
     <item
-        android:id="@+id/expenses"
+        android:id="@+id/transaction"
         android:enabled="true"
         android:icon="@drawable/expense_nav_icon"
         android:title="@string/expense_item"/>
+
+    <item
+        android:id="@+id/newTransaction"
+        android:enabled="true"
+        android:icon="@drawable/add_transaction_icon"
+        android:title=""/>
 
     <item
         android:id="@+id/wallet"

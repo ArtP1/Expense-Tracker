@@ -23,6 +23,10 @@ public class PaymentMethod {
         this.icon = icon;
     }
 
+    @Ignore
+    public PaymentMethod(String method) {
+        this.method = method;
+    }
     public PaymentMethod(String method, String icon) {
         this.method = method;
         this.icon = icon;
@@ -50,5 +54,10 @@ public class PaymentMethod {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    @Override
+    public String toString() {
+        return method;
     }
 }

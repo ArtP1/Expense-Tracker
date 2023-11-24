@@ -21,4 +21,8 @@
     <string name="today_is">TODAY IS</string>
     <string name="spending_wallet_budget">Spending Wallet/Budget</string>
     <string name="see_all">See all..</string>
+    <string name="welcome_message">Welcome, %s!</string>
+    <string name="money_symbol">$%s</string>
+    <string name="expense_amount_format">- %s</string>
+    <string name="earning_amount_format">+ %s</string>
 </resources>

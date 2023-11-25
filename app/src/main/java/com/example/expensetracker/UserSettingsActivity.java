@@ -2,9 +2,6 @@ package com.example.expensetracker;
 
 import static com.example.expensetracker.Preferences.EXPENSE_TRACKER_PREFERENCES;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +12,9 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CurrencyDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
@@ -28,9 +28,8 @@ import java.util.List;
 public class UserSettingsActivity extends AppCompatActivity {
     ActivityUserSettingsBinding mUserSettingsBinding;
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-
     Button mSaveBtn;
+    Button mLogoutBtn;
     TextView mEditTextOldUsername;
     TextView mEditTextOldPassword;
     TextView mEditTextFirstName;
@@ -65,7 +64,7 @@ public class UserSettingsActivity extends AppCompatActivity {
                 String newCurrencyISO = selectedCurrency.getISO();
 
                 Double newBudget;
-                if(!mEditTextBudget.getText().toString().isEmpty()) {
+                if (!mEditTextBudget.getText().toString().isEmpty()) {
                     newBudget = Double.parseDouble(mEditTextBudget.getText().toString());
                 } else {
                     newBudget = 0.0;
@@ -79,7 +78,7 @@ public class UserSettingsActivity extends AppCompatActivity {
                 boolean firstNameChanged = !newFirstName.equals(currUser.getFirstName()) && !newFirstName.isEmpty();
                 boolean budgetChanged = !newBudget.equals(currUser.getBudget()) && !newBudget.equals(0.0);
                 boolean notificationsChanged = enabledNotifications != currUser.hasNotifications();
-                boolean currencyChanged =  !newCurrencyISO.equals(currUser.getCurrency()) && !newCurrencyISO.equals("N/A");
+                boolean currencyChanged = !newCurrencyISO.equals(currUser.getCurrency()) && !newCurrencyISO.equals("N/A");
 
                 if (usernameChanged || passwordChanged || firstNameChanged || budgetChanged || notificationsChanged || currencyChanged) {
 
@@ -101,7 +100,7 @@ public class UserSettingsActivity extends AppCompatActivity {
                         currUser.setHasNotifications(enabledNotifications);
                     }
 
-                    if(currencyChanged) {
+                    if (currencyChanged) {
                         currUser.setCurrency(newCurrencyISO);
                     }
 
@@ -113,6 +112,18 @@ public class UserSettingsActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(UserSettingsActivity.this, "No changes detected!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        mLogoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences.edit().clear().apply();
+
+                Intent intent = new Intent(UserSettingsActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -131,6 +142,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         setContentView(mUserSettingsBinding.getRoot());
 
         mSaveBtn = mUserSettingsBinding.saveSettingsBtn;
+        mLogoutBtn = mUserSettingsBinding.logoutBtn;
         mEditTextOldUsername = mUserSettingsBinding.editTextOldUsername;
         mEditTextOldPassword = mUserSettingsBinding.editTextOldPassword;
         mEditTextFirstName = mUserSettingsBinding.editTextFirstName;
@@ -157,7 +169,7 @@ public class UserSettingsActivity extends AppCompatActivity {
 
         int predefinedCurrencyPosition = getCurrencyPosition(currencyList, user.getCurrency());
 
-        if(predefinedCurrencyPosition != -1) {
+        if (predefinedCurrencyPosition != -1) {
             mSpinnerCurrency.setSelection(predefinedCurrencyPosition);
         } else {
             mSpinnerCurrency.setSelection(0);

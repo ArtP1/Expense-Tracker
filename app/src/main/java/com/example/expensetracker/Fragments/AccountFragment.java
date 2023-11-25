@@ -5,16 +5,15 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.room.Room;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
@@ -129,7 +128,7 @@ public class AccountFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        Double loggedInUserTotalExpenses = transactionDAO.getTotalExpensesByUser(currUserID);
+        Double loggedInUserTotalExpenses = transactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
 
         mWelcomeMsg.setText(getString(R.string.welcome_message, currUser.getUsername()));
 
@@ -143,14 +142,11 @@ public class AccountFragment extends Fragment {
 
         double expensesPercentage = (loggedInUserTotalExpenses / currUser.getBudget()) * 100;
 
-        // Find the ProgressBar and set its progress based on the expenses percentage
-        mTransactionsProgressBar.setMax(100); // Set the maximum value of the progress bar
+        mTransactionsProgressBar.setMax(100);
 
-        // Set the progress based on the expenses percentage
         if (expensesPercentage <= 100) {
             mTransactionsProgressBar.setProgress((int) expensesPercentage);
 
-            // Change color based on percentage ranges
             if (expensesPercentage <= 45) {
                 mTransactionsProgressBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.progressGreen)));
             } else if (expensesPercentage <= 75) {

@@ -9,22 +9,20 @@ import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 
 @Entity(tableName = ExpenseTrackerDatabase.CATEGORY_TABLE)
 public class Category {
+
     // PRIMARY KEY
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @NonNull
+    @PrimaryKey
+    private String name;
 
     // COLUMNS
     private String color_hex;
 
     @NonNull
-    private String name;
-
-    @NonNull
     private String icon;
 
-    @Ignore
-    public Category(int id, String color_hex, @NonNull String name, @NonNull String icon) {
-        this.id = id;
+
+    public Category(String name, String color_hex, @NonNull String icon) {
         this.color_hex = color_hex;
         this.name = name;
         this.icon = icon;
@@ -35,19 +33,6 @@ public class Category {
         this.name = name;
     }
 
-    public Category(String color_hex, @NonNull String name, @NonNull String icon) {
-        this.color_hex = color_hex;
-        this.name = name;
-        this.icon = icon;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getColor_hex() {
         return color_hex;

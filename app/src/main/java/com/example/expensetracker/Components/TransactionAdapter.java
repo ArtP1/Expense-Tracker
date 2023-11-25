@@ -27,33 +27,33 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
     public TransactionAdapter(Context context, List<Transaction> transactionList) {
         this.context = context;
         this.transactionList = transactionList;
-        this.categoryDAO = Room.databaseBuilder(context, ExpenseTrackerDatabase .class, ExpenseTrackerDatabase.DATABASE_NAME)
-                            .allowMainThreadQueries()
-                            .build()
-                            .categoryDAO();
+        this.categoryDAO = Room.databaseBuilder(context, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .build()
+                .categoryDAO();
     }
 
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TransactionViewHolder(LayoutInflater.from(context).inflate(R.layout.transaction_view,parent, false));
+        return new TransactionViewHolder(LayoutInflater.from(context).inflate(R.layout.transaction_view, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH );
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH);
 
-        int categoryId = transactionList.get(position).getCategory_id();
+        String categoryName = transactionList.get(position).getCategory_name();
         Transaction.Type transType = transactionList.get(position).getTransType();
 
-        Category category = categoryDAO.getCategoryById(categoryId);
+        Category category = categoryDAO.getCategoryByName(categoryName);
 
-        if(category != null) {
+        if (category != null) {
 //            holder.mExpenseImage.setImageResource((category.getIcon()));
             String resourceName = category.getIcon();
             int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
 
-            if(resourceId != 0) {
+            if (resourceId != 0) {
                 holder.mTransactionImage.setImageResource(resourceId);
             } else {
                 holder.mTransactionImage.setImageResource(R.drawable.default_expense_icon);
@@ -67,10 +67,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
         Locale locale = Locale.US;
         String formattedAmount = String.format(locale, "$%.2f", transactionList.get(position).getAmount());
 
-        if(transType.equals(Transaction.Type.EXPENSE)) {
+        if (transType.equals(Transaction.Type.EXPENSE)) {
 //            holder.mTransactionAmount.setTextColor(ContextCompat.getColor(context, R.color.expense_color));
             holder.mTransactionAmount.setText(context.getString(R.string.expense_amount_format, formattedAmount));
-        } else if(transType.equals(Transaction.Type.EARNING)){
+        } else if (transType.equals(Transaction.Type.EARNING)) {
 //            holder.mTransactionAmount.setTextColor(ContextCompat.getColor(context, R.color.earning_color));
             holder.mTransactionAmount.setText(context.getString(R.string.earning_amount_format, formattedAmount));
         }

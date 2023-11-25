@@ -1,16 +1,16 @@
 package com.example.expensetracker;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.expensetracker.Fragments.AccountFragment;
 import com.example.expensetracker.Fragments.HomeFragment;
@@ -25,6 +25,7 @@ public class FragmentContainerActivity extends AppCompatActivity {
     ActivityFragmentContainerBinding mFragmentContainerBinding;
     BottomNavigationView mBottomNavigation;
     FrameLayout mFrameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,21 +40,33 @@ public class FragmentContainerActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
+                Fragment selectedFragment = null;
 
-                if(itemId == R.id.home) {
-                    loadFragment(new HomeFragment(), false);
+                // Get the currently displayed fragment
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
 
-                } else if(itemId == R.id.transaction) {
-                    loadFragment(new TransactionsFragment(), false);
+                // Check which item was selected and assign the appropriate fragment
+                if (itemId == R.id.home) {
+                    selectedFragment = new HomeFragment();
 
-                } else if(itemId == R.id.wallet) {
-                    loadFragment(new WalletsFragment(), false);
+                } else if (itemId == R.id.transaction) {
+                    selectedFragment = new TransactionsFragment();
+
+                } else if (itemId == R.id.wallet) {
+                    selectedFragment = new WalletsFragment();
 
                 } else if (itemId == R.id.account) {
-                    loadFragment(new AccountFragment(), false);
+                    selectedFragment = new AccountFragment();
 
-                } else if(itemId == R.id.newTransaction) {
-                    loadFragment(new NewTransactionFragment(), false);
+                } else if (itemId == R.id.newTransaction) {
+                    selectedFragment = new NewTransactionFragment();
+                }
+
+                // Check if the selected fragment is different from the current one
+                if (currentFragment != null) {
+                    if(!selectedFragment.getClass().equals(currentFragment.getClass())) {
+                        loadFragment(selectedFragment, false);
+                    }
                 }
 
                 return true;
@@ -67,11 +80,12 @@ public class FragmentContainerActivity extends AppCompatActivity {
         super.onResume();
         loadFragment(new HomeFragment(), true);
     }
-    private void loadFragment(Fragment fragment, boolean isAppInitialized) {
+
+    public void loadFragment(Fragment fragment, boolean isAppInitialized) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if(isAppInitialized) {
+        if (isAppInitialized) {
             fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentTransaction.add(R.id.frameLayout, fragment);
         } else {

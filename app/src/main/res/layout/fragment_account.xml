@@ -84,7 +84,7 @@
             android:layout_marginTop="80dp"
             android:padding="2dp"
             android:indeterminate="false"
-            android:background="@drawable/custom_progress_bar_outline"
+            android:background="@drawable/custom_black_view_outline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/welcomeMsg" />

@@ -15,19 +15,21 @@ public interface CategoryDAO {
     // Batch Operations
     @Insert
     void insertCategory(Category... categories);
+
     @Insert
     void insertAll(Category[] categories);
 
     @Update
     void updateCategory(Category... categories);
+
     @Delete
     void deleteCategory(Category... categories);
 
     @Query("SELECT COUNT(*) AS NumberOfCategories FROM category_table")
     Integer numberOfCategories();
 
-    @Query("SELECT * FROM category_table WHERE id = :categoryId")
-    Category getCategoryById(int categoryId);
+    @Query("SELECT * FROM category_table WHERE name=:category_name")
+    Category getCategoryByName(String category_name);
 
     @Query("SELECT * FROM category_table")
     List<Category> getAllCategories();

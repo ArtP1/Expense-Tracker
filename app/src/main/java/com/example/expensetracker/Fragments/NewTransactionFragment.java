@@ -1,11 +1,9 @@
 package com.example.expensetracker.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.room.Room;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +13,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.room.Room;
+
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.PaymentMethodDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.FragmentContainerActivity;
+import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentNewTransactionBinding;
 
@@ -31,10 +35,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  * Use the {@link NewTransactionFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class NewTransactionFragment extends Fragment {
-
 
     private EditText mEditTextTransTitle;
     private EditText mEditTextTransDescrip;
@@ -103,6 +105,10 @@ public class NewTransactionFragment extends Fragment {
 
         initializeDatabase();
 
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
+        long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
+
+
         mEditTextTransTitle = mNewTransactionBinding.editTextTransTitle;
         mEditTextTransDescrip = mNewTransactionBinding.editTextTransDescrip;
         mEditTextTransLocation = mNewTransactionBinding.editTextTransLocation;
@@ -121,7 +127,33 @@ public class NewTransactionFragment extends Fragment {
                 String transTitle = mEditTextTransTitle.getText().toString();
                 String transDescrip = mEditTextTransDescrip.getText().toString();
                 String transLocation = mEditTextTransLocation.getText().toString();
-                double transDouble = Double.parseDouble(mEditTextTransAmount.getText().toString());
+                double transAmount = Double.parseDouble(mEditTextTransAmount.getText().toString());
+                boolean transIsExpense = mCheckBoxTransExpense.isChecked();
+                boolean transIsEarning = mCheckBoxTransEarning.isChecked();
+
+                Category selectedCategory = (Category) mCategorySpinner.getSelectedItem();
+                String transCategoryName = selectedCategory.getName();
+
+                PaymentMethod selectedPaymentMethod = (PaymentMethod) mPaymentMethodsSpinner.getSelectedItem();
+                String transPaymentMethod = selectedPaymentMethod.getMethod();
+
+                Transaction newTransaction = null;
+                if(transIsExpense) {
+                    newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
+                } else if(transIsEarning) {
+                    newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                }
+
+                try {
+                    transactionDAO.insertTransaction(newTransaction);
+
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.frameLayout, new HomeFragment())
+                            .addToBackStack(null)
+                            .commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

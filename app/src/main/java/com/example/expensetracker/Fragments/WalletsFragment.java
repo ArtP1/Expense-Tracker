@@ -1,13 +1,12 @@
 package com.example.expensetracker.Fragments;
 
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.R;

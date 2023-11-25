@@ -14,11 +14,13 @@ import java.util.List;
 public interface CurrencyDAO {
     @Insert
     void insertCurrency(Currency... currencies);
+
     @Insert
     void insertAll(Currency[] currencies);
 
     @Update
     void updateCurrency(Currency... currencies);
+
     @Delete
     void deleteCurrency(Currency... currencies);
 

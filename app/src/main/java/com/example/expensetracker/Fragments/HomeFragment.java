@@ -5,18 +5,18 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.expensetracker.Components.TransactionAdapter;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
@@ -45,7 +45,8 @@ public class HomeFragment extends Fragment {
     private TextView mCurrentDate;
     private TextView mEmptyExpensesTextView;
     private TextView mBudget;
-    private RecyclerView mExpensesRecyclerView;
+    private TextView mSeeAllTransactionsTextView;
+    private RecyclerView mTransactionsRecyclerView;
     private ImageView mSettingsImg;
     private TransactionDAO transactionDAO;
     private UserDAO userDAO;
@@ -108,9 +109,9 @@ public class HomeFragment extends Fragment {
         mCurrentDate = mHomeFragmentBinding.currentDate;
         mSettingsImg = mHomeFragmentBinding.settingsImg;
         mBudget = mHomeFragmentBinding.budget;
-        mExpensesRecyclerView = mHomeFragmentBinding.expensesRecyclerView;
-
+        mTransactionsRecyclerView = mHomeFragmentBinding.expensesRecyclerView;
         mEmptyExpensesTextView = mHomeFragmentBinding.emptyExpensesTextView;
+        mSeeAllTransactionsTextView = mHomeFragmentBinding.seeAllTransactionsTextView;
 
         mSettingsImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,9 +122,18 @@ public class HomeFragment extends Fragment {
 
         displayData();
 
+        mSeeAllTransactionsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.frameLayout, new TransactionsFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
         return view;
     }
-
 
     private void initializeDatabase() {
         ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
@@ -140,21 +150,24 @@ public class HomeFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        Double loggedInUserTotalExpenses = transactionDAO.getTotalExpensesByUser(currUserID);
+        Double userMonthTotalExpensesAmount = transactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
 
-        List<Transaction> transactionList = transactionDAO.getExpensesByUser(currUserID);
+        LiveData<List<Transaction>> recentTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
 
-        if (!transactionList.isEmpty()) {
-            mEmptyExpensesTextView.setVisibility(View.GONE);
+        recentTransactionsLiveData.observe(getViewLifecycleOwner(), recentTransactionsList -> {
+            if (recentTransactionsList != null && !recentTransactionsList.isEmpty()) {
+                mEmptyExpensesTextView.setVisibility(View.GONE);
 
-            mExpensesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                mTransactionsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-            mExpensesRecyclerView.setAdapter(new TransactionAdapter(requireContext(), transactionList));
-            mMonthsExpenses.setText("$" + Double.toString(loggedInUserTotalExpenses));
-        } else {
-            mExpensesRecyclerView.setVisibility(View.GONE);
-            mMonthsExpenses.setText("$0");
-        }
+                mTransactionsRecyclerView.setAdapter(new TransactionAdapter(requireContext(), recentTransactionsList));
+                mMonthsExpenses.setText("$" + userMonthTotalExpensesAmount);
+            } else {
+                mTransactionsRecyclerView.setVisibility(View.GONE);
+                mMonthsExpenses.setText("$0");
+            }
+        });
+
 
         mCurrentDate.setText(currDate.format(formatter));
         mBudget.setText("$" + currUser.getBudget());

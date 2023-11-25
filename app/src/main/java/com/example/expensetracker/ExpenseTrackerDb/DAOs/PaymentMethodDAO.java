@@ -15,11 +15,13 @@ public interface PaymentMethodDAO {
     // Batch Operations
     @Insert
     void insertPaymentMethod(PaymentMethod... paymentMethods);
+
     @Insert
     void insertAll(PaymentMethod[] paymentMethods);
 
     @Update
     void updatePaymentMethod(PaymentMethod... paymentMethods);
+
     @Delete
     void deletePaymentMethod(PaymentMethod... paymentMethods);
 

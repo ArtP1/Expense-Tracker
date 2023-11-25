@@ -7,9 +7,6 @@ import static com.example.expensetracker.Preferences.TYPE_OF_USER_KEY;
 import static com.example.expensetracker.Preferences.USER_FIRST_NAME_KEY;
 import static com.example.expensetracker.Preferences.USER_ID_KEY;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
@@ -42,8 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
 
-        checkLoggedInState();
-
         editor = sharedPreferences.edit();
 
         userDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build().userDAO();
@@ -56,34 +54,35 @@ public class LoginActivity extends AppCompatActivity {
                 String username = mUsername.getText().toString();
                 String password = mPassword.getText().toString();
 
-                if(!username.isEmpty() || !password.isEmpty()) {
+                if (!username.isEmpty() || !password.isEmpty()) {
                     User foundUser = userDAO.getUserByUsername(username);
 
-                    if(foundUser != null && foundUser.getPassword().equals(password)) {
+                    if (foundUser != null && foundUser.getPassword().equals(password)) {
                         editor.putBoolean(IS_LOGGED_IN_KEY, true);
 
-                        if(foundUser.getRole().equals(User.UserRole.USER)) {
+                        Intent intent = null;
+                        if (foundUser.getRole().equals(User.UserRole.USER)) {
                             editor.putLong(USER_ID_KEY, foundUser.getId());
                             editor.putString(TYPE_OF_USER_KEY, User.UserRole.USER.toString());
 
                             Toast.makeText(LoginActivity.this, "Welcome back " + foundUser.getFirstName() + "!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, FragmentContainerActivity.class));
-                        } else  {
+                            intent = new Intent(LoginActivity.this, FragmentContainerActivity.class);
+                        } else {
                             editor.putString(USER_FIRST_NAME_KEY, foundUser.getFirstName());
 
-                            if(foundUser.getRole().equals(User.UserRole.ADMIN)) {
+                            if (foundUser.getRole().equals(User.UserRole.ADMIN)) {
                                 editor.putString(TYPE_OF_USER_KEY, User.UserRole.ADMIN.toString());
-
-                                startActivity(new Intent(LoginActivity.this, AdminsLandingPageActivity.class));
-                            } else if(foundUser.getRole().equals(User.UserRole.SUPER_ADMIN)){
+                                intent = new Intent(LoginActivity.this, AdminsLandingPageActivity.class);
+                            } else if (foundUser.getRole().equals(User.UserRole.SUPER_ADMIN)) {
                                 editor.putString("isUser", User.UserRole.SUPER_ADMIN.toString());
-
-                                startActivity(new Intent(LoginActivity.this, SuperAdminsLandingPageActivity.class));
+                                intent = new Intent(LoginActivity.this, SuperAdminsLandingPageActivity.class);
                             }
                         }
 
                         editor.apply();
 
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
@@ -98,13 +97,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void checkLoggedInState() {
-        if (sharedPreferences.getBoolean(IS_LOGGED_IN_KEY, false)) {
-            redirectToAppropriateActivity();
-            finish();
-        }
     }
 
     private void redirectToAppropriateActivity() {

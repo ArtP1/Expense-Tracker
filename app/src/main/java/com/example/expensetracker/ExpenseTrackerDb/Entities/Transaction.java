@@ -26,43 +26,34 @@ import java.time.LocalDate;
                 ),
                 @ForeignKey(
                         entity = Category.class,
-                        parentColumns = "id",
-                        childColumns = "category_id",
+                        parentColumns = "name",
+                        childColumns = "category_name",
                         onUpdate = ForeignKey.CASCADE
                 ),
                 @ForeignKey(
                         entity = PaymentMethod.class,
-                        parentColumns = "id",
-                        childColumns = "payment_method_id",
-                        onUpdate = ForeignKey.CASCADE
-                ),
-                @ForeignKey(entity = Currency.class,
-                        parentColumns = "ISO",
-                        childColumns = "currency",
+                        parentColumns = "method",
+                        childColumns = "payment_method",
                         onUpdate = ForeignKey.CASCADE
                 )
         },
         indices = {
                 @Index("user_id"),
-                @Index("category_id"),
-                @Index("payment_method_id"),
-                @Index("currency")
+                @Index("category_name"),
+                @Index("payment_method")
         }
 )
 public class Transaction {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
     // FOREIGN KEY(s)
-    private int user_id;
+    private long user_id;
 
-    private int category_id;
+    private String category_name;
 
-    private int payment_method_id;
-
-    @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
-    private String currency;
+    private String payment_method;
 
     // COLUMNS
     @NonNull
@@ -71,6 +62,7 @@ public class Transaction {
     @NonNull
     private String title;
 
+    @NonNull
     @TypeConverters(DateConverter.class)
     private LocalDate dateSubmitted;
 
@@ -86,13 +78,24 @@ public class Transaction {
     @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
     private Type transType;
 
+    /**
+     *  Constructs a Transaction object with specified parameters, setting the submission date to the current system date
+     *
+     * @param user_id
+     * @param category_name
+     * @param payment_method
+     * @param amount
+     * @param title
+     * @param description
+     * @param location
+     * @param transType
+     */
     @Ignore
-    public Transaction(int id, int user_id, int category_id, int payment_method_id, @NonNull double amount, @NonNull String title, LocalDate dateSubmitted, String description, String location, @NonNull Type transType) {
+    public Transaction(long user_id, String category_name, String payment_method, @NonNull double amount, @NonNull String title, String description, String location, @NonNull Type transType) {
         LocalDate currDate = LocalDate.now();
-        this.id = id;
         this.user_id = user_id;
-        this.category_id = category_id;
-        this.payment_method_id = payment_method_id;
+        this.category_name = category_name;
+        this.payment_method = payment_method;
         this.amount = amount;
         this.title = title;
         this.dateSubmitted = currDate;
@@ -100,15 +103,26 @@ public class Transaction {
         this.location = location;
         this.transType = transType;
     }
-    public Transaction(int user_id, int category_id, int payment_method_id, @NonNull String title, String currency, @NonNull double amount, String description, String location, @NonNull Type transType) {
-        LocalDate currDate = LocalDate.now();
+
+    /**
+     *  Constructs a Transaction object with specified parameters, setting the submission date to a specified date (future, past, present).
+     *
+     * @param user_id
+     * @param category_name
+     * @param payment_method
+     * @param amount
+     * @param title
+     * @param description
+     * @param location
+     * @param transType
+     */
+    public Transaction(long user_id, String category_name, String payment_method, double amount, @NonNull String title, @NonNull LocalDate dateSubmitted, String description, String location, @NonNull Type transType) {
         this.user_id = user_id;
-        this.category_id = category_id;
-        this.payment_method_id = payment_method_id;
-        this.title = title;
-        this.currency = currency;
+        this.category_name = category_name;
+        this.payment_method = payment_method;
         this.amount = amount;
-        this.dateSubmitted = currDate;
+        this.title = title;
+        this.dateSubmitted = dateSubmitted;
         this.description = description;
         this.location = location;
         this.transType = transType;
@@ -146,36 +160,40 @@ public class Transaction {
         this.location = location;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getUser_id() {
+    public long getUser_id() {
         return user_id;
+    }
+
+    public void setUser_id(long user_id) {
+        this.user_id = user_id;
     }
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory_name() {
+        return category_name;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
     }
 
-    public int getPayment_method_id() {
-        return payment_method_id;
+    public String getPayment_method() {
+        return payment_method;
     }
 
-    public void setPayment_method_id(int payment_method_id) {
-        this.payment_method_id = payment_method_id;
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
     }
 
     @NonNull
@@ -185,14 +203,6 @@ public class Transaction {
 
     public void setTitle(@NonNull String title) {
         this.title = title;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     @NonNull

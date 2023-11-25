@@ -8,13 +8,13 @@ import androidx.room.RoomDatabase;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CurrencyDAO;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.PaymentMethodDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 
 import java.util.concurrent.ExecutorService;
@@ -34,15 +34,19 @@ public abstract class ExpenseTrackerDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
 
     public abstract UserDAO userDAO();
+
     public abstract TransactionDAO transactionDAO();
+
     public abstract PaymentMethodDAO paymentMethodDAO();
+
     public abstract CategoryDAO categoryDAO();
+
     public abstract CurrencyDAO currencyDAO();
 
     public static ExpenseTrackerDatabase getInstance(Context context) {
-        if(dbInstance == null) {
+        if (dbInstance == null) {
             synchronized (LOCK) {
-                if(dbInstance == null) {
+                if (dbInstance == null) {
                     dbInstance = Room.databaseBuilder(context.getApplicationContext(), ExpenseTrackerDatabase.class, DATABASE_NAME).build();
                 }
             }

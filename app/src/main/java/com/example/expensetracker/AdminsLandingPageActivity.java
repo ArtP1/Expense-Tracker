@@ -3,14 +3,14 @@ package com.example.expensetracker;
 import static com.example.expensetracker.Preferences.EXPENSE_TRACKER_PREFERENCES;
 import static com.example.expensetracker.Preferences.USER_FIRST_NAME_KEY;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CurrencyDAO;
@@ -20,7 +20,7 @@ import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.databinding.ActivityAdminsLandingPageBinding;
 
 public class AdminsLandingPageActivity extends AppCompatActivity {
-    ActivityAdminsLandingPageBinding  mAdminLandingPageBinding;
+    ActivityAdminsLandingPageBinding mAdminLandingPageBinding;
 
     SharedPreferences sharedPreferences;
 

@@ -16,10 +16,10 @@ import java.time.LocalDate;
 
 @Entity(tableName = ExpenseTrackerDatabase.USER_TABLE,
         foreignKeys = @ForeignKey(entity = Currency.class,
-                        parentColumns = "ISO",
-                        childColumns = "currency",
-                        onDelete = ForeignKey.SET_NULL,
-                        onUpdate = ForeignKey.CASCADE),
+                parentColumns = "ISO",
+                childColumns = "currency",
+                onDelete = ForeignKey.SET_NULL,
+                onUpdate = ForeignKey.CASCADE),
         indices = @Index("currency")
 )
 public class User {

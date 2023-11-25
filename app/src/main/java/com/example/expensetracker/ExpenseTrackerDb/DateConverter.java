@@ -5,7 +5,6 @@ import androidx.room.TypeConverter;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
 
 public class DateConverter {
     @TypeConverter
@@ -14,7 +13,7 @@ public class DateConverter {
             return null;
         }
 
-        return LocalDate.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @TypeConverter

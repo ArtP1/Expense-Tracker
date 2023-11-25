@@ -1,17 +1,32 @@
 package com.example.expensetracker.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
+import com.example.expensetracker.Components.CategoryTransactionAdapter;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
+import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
+import com.example.expensetracker.ExpenseTrackerDb.Models.TransactionCategoryWithAmount;
 import com.example.expensetracker.FragmentContainerActivity;
+import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentTransactionsBinding;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +35,14 @@ import com.example.expensetracker.databinding.FragmentTransactionsBinding;
  */
 public class TransactionsFragment extends Fragment {
 
+    private TextView mIncomeAmountTextView;
+    private TextView mExpenseAmountTextView;
+
+    private TextView mEmptyExpensesTextView;
+    private RecyclerView mCategoryTransactionsRecyclerView;
+
+    private TransactionDAO transactionDAO;
+    private UserDAO userDAO;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,10 +89,60 @@ public class TransactionsFragment extends Fragment {
         ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
         ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(0);
 
-        FragmentTransactionsBinding mExpressBinding = FragmentTransactionsBinding.inflate(inflater, container, false);
-        View view = mExpressBinding.getRoot();
+        FragmentTransactionsBinding mTransactionsFragmentBinding = FragmentTransactionsBinding.inflate(inflater, container, false);
+        View view = mTransactionsFragmentBinding.getRoot();
 
+        initializeDatabase();
+
+        mIncomeAmountTextView = mTransactionsFragmentBinding.incomeAmountTextView;
+        mExpenseAmountTextView = mTransactionsFragmentBinding.expenseAmountTextView;
+        mCategoryTransactionsRecyclerView = mTransactionsFragmentBinding.transactionsCategoriesRecyclerView;
+        mEmptyExpensesTextView = mTransactionsFragmentBinding.emptyExpensesTextView;
+
+        displayData();
 
         return view;
     }
+
+    private void initializeDatabase() {
+        ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
+                requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
+
+        userDAO = expenseTrackerDatabase.userDAO();
+        transactionDAO = expenseTrackerDatabase.transactionDAO();
+    }
+
+    private void displayData() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
+        long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
+
+        double userMonthTotalExpensesAmount = transactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
+        double userMonthTotalEarningsAmount = transactionDAO.getTotalMonthlyEarningsByUserID(currUserID);
+
+        mIncomeAmountTextView.setText("$" + userMonthTotalEarningsAmount);
+        mExpenseAmountTextView.setText("$" + userMonthTotalExpensesAmount);
+
+        try {
+            LiveData<List<TransactionCategoryWithAmount>> categoryWithAmountLiveData = transactionDAO.getExpenseCategoriesWithAmount(currUserID);
+
+            categoryWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
+                if(transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
+                    mEmptyExpensesTextView.setVisibility(View.GONE);
+
+                    mCategoryTransactionsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+                    mCategoryTransactionsRecyclerView.setAdapter(new CategoryTransactionAdapter(requireContext(), transactionCategoryWithAmountList));
+
+                } else {
+                    mCategoryTransactionsRecyclerView.setVisibility(View.GONE);
+                }
+            });
+        } catch (Exception e) {
+            mEmptyExpensesTextView.setVisibility(View.GONE);
+            e.printStackTrace();
+        }
+
+    }
 }
+
+//new Transaction(1, "Groceries", "Credit Card", 55.0, "Local Supermarket", pastDate4, "Weekly grocery shopping", "123 Main Street", Transaction.Type.EXPENSE)

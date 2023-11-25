@@ -4,14 +4,14 @@ import static com.example.expensetracker.Preferences.EXPENSE_TRACKER_PREFERENCES
 import static com.example.expensetracker.Preferences.IS_LOGGED_IN_KEY;
 import static com.example.expensetracker.Preferences.TYPE_OF_USER_KEY;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.databinding.ActivityMainBinding;
@@ -53,23 +53,26 @@ public class MainActivity extends AppCompatActivity {
     private void checkLoggedInState() {
         if (sharedPreferences.getBoolean(IS_LOGGED_IN_KEY, false)) {
             redirectToAppropriateActivity();
-            finish();
         }
     }
 
     private void redirectToAppropriateActivity() {
         String userType = sharedPreferences.getString(TYPE_OF_USER_KEY, "");
 
-        Class<?> targetActivity = null;
+        Intent targetActivity = null;
         if (User.UserRole.USER.toString().equals(userType)) {
-            targetActivity = FragmentContainerActivity.class;
+            targetActivity = new Intent(MainActivity.this,FragmentContainerActivity.class);
         } else if (User.UserRole.ADMIN.toString().equals(userType)) {
-            targetActivity = AdminsLandingPageActivity.class;
+            targetActivity = new Intent(MainActivity.this,AdminsLandingPageActivity.class);
         } else if (User.UserRole.SUPER_ADMIN.toString().equals(userType)) {
-            targetActivity = SuperAdminsLandingPageActivity.class;
+            targetActivity = new Intent(MainActivity.this,SuperAdminsLandingPageActivity.class);
         }
 
-        startActivity(new Intent(MainActivity.this, targetActivity));
+        startActivity(targetActivity);
+
+        targetActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(targetActivity);
+        finish();
     }
 
     private void initializeViews() {

@@ -12,7 +12,7 @@
     android:background="@drawable/transaction_background">
 
     <ImageView
-        android:id="@+id/transactionImage"
+        android:id="@+id/transactionsCategoryImage"
         android:layout_width="51dp"
         android:layout_height="46dp"
         android:layout_alignParentStart="true"
@@ -22,32 +22,32 @@
 
 
     <TextView
-        android:id="@+id/transactionTitle"
+        android:id="@+id/tansactionsCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/transactionImage"
+        android:layout_alignTop="@id/transactionsCategoryImage"
         android:layout_marginStart="8dp"
         android:layout_marginTop="6dp"
-        android:layout_toEndOf="@id/transactionImage"
+        android:layout_toEndOf="@id/transactionsCategoryImage"
         android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/transactionDate"
+        android:id="@+id/categoryTransactionsMonthComparison"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/transactionTitle"
+        android:layout_below="@id/tansactionsCategory"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
-        android:layout_toEndOf="@id/transactionImage"
+        android:layout_toEndOf="@id/transactionsCategoryImage"
         android:text=""
         android:textColor="@color/black"
         android:textSize="11sp" />
 
     <TextView
-        android:id="@+id/transactionAmount"
+        android:id="@+id/categoryTransactionsAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

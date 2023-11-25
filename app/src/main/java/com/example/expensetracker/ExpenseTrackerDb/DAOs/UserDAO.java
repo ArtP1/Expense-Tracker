@@ -15,6 +15,7 @@ public interface UserDAO {
 
     @Insert
     void insertUser(User... users);
+
     @Insert
     long insertUserAndReturnId(User user);
 
@@ -23,6 +24,7 @@ public interface UserDAO {
 
     @Update
     void updateUser(User... users);
+
     @Delete
     void deleteUser(User... users);
 

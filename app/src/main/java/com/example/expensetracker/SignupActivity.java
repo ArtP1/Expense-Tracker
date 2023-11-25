@@ -5,9 +5,6 @@ import static com.example.expensetracker.Preferences.IS_LOGGED_IN_KEY;
 import static com.example.expensetracker.Preferences.TYPE_OF_USER_KEY;
 import static com.example.expensetracker.Preferences.USER_ID_KEY;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
@@ -37,7 +37,7 @@ public class SignupActivity extends AppCompatActivity {
     Button mSignupBtn;
 
     ImageView mSignupImg;
-    
+
     private boolean isAdmin;
     private int imgViewClicks = 0;
 
@@ -51,9 +51,9 @@ public class SignupActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         userDAO = Room.databaseBuilder(this, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME)
-                    .allowMainThreadQueries()
-                    .build()
-                    .userDAO();
+                .allowMainThreadQueries()
+                .build()
+                .userDAO();
 
         initializeViews();
 
@@ -64,30 +64,33 @@ public class SignupActivity extends AppCompatActivity {
                 String firstName = mFirstname.getText().toString();
                 String password = mPassword.getText().toString();
 
-                if(!username.isEmpty() && !password.isEmpty()) {
+                if (!username.isEmpty() && !password.isEmpty()) {
                     Boolean userExists = userDAO.userExists(username);
 
-                    if(!userExists) { // User with username already exists
+                    if (!userExists) { // User with username doesn't exists
                         long insertedUserId;
+                        Intent intent = null;
 
-                        if(!isAdmin) {
+                        if (!isAdmin) {
                             editor.putString(TYPE_OF_USER_KEY, User.UserRole.USER.toString());
 
                             insertedUserId = userDAO.insertUserAndReturnId(new User(username, password, firstName, User.UserRole.USER));
 
                             editor.putLong(USER_ID_KEY, insertedUserId);
 
-                            startActivity(new Intent(SignupActivity.this, FragmentContainerActivity.class));
+                            intent = new Intent(SignupActivity.this, FragmentContainerActivity.class);
                         } else {
                             editor.putString(TYPE_OF_USER_KEY, User.UserRole.ADMIN.toString());
 
                             userDAO.insertUser(new User(username, password, firstName, User.UserRole.ADMIN));
-                            startActivity(new Intent(SignupActivity.this, AdminsLandingPageActivity.class));
+                            intent = new Intent(SignupActivity.this, AdminsLandingPageActivity.class);
                         }
 
                         editor.putBoolean(IS_LOGGED_IN_KEY, true);
                         editor.apply();
 
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(SignupActivity.this, "Username is taken!", Toast.LENGTH_SHORT).show();
@@ -98,16 +101,16 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-       mSignupImg.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               imgViewClicks += 1;
-               if(imgViewClicks >= 5) {
-                   isAdmin = true;
-                   Toast.makeText(SignupActivity.this, "You've found the secret tunnel!", Toast.LENGTH_SHORT).show();
-               }
-           }
-       });
+        mSignupImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imgViewClicks += 1;
+                if (imgViewClicks >= 5) {
+                    isAdmin = true;
+                    Toast.makeText(SignupActivity.this, "You've found the secret tunnel!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 

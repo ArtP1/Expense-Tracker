@@ -1,174 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.AccountFragment">
+    android:fillViewport="true">
 
-    <!-- New Account Section -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        android:layout_height="wrap_content"
+        tools:context=".Fragments.AccountFragment">
 
-        <TextView
-            android:id="@+id/welcomeMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.035" />
-
-        <TextView
-            android:id="@+id/expensesHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Expenses"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/recentExpensesCard"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.048"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.495" />
-
-        <TextView
-            android:id="@+id/expensesAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$100"
-            app:layout_constraintBottom_toTopOf="@+id/recentExpensesCard"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.044"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.594" />
-
-        <TextView
-            android:id="@+id/budgetAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="350$"
-            app:layout_constraintBottom_toTopOf="@+id/recentExpensesCard"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.952"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.599" />
-
-        <TextView
-            android:id="@+id/budgetHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Budget"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/recentExpensesCard"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.951"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.504" />
-
-        <ProgressBar
-            android:id="@+id/transactionsProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="330dp"
-            android:layout_height="8dp"
-            android:layout_marginTop="80dp"
-            android:padding="2dp"
-            android:indeterminate="false"
-            android:background="@drawable/custom_black_view_outline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/welcomeMsg" />
-
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/recentExpensesCard"
-            android:layout_width="385dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="50dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.49"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/transactionsProgressBar"
-            app:layout_constraintVertical_bias="0.0">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recent Transactions"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvUserInformation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="352dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/welcomeMsg" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recentExpensesCard">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/welcomeMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.035" />
+
+            <TextView
+                android:id="@+id/expensesHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expenses"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/transactionsProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.091"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.854" />
+
+            <TextView
+                android:id="@+id/expensesAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/transactionsProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.084"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/budgetAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="112dp"
+                app:layout_constraintBottom_toTopOf="@+id/transactionsProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.915"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.92" />
+
+            <TextView
+                android:id="@+id/budgetHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Budget"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/transactionsProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.915"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.844" />
+
+
+            <ProgressBar
+                android:id="@+id/transactionsProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="330dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="80dp"
+                android:background="@drawable/custom_black_view_outline"
+                android:indeterminate="false"
+                android:padding="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.493"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/welcomeMsg"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/transactionsPieChart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transactionsProgressBar"
+                app:layout_constraintVertical_bias="0.093" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/recentTransactions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transactionsPieChart"
+                app:layout_constraintVertical_bias="0.373">
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/transactionsPieChart"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="192dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.484"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recentExpensesCard"
-                    app:layout_constraintVertical_bias="0.379" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="13dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp"
+                        android:text="Top Spending Categories"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
 
-                <Button
-                    android:id="@+id/deletePermanentlyBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/black_new_transaction_btn"
-                    android:gravity="center"
-                    android:padding="20dp"
-                    android:text="Delete Permanently"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </ScrollView>
+                    <TextView
+                        android:id="@+id/emptyExpensesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="320dp"
+                        android:gravity="center"
+                        android:text="No Transactions"
+                        tools:layout_editor_absoluteX="-16dp"
+                        tools:layout_editor_absoluteY="342dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/transactionsCategoriesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.491"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
+                        app:layout_constraintVertical_bias="0.529" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/deletePermanentlyBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/black_new_transaction_btn"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="Delete Permanently"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recentTransactions" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</ScrollView>

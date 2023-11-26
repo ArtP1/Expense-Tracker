@@ -48,8 +48,11 @@ public interface TransactionDAO {
     @Query("SELECT SUM(amount) AS TotalEarnings FROM transaction_table WHERE user_id = :user_id AND transType = 'EARNING' AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now')")
     double getTotalMonthlyEarningsByUserID(long user_id);
 
-    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND transType = 'EXPENSE' AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') ORDER BY dateSubmitted DESC LIMIT 10")
+    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND transType = 'EXPENSE' AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') ORDER BY dateSubmitted DESC LIMIT 5")
     LiveData<List<Transaction>> getMonthMostRecentExpensesByUserID(long user_id);
+
+    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') ORDER BY dateSubmitted DESC LIMIT 10")
+    LiveData<List<Transaction>> getMonthMostRecentTransactionsByUserID(long user_id);
 
     /**
      * Retrieves the total amount spent per expense category for a given user.
@@ -70,6 +73,6 @@ public interface TransactionDAO {
             "WHERE t.user_id = :userId " +
             "AND t.transType = 'EXPENSE' " +
             "AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now')" +
-            "GROUP BY category_name ORDER BY total_amount DESC")
+            "GROUP BY category_name ORDER BY total_amount DESC LIMIT 5")
     LiveData<List<TransactionCategoryWithAmount>> getExpenseCategoriesWithAmount(long userId);
 }

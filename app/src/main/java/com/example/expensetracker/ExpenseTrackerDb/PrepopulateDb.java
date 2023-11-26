@@ -152,7 +152,8 @@ public class PrepopulateDb {
                 new Category("Debt", "#FF0000", "https://drive.google.com/file/d/1ycfztcRgcevLigPr_9Qv9ajpjpF9DD1r/view?usp=sharing"),
                 new Category("Investment", "#FF0000", "https://drive.google.com/file/d/1uAfUs4poJPPsJW-W_xR2VgWBpIUfNPU-/view?usp=sharing"),
                 new Category("Freelancing", "#FF0000", "https://drive.google.com/file/d/1azxdhqTRo3zN1bE9CQLQCOTzeTOT2o5D/view?usp=sharing"),
-                new Category("Salary", "#FF0000", "https://drive.google.com/file/d/1o2_HK_TGGqjubAp0gghWWLrPaijFgmQ3/view?usp=sharing")
+                new Category("Salary", "#FF0000", "https://drive.google.com/file/d/1o2_HK_TGGqjubAp0gghWWLrPaijFgmQ3/view?usp=sharing"),
+                new Category("Utilities", "#FF0000", "")
         };
     }
 
@@ -168,7 +169,12 @@ public class PrepopulateDb {
                 new Transaction(1, "Debt", "Crypto", 10000.0, "Student Loans", "", "", Transaction.Type.EXPENSE),
                 new Transaction(1, "Freelancing", "Bank Transfer", 500.0, "Freelance Work", "Web design project", "Client Address", Transaction.Type.EARNING),
                 new Transaction(1, "Personal Care", "Credit Card", 25.0, "Movie Night", pastDate2, "Tickets for movie night", "350 Northridge Shopping Ctr", Transaction.Type.EXPENSE),
-                new Transaction(1, "Investment", "Direct Deposit", 200.0, "Stock Dividend", "Quarterly dividend payment", "Investment Firm Address", Transaction.Type.EARNING)
+                new Transaction(1, "Investment", "Direct Deposit", 200.0, "Stock Dividend", "Quarterly dividend payment", "Investment Firm Address", Transaction.Type.EARNING),
+                new Transaction(1, "Housing", "Credit Card", 80.0, "Supermarket", "Weekly grocery shopping", "123 Main St", Transaction.Type.EXPENSE),
+                new Transaction(1, "Utilities", "Bank Transfer", 150.0, "Electricity, Water, Gas", "Monthly utility bills", "456 Elm St", Transaction.Type.EXPENSE),
+                new Transaction(1, "Entertainment", "Cash", 40.0, "Concert Tickets", "Concert tickets for the weekend", "789 Oak St", Transaction.Type.EXPENSE),
+                new Transaction(1, "Transportation", "Debit Card", 30.0, "Public Transit", "Public transportation fare", "101 Pine St", Transaction.Type.EXPENSE),
+                new Transaction(1, "Dining", "Cash", 50.0, "Restaurant Dinner", "Dinner with friends", "246 Maple St", Transaction.Type.EXPENSE)
         };
     }
 }

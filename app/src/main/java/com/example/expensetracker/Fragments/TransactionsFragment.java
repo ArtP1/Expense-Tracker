@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import com.example.expensetracker.Components.CategoryTransactionAdapter;
+import com.example.expensetracker.Components.TransactionAdapter;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
-import com.example.expensetracker.ExpenseTrackerDb.Models.TransactionCategoryWithAmount;
 import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
@@ -123,15 +123,22 @@ public class TransactionsFragment extends Fragment {
         mExpenseAmountTextView.setText("$" + userMonthTotalExpensesAmount);
 
         try {
-            LiveData<List<TransactionCategoryWithAmount>> categoryWithAmountLiveData = transactionDAO.getExpenseCategoriesWithAmount(currUserID);
+            LiveData<List<Transaction>> allUserTransactionsLiveData = transactionDAO.getMonthMostRecentTransactionsByUserID(currUserID);
 
-            categoryWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
-                if(transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
+            allUserTransactionsLiveData.observe(getViewLifecycleOwner(), userTransactions -> {
+                if(userTransactions != null && !userTransactions.isEmpty()) {
                     mEmptyExpensesTextView.setVisibility(View.GONE);
 
-                    mCategoryTransactionsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext()) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
 
-                    mCategoryTransactionsRecyclerView.setAdapter(new CategoryTransactionAdapter(requireContext(), transactionCategoryWithAmountList));
+                    mCategoryTransactionsRecyclerView.setLayoutManager(layoutManager);
+
+                    mCategoryTransactionsRecyclerView.setAdapter(new TransactionAdapter(requireContext(), userTransactions));
 
                 } else {
                     mCategoryTransactionsRecyclerView.setVisibility(View.GONE);
@@ -141,8 +148,6 @@ public class TransactionsFragment extends Fragment {
             mEmptyExpensesTextView.setVisibility(View.GONE);
             e.printStackTrace();
         }
-
     }
 }
 
-//new Transaction(1, "Groceries", "Credit Card", 55.0, "Local Supermarket", pastDate4, "Weekly grocery shopping", "123 Main Street", Transaction.Type.EXPENSE)

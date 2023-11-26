@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -29,11 +32,14 @@ import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.UserSettingsActivity;
 import com.example.expensetracker.databinding.FragmentHomeBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,9 +51,7 @@ public class HomeFragment extends Fragment {
     private TextView mCurrentDate;
     private TextView mEmptyExpensesTextView;
     private TextView mBudget;
-    private TextView mSeeAllTransactionsTextView;
     private RecyclerView mTransactionsRecyclerView;
-    private ImageView mSettingsImg;
     private TransactionDAO transactionDAO;
     private UserDAO userDAO;
 
@@ -107,11 +111,11 @@ public class HomeFragment extends Fragment {
 
         mMonthsExpenses = mHomeFragmentBinding.monthsExpenses;
         mCurrentDate = mHomeFragmentBinding.currentDate;
-        mSettingsImg = mHomeFragmentBinding.settingsImg;
+        ImageView mSettingsImg = mHomeFragmentBinding.settingsImg;
         mBudget = mHomeFragmentBinding.budget;
         mTransactionsRecyclerView = mHomeFragmentBinding.expensesRecyclerView;
         mEmptyExpensesTextView = mHomeFragmentBinding.emptyExpensesTextView;
-        mSeeAllTransactionsTextView = mHomeFragmentBinding.seeAllTransactionsTextView;
+        TextView mSeeAllTransactionsTextView = mHomeFragmentBinding.seeAllTransactionsTextView;
 
         mSettingsImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,21 +156,93 @@ public class HomeFragment extends Fragment {
 
         Double userMonthTotalExpensesAmount = transactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
 
-        LiveData<List<Transaction>> recentTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
+        try {
+            LiveData<List<Transaction>> recentTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
 
-        recentTransactionsLiveData.observe(getViewLifecycleOwner(), recentTransactionsList -> {
-            if (recentTransactionsList != null && !recentTransactionsList.isEmpty()) {
-                mEmptyExpensesTextView.setVisibility(View.GONE);
+            recentTransactionsLiveData.observe(getViewLifecycleOwner(), recentTransactionsList -> {
+                if (recentTransactionsList != null && !recentTransactionsList.isEmpty()) {
+                    if(recentTransactionsList.size() <= 4) {
 
-                mTransactionsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    }
 
-                mTransactionsRecyclerView.setAdapter(new TransactionAdapter(requireContext(), recentTransactionsList));
-                mMonthsExpenses.setText("$" + userMonthTotalExpensesAmount);
-            } else {
-                mTransactionsRecyclerView.setVisibility(View.GONE);
-                mMonthsExpenses.setText("$0");
-            }
-        });
+                    mEmptyExpensesTextView.setVisibility(View.GONE);
+
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext()) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
+
+                    mTransactionsRecyclerView.setLayoutManager(layoutManager);
+                    TransactionAdapter transactionAdapter = new TransactionAdapter(requireContext(), recentTransactionsList);
+                    mTransactionsRecyclerView.setAdapter(transactionAdapter);
+
+                    mMonthsExpenses.setText("$" + userMonthTotalExpensesAmount);
+                    // Set up swipe gestures using ItemTouchHelper
+                    ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                        @Override
+                        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                            return false;
+                        }
+
+                        @Override
+                        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                            int position = viewHolder.getBindingAdapterPosition();
+                            Transaction transaction = transactionAdapter.getTransaction(position);
+
+                            if (direction == ItemTouchHelper.LEFT) {
+                                // Handle delete action
+                                transactionDAO.deleteTransaction(transaction);
+                                transactionAdapter.removeTransaction(position);
+                                transactionAdapter.notifyItemRemoved(position);
+                                Snackbar.make(mTransactionsRecyclerView, "Deleted: " + transaction.getTitle(), Snackbar.LENGTH_LONG)
+                                        .setAction("Undo", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                recentTransactionsList.add(position, transaction);
+                                                transactionDAO.insertTransaction(transaction);
+                                                transactionAdapter.notifyItemInserted(position);
+                                            }
+                                        }).show();
+                            }
+                        }
+
+                        // Additional method to customize swipe appearance
+                        @Override
+                        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.adminRed))
+                                    .addSwipeLeftActionIcon(R.drawable.recycler_view_delete_swipe_icon)
+                                    .create()
+                                    .decorate();
+
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                        }
+                    };
+
+                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallback);
+                    itemTouchHelper.attachToRecyclerView(mTransactionsRecyclerView);
+
+                } else {
+                    // Set a height for mEmptyExpensesTextView here
+                    int desiredHeightInPixels = getResources().getDimensionPixelSize(R.dimen.empty_expenses_text_height); // Define your desired height in resources
+
+                    ViewGroup.LayoutParams params = mEmptyExpensesTextView.getLayoutParams();
+                    params.height = desiredHeightInPixels;
+                    mEmptyExpensesTextView.setLayoutParams(params);
+
+                    // Hide or show based on your requirement
+                    mEmptyExpensesTextView.setVisibility(View.VISIBLE); // or View.GONE based on your requirement
+
+                    mTransactionsRecyclerView.setVisibility(View.GONE);
+                    mMonthsExpenses.setText("$0");
+                }
+            });
+        } catch (Exception e) {
+            mTransactionsRecyclerView.setVisibility(View.GONE);
+            mMonthsExpenses.setText("$0");
+        }
 
 
         mCurrentDate.setText(currDate.format(formatter));

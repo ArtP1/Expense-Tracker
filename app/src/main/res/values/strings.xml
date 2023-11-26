@@ -25,4 +25,5 @@
     <string name="money_symbol">$%s</string>
     <string name="expense_amount_format">- %s</string>
     <string name="earning_amount_format">+ %s</string>
+    <string name="notifications">Notifications</string>
 </resources>

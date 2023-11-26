@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +14,32 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.example.expensetracker.Components.CategoryTransactionAdapter;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
+import com.example.expensetracker.ExpenseTrackerDb.Models.TransactionCategoryWithAmount;
 import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentAccountBinding;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,9 +53,13 @@ public class AccountFragment extends Fragment {
     private TextView mWelcomeMsg;
 
     private TextView mBudgetAmount;
+    private TextView mEmptyExpensesTextView;
+
     private TextView mExpensesAmount;
 
     private ProgressBar mTransactionsProgressBar;
+
+    private RecyclerView mCategoryTransactionsRecyclerView;
 
     private TransactionDAO transactionDAO;
     private UserDAO userDAO;
@@ -107,6 +121,10 @@ public class AccountFragment extends Fragment {
         mBudgetAmount = mAccountFragmentBinding.budgetAmount;
         mExpensesAmount = mAccountFragmentBinding.expensesAmount;
         mTransactionsProgressBar = mAccountFragmentBinding.transactionsProgressBar;
+        mCategoryTransactionsRecyclerView = mAccountFragmentBinding.transactionsCategoriesRecyclerView;
+        mEmptyExpensesTextView = mAccountFragmentBinding.emptyExpensesTextView;
+
+
 
         displayData();
 
@@ -159,29 +177,80 @@ public class AccountFragment extends Fragment {
             mTransactionsProgressBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.progressRed)));
         }
 
-        ArrayList<PieEntry> expensesPieChartEntries = new ArrayList<>();
-        expensesPieChartEntries.add(new PieEntry(80f, "Food"));
-        expensesPieChartEntries.add(new PieEntry(90f, "Transportation"));
-        expensesPieChartEntries.add(new PieEntry(75f, "Housing"));
-        expensesPieChartEntries.add(new PieEntry(60f, "Entertainment"));
+        try {
+            LiveData<List<TransactionCategoryWithAmount>> categoryWithAmountLiveData = transactionDAO.getExpenseCategoriesWithAmount(currUserID);
 
-        float total = 80f + 90f + 75f + 60f;
-        for (PieEntry entry : expensesPieChartEntries) {
-            entry.setLabel(entry.getLabel() + " " + String.format("%.1f%%", (entry.getValue() / total) * 100));
+            categoryWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
+                if(transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
+                    mEmptyExpensesTextView.setVisibility(View.GONE);
+
+                    setPieChart(transactionCategoryWithAmountList);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext()) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
+
+                    mCategoryTransactionsRecyclerView.setLayoutManager(layoutManager);
+
+                    mCategoryTransactionsRecyclerView.setAdapter(new CategoryTransactionAdapter(requireContext(), transactionCategoryWithAmountList));
+
+                } else {
+                    mCategoryTransactionsRecyclerView.setVisibility(View.GONE);
+                }
+            });
+        } catch (Exception e) {
+            mEmptyExpensesTextView.setVisibility(View.GONE);
+            e.printStackTrace();
+        }
+    }
+
+    private void setPieChart(List<TransactionCategoryWithAmount> transactionCategoryWithAmountList) {
+        ArrayList<PieEntry> expensesPieChartEntries = new ArrayList<>();
+
+        // Clear previous entries
+        expensesPieChartEntries.clear();
+
+        double totalAmount = 0.0;
+        for (TransactionCategoryWithAmount transaction : transactionCategoryWithAmountList) {
+            totalAmount += transaction.getTotal_amount();
         }
 
-        PieDataSet expensesPieDataSet = new PieDataSet(expensesPieChartEntries, "Transactions");
+        // Populate entries with normalized values
+        for (TransactionCategoryWithAmount transaction : transactionCategoryWithAmountList) {
+            // Calculate the percentage of each category relative to the total
+            float percentage = (float) ((transaction.getTotal_amount() / totalAmount) * 100);
+            expensesPieChartEntries.add(new PieEntry(percentage, transaction.getCategory_name()));
+        }
+
+        // Set up PieChart with new data
+        PieDataSet expensesPieDataSet = new PieDataSet(expensesPieChartEntries, "");
         expensesPieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         expensesPieDataSet.setValueTextSize(12f);
+        expensesPieDataSet.setValueTextColor(Color.BLACK); // Ensure values are visible
 
         PieData expensesPieData = new PieData(expensesPieDataSet);
+        expensesPieData.setValueFormatter(new PercentFormatter()); // Show percentage values
+        expensesPieData.setValueTextColor(Color.WHITE); // Set value text color
+
         mExpensesPieChart.setData(expensesPieData);
 
-        mExpensesPieChart.getDescription().setEnabled(false);
-        mExpensesPieChart.getLegend().setEnabled(false);
-        mExpensesPieChart.setEntryLabelColor(R.color.black);
-        mExpensesPieChart.setEntryLabelTextSize(10f);
+        // Customize chart appearance and behavior
+        Description description = new Description();
+        description.setText(""); // Clear description
+        mExpensesPieChart.setDescription(description);
+        mExpensesPieChart.setDrawEntryLabels(false); // Hide entry labels
+
+        Legend legend = mExpensesPieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setTextSize(10f);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
         mExpensesPieChart.setRotationEnabled(false);
+        mExpensesPieChart.setHoleRadius(60f); // Set hole radius as needed
+        mExpensesPieChart.setTransparentCircleRadius(35f); // Set transparent circle radius
 
         mExpensesPieChart.invalidate();
     }

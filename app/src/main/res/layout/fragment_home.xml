@@ -1,266 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.HomeFragment">
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".LandingPageActivity"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-49dp">
+        android:layout_height="wrap_content"
+        tools:context=".Fragments.HomeFragment">
 
-        <View
-            android:id="@+id/view2"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="290dp"
-            android:background="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            tools:context=".LandingPageActivity"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-49dp">
 
-        <ImageView
-            android:id="@+id/settingsImg"
-            android:layout_width="23dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.072"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.014"
-            app:srcCompat="@drawable/settings_icon" />
-
-        <ImageView
-            android:id="@+id/notificationImg"
-            android:layout_width="19dp"
-            android:layout_height="25dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.931"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.118"
-            app:srcCompat="@drawable/notification_icon" />
-
-        <TextView
-            android:id="@+id/stats1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/today_is"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.114" />
-
-        <TextView
-            android:id="@+id/currentDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stats1"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/stats4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/this_month_s_spend"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currentDate"
-            app:layout_constraintVertical_bias="0.195" />
-
-        <!-- A way to group components -->
-
-        <TextView
-            android:id="@+id/monthsExpenses"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stats4"
-            app:layout_constraintVertical_bias="0.081" />
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            app:cardCornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view2"
-            app:layout_constraintTop_toBottomOf="@+id/view2"
-            tools:layout_editor_absoluteX="0dp">
-
-            <!--            <androidx.constraintlayout.widget.Group-->
-            <!--                android:id="@+id/group_spending_wallet"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="0dp"-->
-            <!--                android:visibility="visible"-->
-            <!--                app:constraint_referenced_ids="spendingWallet,spendingWalletText,spendingWalletIcon,budget" />-->
-
-            <LinearLayout
-                android:id="@+id/spendingWallet"
+            <View
+                android:id="@+id/view2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="18dp">
+                android:layout_height="290dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/spendingWalletIcon"
-                    android:layout_width="17.5dp"
-                    android:layout_height="17.5dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-                    app:layout_constraintHorizontal_bias="0.071"
-                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-                    app:layout_constraintVertical_bias="0.484"
-                    app:srcCompat="@drawable/green_wallet_icon"
-                    android:layout_marginRight="10dp"/>
+            <ImageView
+                android:id="@+id/settingsImg"
+                android:layout_width="23dp"
+                android:layout_height="26dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.072"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.014"
+                app:srcCompat="@drawable/settings_icon" />
 
-                <TextView
-                    android:id="@+id/spendingWalletText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/spending_wallet_budget"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-                    app:layout_constraintHorizontal_bias="0.262"
-                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-                    app:layout_constraintVertical_bias="0.483" />
+            <ImageView
+                android:id="@+id/notificationImg"
+                android:layout_width="19dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.931"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.118"
+                app:srcCompat="@drawable/notification_icon" />
+
+            <TextView
+                android:id="@+id/stats1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/today_is"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.114" />
+
+            <TextView
+                android:id="@+id/currentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stats1"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/stats4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/this_month_s_spend"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/currentDate"
+                app:layout_constraintVertical_bias="0.195" />
+
+            <!-- A way to group components -->
+
+            <TextView
+                android:id="@+id/monthsExpenses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stats4"
+                app:layout_constraintVertical_bias="0.081" />
 
 
-                <TextView
-                    android:id="@+id/budget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$5000000"
-                    android:textStyle="bold"
-                    android:layout_marginRight="10dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-                    app:layout_constraintHorizontal_bias="0.874"
-                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-                    app:layout_constraintVertical_bias="0.5" />
-
-
-                <ImageView
-                    android:id="@+id/rightArrow"
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_gravity="center_vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
-                    app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
-                    app:layout_constraintHorizontal_bias="0.96"
-                    app:layout_constraintStart_toStartOf="@+id/spendingWallet"
-                    app:layout_constraintTop_toTopOf="@+id/spendingWallet"
-                    app:layout_constraintVertical_bias="0.5"
-                    app:srcCompat="@drawable/right_arrow_icon" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/recentTransactions"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView3"
-            app:layout_constraintVertical_bias="0.836">
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView3"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="13dp">
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                app:cardCornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintTop_toBottomOf="@+id/view2"
+                tools:layout_editor_absoluteX="0dp">
+
+                <LinearLayout
+                    android:id="@+id/spendingWallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="18dp">
+
+                    <ImageView
+                        android:id="@+id/spendingWalletIcon"
+                        android:layout_width="17.5dp"
+                        android:layout_height="17.5dp"
+                        android:layout_marginRight="10dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                        app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                        app:layout_constraintHorizontal_bias="0.071"
+                        app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                        app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                        app:layout_constraintVertical_bias="0.484"
+                        app:srcCompat="@drawable/green_wallet_icon" />
+
+                    <TextView
+                        android:id="@+id/spendingWalletText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/spending_wallet_budget"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                        app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                        app:layout_constraintHorizontal_bias="0.262"
+                        app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                        app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                        app:layout_constraintVertical_bias="0.483" />
+
+
+                    <TextView
+                        android:id="@+id/budget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                        app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                        app:layout_constraintHorizontal_bias="0.874"
+                        app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                        app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                        app:layout_constraintVertical_bias="0.5" />
+
+
+                    <ImageView
+                        android:id="@+id/rightArrow"
+                        android:layout_width="9dp"
+                        android:layout_height="9dp"
+                        android:layout_gravity="center_vertical"
+                        app:layout_constraintBottom_toBottomOf="@+id/spendingWallet"
+                        app:layout_constraintEnd_toEndOf="@+id/spendingWallet"
+                        app:layout_constraintHorizontal_bias="0.96"
+                        app:layout_constraintStart_toStartOf="@+id/spendingWallet"
+                        app:layout_constraintTop_toTopOf="@+id/spendingWallet"
+                        app:layout_constraintVertical_bias="0.5"
+                        app:srcCompat="@drawable/right_arrow_icon" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/recentTransactions"
+                android:layout_width="match_parent"
+                android:layout_marginTop="50dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView3"
+                app:layout_constraintVertical_bias="0.836">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="13dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Recent Expenses"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/seeAllTransactionsTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See all.."
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Recent transactions"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:id="@+id/emptyExpensesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="280dp"
+                        android:gravity="center"
+                        android:text="No Transactions" />
 
-                    <TextView
-                        android:id="@+id/seeAllTransactionsTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See all.."
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/expensesRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.491"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-                        app:layout_constraintVertical_bias="0.529" />
-                </ScrollView>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/emptyExpensesTextView"
-            android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:text="No Transactions"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.959" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
-
+                        android:background="@color/white" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</ScrollView>

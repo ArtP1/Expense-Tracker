@@ -60,6 +60,21 @@ public class UserSettingsActivity extends AppCompatActivity {
                 String newPassword = mEditTextOldPassword.getText().toString();
                 String newFirstName = mEditTextFirstName.getText().toString();
 
+                if (!newUsername.matches("(?i)^(?=(?:[^a-z]*[a-z]){3}).*$")) {
+                    Toast.makeText(UserSettingsActivity.this, "Username must have at least 3 alphabetical characters", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (newUsername.matches(".*[!~()\\-+=><?}{\\[\\];:\"'|\\\\/].*")) {
+                    Toast.makeText(UserSettingsActivity.this, "Username must contain other special characters", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!newFirstName.matches("^[a-zA-Z]+$")) {
+                    Toast.makeText(UserSettingsActivity.this, "First name must only contain alphabetical characters.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Currency selectedCurrency = (Currency) mSpinnerCurrency.getSelectedItem();
                 String newCurrencyISO = selectedCurrency.getISO();
 

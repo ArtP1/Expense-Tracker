@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -27,7 +28,7 @@ import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
-import com.example.expensetracker.FragmentContainerActivity;
+import com.example.expensetracker.NotificationsActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.UserSettingsActivity;
@@ -51,6 +52,8 @@ public class HomeFragment extends Fragment {
     private TextView mCurrentDate;
     private TextView mEmptyExpensesTextView;
     private TextView mBudget;
+    private CardView mRecentTransactionsCardView;
+    private ImageView mNotificationImg;
     private RecyclerView mTransactionsRecyclerView;
     private TransactionDAO transactionDAO;
     private UserDAO userDAO;
@@ -101,8 +104,8 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int statusBarColor = ContextCompat.getColor(requireContext(), R.color.black);
-        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
-        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(0);
+        requireActivity().getWindow().setStatusBarColor(statusBarColor);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
 
         FragmentHomeBinding mHomeFragmentBinding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = mHomeFragmentBinding.getRoot();
@@ -116,6 +119,8 @@ public class HomeFragment extends Fragment {
         mTransactionsRecyclerView = mHomeFragmentBinding.expensesRecyclerView;
         mEmptyExpensesTextView = mHomeFragmentBinding.emptyExpensesTextView;
         TextView mSeeAllTransactionsTextView = mHomeFragmentBinding.seeAllTransactionsTextView;
+        mRecentTransactionsCardView = mHomeFragmentBinding.recentTransactionsCardView;
+        mNotificationImg = mHomeFragmentBinding.notificationImg;
 
         mSettingsImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +130,13 @@ public class HomeFragment extends Fragment {
         });
 
         displayData();
+
+        mNotificationImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(requireActivity(), NotificationsActivity.class));
+            }
+        });
 
         mSeeAllTransactionsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,18 +166,26 @@ public class HomeFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        Double userMonthTotalExpensesAmount = transactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
+        mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
         try {
             LiveData<List<Transaction>> recentTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
 
             recentTransactionsLiveData.observe(getViewLifecycleOwner(), recentTransactionsList -> {
                 if (recentTransactionsList != null && !recentTransactionsList.isEmpty()) {
-                    if(recentTransactionsList.size() <= 4) {
-
-                    }
-
                     mEmptyExpensesTextView.setVisibility(View.GONE);
+
+                    if (recentTransactionsList.size() <= 4) {
+                        // Set a specific height to the CardView when list size is less than or equal to 4
+                        ViewGroup.LayoutParams layoutParams = mRecentTransactionsCardView.getLayoutParams();
+                        layoutParams.height = getResources().getDimensionPixelSize(R.dimen.recent_expenses_cardview_height);
+                        mRecentTransactionsCardView.setLayoutParams(layoutParams);
+                    } else {
+                        // Reset the height to default or any other desired height when list size is greater than 4
+                        ViewGroup.LayoutParams layoutParams = mRecentTransactionsCardView.getLayoutParams();
+                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT; // or set a default height
+                        mRecentTransactionsCardView.setLayoutParams(layoutParams);
+                    }
 
                     LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext()) {
                         @Override
@@ -178,7 +198,6 @@ public class HomeFragment extends Fragment {
                     TransactionAdapter transactionAdapter = new TransactionAdapter(requireContext(), recentTransactionsList);
                     mTransactionsRecyclerView.setAdapter(transactionAdapter);
 
-                    mMonthsExpenses.setText("$" + userMonthTotalExpensesAmount);
                     // Set up swipe gestures using ItemTouchHelper
                     ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                         @Override
@@ -196,15 +215,19 @@ public class HomeFragment extends Fragment {
                                 transactionDAO.deleteTransaction(transaction);
                                 transactionAdapter.removeTransaction(position);
                                 transactionAdapter.notifyItemRemoved(position);
+
                                 Snackbar.make(mTransactionsRecyclerView, "Deleted: " + transaction.getTitle(), Snackbar.LENGTH_LONG)
                                         .setAction("Undo", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
                                                 recentTransactionsList.add(position, transaction);
                                                 transactionDAO.insertTransaction(transaction);
+                                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
                                                 transactionAdapter.notifyItemInserted(position);
                                             }
                                         }).show();
+
+                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
                             }
                         }
 
@@ -225,15 +248,7 @@ public class HomeFragment extends Fragment {
                     itemTouchHelper.attachToRecyclerView(mTransactionsRecyclerView);
 
                 } else {
-                    // Set a height for mEmptyExpensesTextView here
-                    int desiredHeightInPixels = getResources().getDimensionPixelSize(R.dimen.empty_expenses_text_height); // Define your desired height in resources
-
-                    ViewGroup.LayoutParams params = mEmptyExpensesTextView.getLayoutParams();
-                    params.height = desiredHeightInPixels;
-                    mEmptyExpensesTextView.setLayoutParams(params);
-
-                    // Hide or show based on your requirement
-                    mEmptyExpensesTextView.setVisibility(View.VISIBLE); // or View.GONE based on your requirement
+                    mEmptyExpensesTextView.setVisibility(View.VISIBLE);
 
                     mTransactionsRecyclerView.setVisibility(View.GONE);
                     mMonthsExpenses.setText("$0");
@@ -241,7 +256,9 @@ public class HomeFragment extends Fragment {
             });
         } catch (Exception e) {
             mTransactionsRecyclerView.setVisibility(View.GONE);
+            mEmptyExpensesTextView.setVisibility(View.VISIBLE);
             mMonthsExpenses.setText("$0");
+
         }
 
 

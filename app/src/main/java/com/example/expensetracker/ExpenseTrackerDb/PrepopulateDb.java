@@ -3,6 +3,7 @@ package com.example.expensetracker.ExpenseTrackerDb;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Notification;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
@@ -163,8 +164,8 @@ public class PrepopulateDb {
         LocalDate pastDate3 = LocalDate.of(2023, 9, 30);
 
         return new Transaction[]{
-                new Transaction(1, "Dining", "Crypto", 16.75, "Popeyes", pastDate1,"Purchased lunch for the day", "590 Auto Center Dr Unit 1A", Transaction.Type.EXPENSE),
-                new Transaction(1, "Salary", "Direct Deposit", 3000.0, "Monthly Salary", pastDate3,  "November salary", "Your Company Address", Transaction.Type.EARNING),
+                new Transaction(1, "Dining", "Crypto", 16.75, "Popeyes", pastDate1, "Purchased lunch for the day", "590 Auto Center Dr Unit 1A", Transaction.Type.EXPENSE),
+                new Transaction(1, "Salary", "Direct Deposit", 3000.0, "Monthly Salary", pastDate3, "November salary", "Your Company Address", Transaction.Type.EARNING),
                 new Transaction(1, "Healthcare", "Check", 70.0, "Fuel", "Refilled gas for the car", "853 Abbott St", Transaction.Type.EXPENSE),
                 new Transaction(1, "Debt", "Crypto", 10000.0, "Student Loans", "", "", Transaction.Type.EXPENSE),
                 new Transaction(1, "Freelancing", "Bank Transfer", 500.0, "Freelance Work", "Web design project", "Client Address", Transaction.Type.EARNING),
@@ -175,6 +176,14 @@ public class PrepopulateDb {
                 new Transaction(1, "Entertainment", "Cash", 40.0, "Concert Tickets", "Concert tickets for the weekend", "789 Oak St", Transaction.Type.EXPENSE),
                 new Transaction(1, "Transportation", "Debit Card", 30.0, "Public Transit", "Public transportation fare", "101 Pine St", Transaction.Type.EXPENSE),
                 new Transaction(1, "Dining", "Cash", 50.0, "Restaurant Dinner", "Dinner with friends", "246 Maple St", Transaction.Type.EXPENSE)
+        };
+    }
+
+    public static Notification[] populateNotificationData() {
+        return new Notification[]{
+                new Notification(1, "Expense Alert", "You've exceeded your allocated budget for this month. Consider adjusting your spending habits to stay on track", Notification.Type.ALERT),
+                new Notification(1, "Categorization Reminder", "You have unclassified expenses from last week. Categorize them to gain better insights into your spending patterns", Notification.Type.REMINDER),
+                new Notification(2, "Week Insights", "Income: $N\nExpenses: $N\nStay mindful of your spending to maintain a balanced budget.", Notification.Type.WEEKLY_INSIGHT)
         };
     }
 }

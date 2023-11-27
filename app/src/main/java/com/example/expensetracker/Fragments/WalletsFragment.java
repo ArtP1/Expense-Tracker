@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentWalletsBinding;
 
@@ -62,8 +61,8 @@ public class WalletsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int statusBarColor = ContextCompat.getColor(requireContext(), R.color.black);
-        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
-        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(0);
+        requireActivity().getWindow().setStatusBarColor(statusBarColor);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
 
         FragmentWalletsBinding mWalletFragmentBinding = FragmentWalletsBinding.inflate(inflater, container, false);
         View view = mWalletFragmentBinding.getRoot();

@@ -114,13 +114,17 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
+                <TextView
+                    android:id="@+id/transactionDateTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_edittext1"
-                    android:hint="Enter transaction date"
-                    android:inputType="date"
-                    android:padding="10dp" />
+                    android:hint="Select transaction date"
+                    android:padding="13dp"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:onClick="showDatePicker" />
+
 
                 <Space
                     android:layout_width="match_parent"

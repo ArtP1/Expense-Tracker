@@ -2,6 +2,7 @@ package com.example.expensetracker.Fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -24,11 +26,11 @@ import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
-import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentNewTransactionBinding;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -42,6 +44,8 @@ public class NewTransactionFragment extends Fragment {
     private EditText mEditTextTransDescrip;
     private EditText mEditTextTransLocation;
     private EditText mEditTextTransAmount;
+
+    TextView mTransactionDateTextView;
 
     private Spinner mCategorySpinner;
     private Spinner mPaymentMethodsSpinner;
@@ -97,8 +101,8 @@ public class NewTransactionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int statusBarColor = ContextCompat.getColor(requireContext(), R.color.white);
-        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
-        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().setStatusBarColor(statusBarColor);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         FragmentNewTransactionBinding mNewTransactionBinding = FragmentNewTransactionBinding.inflate(inflater, container, false);
         View view = mNewTransactionBinding.getRoot();
@@ -118,8 +122,16 @@ public class NewTransactionFragment extends Fragment {
         mCheckBoxTransEarning = mNewTransactionBinding.checkBoxTransEarning;
         mCreateTransactionBtn = mNewTransactionBinding.createTransactionBtn;
         mPaymentMethodsSpinner = mNewTransactionBinding.paymentMethodsSpinner;
+        mTransactionDateTextView = mNewTransactionBinding.transactionDateTextView;
 
         displayData();
+
+        mTransactionDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
 
         mCreateTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,9 +150,9 @@ public class NewTransactionFragment extends Fragment {
                 String transPaymentMethod = selectedPaymentMethod.getMethod();
 
                 Transaction newTransaction = null;
-                if(transIsExpense) {
+                if (transIsExpense) {
                     newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
-                } else if(transIsEarning) {
+                } else if (transIsEarning) {
                     newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
                 }
 
@@ -192,4 +204,33 @@ public class NewTransactionFragment extends Fragment {
         mPaymentMethodsSpinner.setAdapter(paymentMethodArrayAdapter);
         mPaymentMethodsSpinner.setSelection(0);
     }
+
+    public void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Set up the DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
+                    // Do something with the selected date
+                    String selectedDate = selectedDayOfMonth + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                    TextView transactionDateTextView = requireView().findViewById(R.id.transactionDateTextView);
+                    transactionDateTextView.setText(selectedDate);
+                }, year, month, dayOfMonth);
+
+        // Set the minimum date to the start of the current month
+        Calendar minCalendar = Calendar.getInstance();
+        minCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        datePickerDialog.getDatePicker().setMinDate(minCalendar.getTimeInMillis());
+
+        // Set the maximum date to the end of the current month
+        Calendar maxCalendar = Calendar.getInstance();
+        maxCalendar.set(Calendar.DAY_OF_MONTH, maxCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        datePickerDialog.getDatePicker().setMaxDate(maxCalendar.getTimeInMillis());
+
+        datePickerDialog.show();
+    }
+
 }

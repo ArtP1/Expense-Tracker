@@ -17,12 +17,11 @@ import java.util.List;
 @Dao
 @TypeConverters(DateConverter.class)
 public interface TransactionDAO {
-    // Batch Operations
     @Insert
     void insertTransaction(Transaction... transactions);
 
     @Insert
-    void insertAll(Transaction[] transactions);
+    void insertAllTransactions(Transaction[] transactions);
 
     @Update
     void updateTransaction(Transaction... transactions);
@@ -38,9 +37,6 @@ public interface TransactionDAO {
 
     @Query("SELECT * FROM transaction_table WHERE category_name = :category_name")
     List<Transaction> getTransactionsByCategory(String category_name);
-
-//    @Query("SELECT * FROM transaction_table WHERE dateSubmitted BETWEEN :startDate AND :endDate")
-//    List<Transaction> getTransactionsByDateRange(LocalDate startDate, LocalDate endDate);
 
     @Query("SELECT SUM(amount) AS TotalExpenses FROM transaction_table WHERE user_id = :user_id AND transType = 'EXPENSE' AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now')")
     double getTotalMonthlyExpensesByUserID(long user_id);
@@ -59,8 +55,8 @@ public interface TransactionDAO {
      *
      * @param userId
      * @return LiveData holding a list of Model CategoryWithAmount representing
-     *         the categories and their respective total expenses for the current month.
-     *
+     * the categories and their respective total expenses for the current month.
+     * <p>
      * Query:
      * This query joins the 'category_table' and 'transaction_table' to calculate the total amount spent per
      * expense category for a specific user. It retrieves the category name and the total expense
@@ -75,4 +71,14 @@ public interface TransactionDAO {
             "AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now')" +
             "GROUP BY category_name ORDER BY total_amount DESC LIMIT 5")
     LiveData<List<TransactionCategoryWithAmount>> getExpenseCategoriesWithAmount(long userId);
+
+
+    @Query("SELECT SUM(amount) AS TotalEarnings FROM transaction_table WHERE user_id = :user_id AND transType = 'EARNING' " +
+            "AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = :yearMonth")
+    double getMonthlyIncomeForMonth(long user_id, String yearMonth);
+
+    @Query("SELECT SUM(amount) AS TotalExpenses FROM transaction_table WHERE user_id = :user_id AND transType = 'EXPENSE' " +
+            "AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = :yearMonth")
+    double getMonthlyExpenseForMonth(long user_id, String yearMonth);
+
 }

@@ -44,7 +44,7 @@ public class User {
     @TypeConverters(DateConverter.class)
     private LocalDate dateJoined;
 
-    private double budget;
+    private Double budget;
 
     public enum UserRole {
         USER, ADMIN, SUPER_ADMIN
@@ -124,11 +124,11 @@ public class User {
         this.firstName = firstName;
     }
 
-    public double getBudget() {
+    public Double getBudget() {
         return budget;
     }
 
-    public void setBudget(double budget) {
+    public void setBudget(Double budget) {
         this.budget = budget;
     }
 

@@ -26,12 +26,17 @@ public class FragmentContainerActivity extends AppCompatActivity {
     BottomNavigationView mBottomNavigation;
     FrameLayout mFrameLayout;
 
+    private static final String SELECTED_FRAGMENT_TAG = "selectedFragmentTag";
+    private Fragment selectedFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mFragmentContainerBinding = ActivityFragmentContainerBinding.inflate(getLayoutInflater());
         setContentView(mFragmentContainerBinding.getRoot());
+
 
         mBottomNavigation = mFragmentContainerBinding.userNavbar;
         mFrameLayout = mFragmentContainerBinding.frameLayout;
@@ -40,12 +45,9 @@ public class FragmentContainerActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
-                Fragment selectedFragment = null;
 
-                // Get the currently displayed fragment
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
 
-                // Check which item was selected and assign the appropriate fragment
                 if (itemId == R.id.home) {
                     selectedFragment = new HomeFragment();
 
@@ -62,9 +64,8 @@ public class FragmentContainerActivity extends AppCompatActivity {
                     selectedFragment = new NewTransactionFragment();
                 }
 
-                // Check if the selected fragment is different from the current one
                 if (currentFragment != null) {
-                    if(!selectedFragment.getClass().equals(currentFragment.getClass())) {
+                    if (!selectedFragment.getClass().equals(currentFragment.getClass())) {
                         loadFragment(selectedFragment, false);
                     }
                 }
@@ -76,9 +77,33 @@ public class FragmentContainerActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the tag of the selected fragment if it exists
+        if (selectedFragment != null) {
+            outState.putString(SELECTED_FRAGMENT_TAG, selectedFragment.getTag());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore the selected fragment if available
+        String tag = savedInstanceState.getString(SELECTED_FRAGMENT_TAG);
+        if (tag != null) {
+            selectedFragment = getSupportFragmentManager().findFragmentByTag(tag);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        loadFragment(new HomeFragment(), true);
+        // Load the selected fragment or the default fragment (HomeFragment)
+        if (selectedFragment != null) {
+            loadFragment(selectedFragment, true);
+        } else {
+            loadFragment(new HomeFragment(), true);
+        }
     }
 
     public void loadFragment(Fragment fragment, boolean isAppInitialized) {
@@ -87,13 +112,36 @@ public class FragmentContainerActivity extends AppCompatActivity {
 
         if (isAppInitialized) {
             fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentTransaction.add(R.id.frameLayout, fragment);
+            Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+            if (existingFragment == null) {
+                fragmentTransaction.add(R.id.frameLayout, fragment, fragment.getClass().getSimpleName());
+            } else {
+                fragment = existingFragment;
+            }
         } else {
-            fragmentTransaction.replace(R.id.frameLayout, fragment);
-
+            // Check if the fragment is already added
+            if (fragment.isAdded()) {
+                fragmentTransaction.show(fragment);
+            } else {
+                Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+                if (existingFragment != null) {
+                    fragmentTransaction.show(existingFragment);
+                } else {
+                    fragmentTransaction.replace(R.id.frameLayout, fragment, fragment.getClass().getSimpleName());
+                }
+            }
         }
+
+        // Hide other fragments
+        for (Fragment existingFragment : fragmentManager.getFragments()) {
+            if (existingFragment != null && !existingFragment.equals(fragment)) {
+                fragmentTransaction.hide(existingFragment);
+            }
+        }
+
         fragmentTransaction.commit();
     }
+
 
     public static Intent getIntent(Context context) {
         return new Intent(context, FragmentContainerActivity.class);

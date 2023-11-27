@@ -25,7 +25,6 @@ import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.ExpenseTrackerDb.Models.TransactionCategoryWithAmount;
-import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentAccountBinding;
@@ -107,8 +106,8 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int statusBarColor = ContextCompat.getColor(requireContext(), R.color.white);
-        ((FragmentContainerActivity) requireActivity()).getWindow().setStatusBarColor(statusBarColor);
-        ((FragmentContainerActivity) requireActivity()).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().setStatusBarColor(statusBarColor);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
 
         FragmentAccountBinding mAccountFragmentBinding = FragmentAccountBinding.inflate(inflater, container, false);
@@ -123,7 +122,6 @@ public class AccountFragment extends Fragment {
         mTransactionsProgressBar = mAccountFragmentBinding.transactionsProgressBar;
         mCategoryTransactionsRecyclerView = mAccountFragmentBinding.transactionsCategoriesRecyclerView;
         mEmptyExpensesTextView = mAccountFragmentBinding.emptyExpensesTextView;
-
 
 
         displayData();
@@ -181,7 +179,7 @@ public class AccountFragment extends Fragment {
             LiveData<List<TransactionCategoryWithAmount>> categoryWithAmountLiveData = transactionDAO.getExpenseCategoriesWithAmount(currUserID);
 
             categoryWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
-                if(transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
+                if (transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
                     mEmptyExpensesTextView.setVisibility(View.GONE);
 
                     setPieChart(transactionCategoryWithAmountList);

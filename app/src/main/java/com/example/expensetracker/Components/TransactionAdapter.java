@@ -79,6 +79,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
     public Transaction getTransaction(int position) {
         return transactionList.get(position);
     }
+
     public void removeTransaction(int position) {
         transactionList.remove(position);
         notifyItemRemoved(position);

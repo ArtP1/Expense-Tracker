@@ -187,7 +187,7 @@
 
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/recentTransactions"
+                android:id="@+id/recentTransactionsCardView"
                 android:layout_width="match_parent"
                 android:layout_marginTop="50dp"
                 android:layout_height="wrap_content"

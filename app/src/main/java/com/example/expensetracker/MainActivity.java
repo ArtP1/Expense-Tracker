@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent targetActivity = null;
         if (User.UserRole.USER.toString().equals(userType)) {
-            targetActivity = new Intent(MainActivity.this,FragmentContainerActivity.class);
+            targetActivity = new Intent(MainActivity.this, FragmentContainerActivity.class);
         } else if (User.UserRole.ADMIN.toString().equals(userType)) {
-            targetActivity = new Intent(MainActivity.this,AdminsLandingPageActivity.class);
+            targetActivity = new Intent(MainActivity.this, AdminsLandingPageActivity.class);
         } else if (User.UserRole.SUPER_ADMIN.toString().equals(userType)) {
-            targetActivity = new Intent(MainActivity.this,SuperAdminsLandingPageActivity.class);
+            targetActivity = new Intent(MainActivity.this, SuperAdminsLandingPageActivity.class);
         }
 
         startActivity(targetActivity);

@@ -4,7 +4,12 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/notification_background">
+    android:background="@drawable/notification_background"
+    android:paddingTop="10dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="10dp"
+    android:layout_marginBottom="13dp">
 
     <ImageView
         android:id="@+id/notificationImage"
@@ -24,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Budget Achievement"
         android:textStyle="bold"
+        android:textSize="15sp"
         android:layout_marginStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -31,28 +37,30 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/notificationDescription"
-        android:layout_width="332dp"
+        android:id="@+id/notificationMessage"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Congratulations! You have successfully stayed within your monthly budget. Keep up the good work!"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.062"
         app:layout_constraintStart_toEndOf="@id/notificationImage"
         app:layout_constraintTop_toBottomOf="@id/notificationTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintWidth_max="332dp"
+        android:layout_width="0dp"/>
 
     <TextView
-        android:id="@+id/notificationTime"
+        android:id="@+id/notificationDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0.4"
-        android:text="10:00 am"
+        android:text="July 5: 10:00 am"
         android:textColor="@color/black"
-        android:textSize="10sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

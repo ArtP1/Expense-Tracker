@@ -12,12 +12,11 @@ import java.util.List;
 
 @Dao
 public interface PaymentMethodDAO {
-    // Batch Operations
     @Insert
     void insertPaymentMethod(PaymentMethod... paymentMethods);
 
     @Insert
-    void insertAll(PaymentMethod[] paymentMethods);
+    void insertAllPaymentMethods(PaymentMethod[] paymentMethods);
 
     @Update
     void updatePaymentMethod(PaymentMethod... paymentMethods);

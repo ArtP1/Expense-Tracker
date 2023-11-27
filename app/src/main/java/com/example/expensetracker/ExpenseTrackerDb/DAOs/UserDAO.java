@@ -20,7 +20,7 @@ public interface UserDAO {
     long insertUserAndReturnId(User user);
 
     @Insert
-    void insertAll(User[] users);
+    void insertAllUsers(User[] users);
 
     @Update
     void updateUser(User... users);
@@ -28,7 +28,6 @@ public interface UserDAO {
     @Delete
     void deleteUser(User... users);
 
-    // These will most often be used by admins ---------------
     @Query("SELECT COUNT(*) AS NumberOfUsers FROM user_table")
     Integer numberOfUsers();
 

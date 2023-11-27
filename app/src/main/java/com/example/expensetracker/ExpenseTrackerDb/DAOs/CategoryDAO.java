@@ -12,12 +12,11 @@ import java.util.List;
 
 @Dao
 public interface CategoryDAO {
-    // Batch Operations
     @Insert
     void insertCategory(Category... categories);
 
     @Insert
-    void insertAll(Category[] categories);
+    void insertAllCategories(Category[] categories);
 
     @Update
     void updateCategory(Category... categories);
@@ -33,8 +32,5 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM category_table")
     List<Category> getAllCategories();
-
-//    @Query("DELETE FROM category_table")
-//    void deleteAllCategories();
 
 }

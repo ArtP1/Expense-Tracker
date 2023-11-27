@@ -79,7 +79,7 @@ public class Transaction {
     private Type transType;
 
     /**
-     *  Constructs a Transaction object with specified parameters, setting the submission date to the current system date
+     * Constructs a Transaction object with specified parameters, setting the submission date to the current system date
      *
      * @param user_id
      * @param category_name
@@ -105,7 +105,7 @@ public class Transaction {
     }
 
     /**
-     *  Constructs a Transaction object with specified parameters, setting the submission date to a specified date (future, past, present).
+     * Constructs a Transaction object with specified parameters, setting the submission date to a specified date (future, past, present).
      *
      * @param user_id
      * @param category_name

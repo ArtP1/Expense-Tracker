@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -139,7 +140,13 @@ public class NewTransactionFragment extends Fragment {
                 String transTitle = mEditTextTransTitle.getText().toString();
                 String transDescrip = mEditTextTransDescrip.getText().toString();
                 String transLocation = mEditTextTransLocation.getText().toString();
-                double transAmount = Double.parseDouble(mEditTextTransAmount.getText().toString());
+                String amountString = mEditTextTransAmount.getText().toString();
+                double transAmount = 0.0;
+
+                if(!amountString.isEmpty()) {
+                    transAmount = Double.parseDouble(amountString);
+                }
+
                 boolean transIsExpense = mCheckBoxTransExpense.isChecked();
                 boolean transIsEarning = mCheckBoxTransEarning.isChecked();
 
@@ -150,21 +157,23 @@ public class NewTransactionFragment extends Fragment {
                 String transPaymentMethod = selectedPaymentMethod.getMethod();
 
                 Transaction newTransaction = null;
-                if (transIsExpense) {
-                    newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
-                } else if (transIsEarning) {
-                    newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                if(!transTitle.isEmpty() && !transCategoryName.equals("N/A") && !transPaymentMethod.equals("N/A") && (transIsExpense || transIsEarning) && transAmount > 0) {
+                    if (transIsExpense) {
+                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
+                    } else if (transIsEarning) {
+                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Fill out all required inputs!", Toast.LENGTH_SHORT).show();
                 }
 
-                try {
+                if (newTransaction != null) {
                     transactionDAO.insertTransaction(newTransaction);
 
                     getParentFragmentManager().beginTransaction()
                             .replace(R.id.frameLayout, new HomeFragment())
                             .addToBackStack(null)
                             .commit();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         });

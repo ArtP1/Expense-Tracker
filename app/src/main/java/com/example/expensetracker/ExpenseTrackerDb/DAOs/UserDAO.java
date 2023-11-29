@@ -4,13 +4,16 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.TypeConverters;
 import androidx.room.Update;
 
+import com.example.expensetracker.ExpenseTrackerDb.DateConverter;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 
 import java.util.List;
 
 @Dao
+@TypeConverters(DateConverter.class)
 public interface UserDAO {
 
     @Insert

@@ -2,6 +2,9 @@ package com.example.expensetracker.Fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,6 +29,7 @@ import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.ExpenseTrackerDb.Models.TransactionCategoryWithAmount;
+import com.example.expensetracker.MainActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentAccountBinding;
@@ -46,6 +51,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
+    private SharedPreferences sharedPreferences;
 
     private PieChart mExpensesPieChart;
 
@@ -54,6 +60,7 @@ public class AccountFragment extends Fragment {
     private TextView mBudgetAmount;
     private TextView mEmptyExpensesTextView;
 
+    private Button mDeletePermanentlyBtn;
     private TextView mExpensesAmount;
 
     private ProgressBar mTransactionsProgressBar;
@@ -109,6 +116,7 @@ public class AccountFragment extends Fragment {
         requireActivity().getWindow().setStatusBarColor(statusBarColor);
         requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
+        this.sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
 
         FragmentAccountBinding mAccountFragmentBinding = FragmentAccountBinding.inflate(inflater, container, false);
         View view = mAccountFragmentBinding.getRoot();
@@ -122,10 +130,16 @@ public class AccountFragment extends Fragment {
         mTransactionsProgressBar = mAccountFragmentBinding.transactionsProgressBar;
         mCategoryTransactionsRecyclerView = mAccountFragmentBinding.transactionsCategoriesRecyclerView;
         mEmptyExpensesTextView = mAccountFragmentBinding.emptyExpensesTextView;
-
+        mDeletePermanentlyBtn = mAccountFragmentBinding.deletePermanentlyBtn;
 
         displayData();
 
+        mDeletePermanentlyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteConfirmationDialog();
+            }
+        });
         return view;
     }
 
@@ -133,13 +147,11 @@ public class AccountFragment extends Fragment {
         ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
-        userDAO = expenseTrackerDatabase.userDAO();
-        transactionDAO = expenseTrackerDatabase.transactionDAO();
+        this.userDAO = expenseTrackerDatabase.userDAO();
+        this.transactionDAO = expenseTrackerDatabase.transactionDAO();
     }
 
     private void displayData() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
-
         long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
 
         User currUser = userDAO.getUserById(currUserID);
@@ -252,4 +264,33 @@ public class AccountFragment extends Fragment {
 
         mExpensesPieChart.invalidate();
     }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Confirm Deletion")
+                .setMessage("Are you sure you want to delete your data permanently?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User confirmed, proceed with deletion
+                        deleteUserData();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void deleteUserData() {
+        long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
+
+        sharedPreferences.edit().clear().apply();
+
+        userDAO.deleteUser(userDAO.getUserById(currUserID));
+
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+        getActivity().finish();
+    }
+
 }

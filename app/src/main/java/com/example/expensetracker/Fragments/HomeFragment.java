@@ -28,6 +28,7 @@ import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
+import com.example.expensetracker.FragmentContainerActivity;
 import com.example.expensetracker.NotificationsActivity;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
@@ -141,10 +142,18 @@ public class HomeFragment extends Fragment {
         mSeeAllTransactionsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Replace the fragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.frameLayout, new TransactionsFragment())
                         .addToBackStack(null)
                         .commit();
+
+                // Update the selected item in the BottomNavigationView
+                if (getActivity() instanceof FragmentContainerActivity) {
+                    FragmentContainerActivity activity = (FragmentContainerActivity) getActivity();
+                    activity.setSelectedFragment(new TransactionsFragment()); // Set the selected fragment in the activity
+                    activity.updateSelectedNavItem(R.id.transaction); // Update the selected item in the BottomNavigationView
+                }
             }
         });
 
@@ -213,21 +222,40 @@ public class HomeFragment extends Fragment {
                             if (direction == ItemTouchHelper.LEFT) {
                                 // Handle delete action
                                 transactionDAO.deleteTransaction(transaction);
-                                transactionAdapter.removeTransaction(position);
-                                transactionAdapter.notifyItemRemoved(position);
 
                                 Snackbar.make(mTransactionsRecyclerView, "Deleted: " + transaction.getTitle(), Snackbar.LENGTH_LONG)
                                         .setAction("Undo", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                recentTransactionsList.add(position, transaction);
                                                 transactionDAO.insertTransaction(transaction);
-                                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                                recentTransactionsList.add(position, transaction);
                                                 transactionAdapter.notifyItemInserted(position);
+
+                                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+
+                                                if (recentTransactionsList.isEmpty()) {
+                                                    mEmptyExpensesTextView.setVisibility(View.VISIBLE);
+                                                    mTransactionsRecyclerView.setVisibility(View.GONE);
+                                                } else {
+                                                    mEmptyExpensesTextView.setVisibility(View.GONE);
+                                                    mTransactionsRecyclerView.setVisibility(View.VISIBLE);
+                                                }
                                             }
                                         }).show();
 
+                                transactionAdapter.removeTransaction(position);
+                                transactionAdapter.notifyItemRemoved(position);
+                                transactionAdapter.notifyItemRangeChanged(position, transactionAdapter.getItemCount());
+
                                 mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+
+                                if (recentTransactionsList.isEmpty()) {
+                                    mEmptyExpensesTextView.setVisibility(View.VISIBLE);
+                                    mTransactionsRecyclerView.setVisibility(View.GONE);
+                                } else {
+                                    mEmptyExpensesTextView.setVisibility(View.GONE);
+                                    mTransactionsRecyclerView.setVisibility(View.VISIBLE);
+                                }
                             }
                         }
 

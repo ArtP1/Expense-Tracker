@@ -12,17 +12,19 @@ import com.example.expensetracker.ExpenseTrackerDb.DAOs.NotificationDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.PaymentMethodDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserWalletDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Notification;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.UserWallet;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Transaction.class, User.class, Category.class, PaymentMethod.class, Currency.class, Notification.class}, version = 1, exportSchema = false)
+@Database(entities = {Transaction.class, User.class, Category.class, PaymentMethod.class, Currency.class, Notification.class, UserWallet.class}, version = 1, exportSchema = false)
 public abstract class ExpenseTrackerDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "expense_tracker_db";
@@ -32,6 +34,8 @@ public abstract class ExpenseTrackerDatabase extends RoomDatabase {
     public static final String PAYMENT_METHOD_TABLE = "payment_method_table";
     public static final String CURRENCY_TABLE = "currency_table";
     public static final String NOTIFICATION_TABLE = "notification_table";
+    public static final String USER_WALLET_TABLE = "user_wallet_table";
+
     private static volatile ExpenseTrackerDatabase dbInstance; // Singleton instance var
     private static final Object LOCK = new Object();
 
@@ -46,6 +50,8 @@ public abstract class ExpenseTrackerDatabase extends RoomDatabase {
     public abstract CurrencyDAO currencyDAO();
 
     public abstract NotificationDAO notificationDAO();
+
+    public abstract UserWalletDAO userWalletDAO();
 
 
     public static ExpenseTrackerDatabase getInstance(Context context) {

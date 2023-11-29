@@ -143,6 +143,14 @@ public class FragmentContainerActivity extends AppCompatActivity {
     }
 
 
+    public void setSelectedFragment(Fragment fragment) {
+        selectedFragment = fragment;
+    }
+
+    // Add this method to update the selected item in the BottomNavigationView
+    public void updateSelectedNavItem(int itemId) {
+        mBottomNavigation.setSelectedItemId(itemId);
+    }
     public static Intent getIntent(Context context) {
         return new Intent(context, FragmentContainerActivity.class);
     }

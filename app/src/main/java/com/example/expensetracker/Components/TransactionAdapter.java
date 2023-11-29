@@ -81,8 +81,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
     }
 
     public void removeTransaction(int position) {
-        transactionList.remove(position);
-        notifyItemRemoved(position);
+        if (position < transactionList.size() && position >= 0) {
+            transactionList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     @Override

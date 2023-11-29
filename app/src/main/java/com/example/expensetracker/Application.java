@@ -1,4 +1,6 @@
-package com.example.expensetracker.ExpenseTrackerDb;
+package com.example.expensetracker;
+
+import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 
 public class Application extends android.app.Application {
     @Override

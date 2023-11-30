@@ -3,10 +3,14 @@ package com.example.expensetracker.ExpenseTrackerDb;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Currency;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.DigitalWalletTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Notification;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.UserDigitalWallet;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.DigitalWallet;
 
 import java.time.LocalDate;
 
@@ -127,55 +131,62 @@ public class PrepopulateDb {
         return new PaymentMethod[]{
                 new PaymentMethod("Bank Transfer", "https://drive.google.com/file/d/1uwsOItTkjbLPx4Ul9NznLKldok7xHIE_/view?usp=sharing"),
                 new PaymentMethod("Gift Card", "https://drive.google.com/file/d/1WePETXcU2MgqBR5GInO5gAMBgag6F1qr/view?usp=sharing"),
-                new PaymentMethod("Mobile Wallet", "https://drive.google.com/file/d/1GWtajj34gEhCaQtqKRdyofzXE4KanQc3/view?usp=sharing"),
-                new PaymentMethod("Crypto", "https://drive.google.com/file/d/1k-6fhJ3HUZWXMOfQMng1uZaZLqHTbT5u/view?usp=sharing"),
+                new PaymentMethod("Digital Wallet", "https://drive.google.com/file/d/1GWtajj34gEhCaQtqKRdyofzXE4KanQc3/view?usp=sharing"),
                 new PaymentMethod("Check", "https://drive.google.com/file/d/1IsRFFKQNGfrOQsU0UWi-pyz-GGV4DrZu/view?usp=sharing"),
                 new PaymentMethod("Direct Deposit", "https://drive.google.com/file/d/1xxXj3xPASBvUB9qqgMt71FF2Aw6SG7Xi/view?usp=sharing"),
-                new PaymentMethod("PayPal", "https://drive.google.com/file/d/14F8Jm2xt28U4yFqhmc2MlLrJ27pxtgNC/view?usp=sharing"),
-                new PaymentMethod("Credit Card", "https://drive.google.com/file/d/19uFFR3sY1i7qnJK8gmEDsFoRtvP24Y6h/view?usp=sharing"),
-                new PaymentMethod("Debit Card", "https://drive.google.com/file/d/19dcubR0MLr-0uceZSd-HyNQ9Wi9YJskR/view?usp=sharing"),
-                new PaymentMethod("Cash", "https://drive.google.com/file/d/1k82u7wdEzt7KKuWdQfZ-Iwt3Re737Iww/view?usp=sharing")
+                new PaymentMethod("Cash", "https://drive.google.com/file/d/1k82u7wdEzt7KKuWdQfZ-Iwt3Re737Iww/view?usp=sharing"),
+                new PaymentMethod("Crypto", "https://drive.google.com/file/d/1k-6fhJ3HUZWXMOfQMng1uZaZLqHTbT5u/view?usp=sharing")
         };
     }
 
     public static Category[] populateCategoryData() {
         return new Category[]{
-                new Category("Housing", "#FF0000", "https://drive.google.com/file/d/1v7OP-_817E4oUsjDqeoRJmd5E0TVj728/view?usp=sharing"),
-                new Category("Transportation", "#FF0000", "https://drive.google.com/file/d/1SNMYzMbbOB7ICLcpV4HsP2rHGJtLhI3E/view?usp=sharing"),
-                new Category("Dining", "#FF0000", "https://drive.google.com/file/d/1YLz_vCQUTpi9oUzUKWb6cTZApbEpahnh/view?usp=sharing"),
-                new Category("Healthcare", "#FF0000", "https://drive.google.com/file/d/18Jq6zC36fuhY-4sBTkJBobbNW2ltpMNJ/view?usp=sharing"),
-                new Category("Entertainment", "#FF0000", "https://drive.google.com/file/d/1O309Dh3gMegp22QAmkKDkcXEb_I1APpc/view?usp=sharing"),
-                new Category("Personal Care", "#FF0000", "https://drive.google.com/file/d/1o57aQBGGynUXRDwlZbCE_uD5mh18mCiv/view?usp=sharing"),
-                new Category("Shopping", "#FF0000", "https://drive.google.com/file/d/1B-l6ihbEfcEo96N_0AZdSAlDrIfu5geN/view?usp=sharing"),
-                new Category("Travel", "#FF0000", "https://drive.google.com/file/d/16snpOtXCuhyFtf9YXNKMdUUnW1pjVH7c/view?usp=sharing"),
-                new Category("Education", "#FF0000", "https://drive.google.com/file/d/1lcIVh3nKrxWDRJMkecmncTDBS1AqLCmn/view?usp=sharing"),
-                new Category("Taxes", "#FF0000", "https://drive.google.com/file/d/1klXRiB2B5JJ2B0M3kA--7MoYo5EaD10b/view?usp=sharing"),
-                new Category("Debt", "#FF0000", "https://drive.google.com/file/d/1ycfztcRgcevLigPr_9Qv9ajpjpF9DD1r/view?usp=sharing"),
-                new Category("Investment", "#FF0000", "https://drive.google.com/file/d/1uAfUs4poJPPsJW-W_xR2VgWBpIUfNPU-/view?usp=sharing"),
-                new Category("Freelancing", "#FF0000", "https://drive.google.com/file/d/1azxdhqTRo3zN1bE9CQLQCOTzeTOT2o5D/view?usp=sharing"),
-                new Category("Salary", "#FF0000", "https://drive.google.com/file/d/1o2_HK_TGGqjubAp0gghWWLrPaijFgmQ3/view?usp=sharing"),
-                new Category("Utilities", "#FF0000", "")
+                new Category("Housing", "https://drive.google.com/file/d/1v7OP-_817E4oUsjDqeoRJmd5E0TVj728/view?usp=sharing"),
+                new Category("Transportation", "https://drive.google.com/file/d/1SNMYzMbbOB7ICLcpV4HsP2rHGJtLhI3E/view?usp=sharing"),
+                new Category("Dining", "https://drive.google.com/file/d/1YLz_vCQUTpi9oUzUKWb6cTZApbEpahnh/view?usp=sharing"),
+                new Category("Healthcare", "https://drive.google.com/file/d/18Jq6zC36fuhY-4sBTkJBobbNW2ltpMNJ/view?usp=sharing"),
+                new Category("Entertainment", "https://drive.google.com/file/d/1O309Dh3gMegp22QAmkKDkcXEb_I1APpc/view?usp=sharing"),
+                new Category("Personal Care", "https://drive.google.com/file/d/1o57aQBGGynUXRDwlZbCE_uD5mh18mCiv/view?usp=sharing"),
+                new Category("Shopping", "https://drive.google.com/file/d/1B-l6ihbEfcEo96N_0AZdSAlDrIfu5geN/view?usp=sharing"),
+                new Category("Travel", "https://drive.google.com/file/d/16snpOtXCuhyFtf9YXNKMdUUnW1pjVH7c/view?usp=sharing"),
+                new Category("Education", "https://drive.google.com/file/d/1lcIVh3nKrxWDRJMkecmncTDBS1AqLCmn/view?usp=sharing"),
+                new Category("Taxes", "https://drive.google.com/file/d/1klXRiB2B5JJ2B0M3kA--7MoYo5EaD10b/view?usp=sharing"),
+                new Category("Debt", "https://drive.google.com/file/d/1ycfztcRgcevLigPr_9Qv9ajpjpF9DD1r/view?usp=sharing"),
+                new Category("Investment", "https://drive.google.com/file/d/1uAfUs4poJPPsJW-W_xR2VgWBpIUfNPU-/view?usp=sharing"),
+                new Category("Freelancing", "https://drive.google.com/file/d/1azxdhqTRo3zN1bE9CQLQCOTzeTOT2o5D/view?usp=sharing"),
+                new Category("Salary", "https://drive.google.com/file/d/1o2_HK_TGGqjubAp0gghWWLrPaijFgmQ3/view?usp=sharing"),
+                new Category("Utilities", "https://drive.google.com/file/d/100fXoXLA-76J7nrXffHuVowcn425KGyK/view?usp=sharing")
         };
     }
 
-    public static Transaction[] populateTransactionData() {
+    public static PhysicalTransaction[] populatePhysicalTransactionData() {
         LocalDate pastDate1 = LocalDate.of(2023, 10, 15);
         LocalDate pastDate2 = LocalDate.of(2023, 9, 28);
         LocalDate pastDate3 = LocalDate.of(2023, 9, 30);
 
-        return new Transaction[]{
-                new Transaction(1, "Dining", "Crypto", 16.75, "Popeyes", pastDate1, "Purchased lunch for the day", "590 Auto Center Dr Unit 1A", Transaction.Type.EXPENSE),
-                new Transaction(1, "Salary", "Direct Deposit", 3000.0, "Monthly Salary", pastDate3, "November salary", "Your Company Address", Transaction.Type.EARNING),
-                new Transaction(1, "Healthcare", "Check", 70.0, "Fuel", "Refilled gas for the car", "853 Abbott St", Transaction.Type.EXPENSE),
-                new Transaction(1, "Debt", "Crypto", 10000.0, "Student Loans", "", "", Transaction.Type.EXPENSE),
-                new Transaction(1, "Freelancing", "Bank Transfer", 500.0, "Freelance Work", "Web design project", "Client Address", Transaction.Type.EARNING),
-                new Transaction(1, "Personal Care", "Credit Card", 25.0, "Movie Night", pastDate2, "Tickets for movie night", "350 Northridge Shopping Ctr", Transaction.Type.EXPENSE),
-                new Transaction(1, "Investment", "Direct Deposit", 200.0, "Stock Dividend", "Quarterly dividend payment", "Investment Firm Address", Transaction.Type.EARNING),
-                new Transaction(1, "Housing", "Credit Card", 80.0, "Supermarket", "Weekly grocery shopping", "123 Main St", Transaction.Type.EXPENSE),
-                new Transaction(1, "Utilities", "Bank Transfer", 150.0, "Electricity, Water, Gas", "Monthly utility bills", "456 Elm St", Transaction.Type.EXPENSE),
-                new Transaction(1, "Entertainment", "Cash", 40.0, "Concert Tickets", "Concert tickets for the weekend", "789 Oak St", Transaction.Type.EXPENSE),
-                new Transaction(1, "Transportation", "Debit Card", 30.0, "Public Transit", "Public transportation fare", "101 Pine St", Transaction.Type.EXPENSE),
-                new Transaction(1, "Dining", "Cash", 50.0, "Restaurant Dinner", "Dinner with friends", "246 Maple St", Transaction.Type.EXPENSE)
+        return new PhysicalTransaction[]{
+                new PhysicalTransaction(1, "Salary", "Direct Deposit", 3000.0, "Monthly Salary", pastDate3, "November Income", "Your Company Address", Transaction.Type.EARNING),
+                new PhysicalTransaction(1, "Healthcare", "Check", 70.0, "Fuel", "Refilled gas for the car", "853 Abbott St", Transaction.Type.EXPENSE),
+                new PhysicalTransaction(1, "Freelancing", "Bank Transfer", 500.0, "Freelance Work", "Web design project", "Client Address", Transaction.Type.EARNING),
+                new PhysicalTransaction(1, "Investment", "Direct Deposit", 200.0, "Stock Dividend", pastDate2, "Quarterly dividend payment", "Investment Firm Address", Transaction.Type.EARNING),
+                new PhysicalTransaction(1, "Utilities", "Bank Transfer", 150.0, "Electricity, Water, Gas", "Monthly utility bills", "456 Elm St", Transaction.Type.EXPENSE),
+                new PhysicalTransaction(1, "Entertainment", "Cash", 40.0, "Concert Tickets", "Concert tickets for the weekend", "789 Oak St", Transaction.Type.EXPENSE),
+                new PhysicalTransaction(1, "Dining", "Cash", 50.0, "Restaurant Dinner", pastDate1, "Dinner with friends", "246 Maple St", Transaction.Type.EXPENSE)
+        };
+    }
+
+    public static DigitalWalletTransaction[] populateDigitalWalletTransactionData() {
+        LocalDate pastDate1 = LocalDate.of(2023, 10, 15);
+        LocalDate pastDate2 = LocalDate.of(2023, 9, 28);
+        LocalDate pastDate3 = LocalDate.of(2023, 9, 30);
+
+        return new DigitalWalletTransaction[] {
+                new DigitalWalletTransaction(1, "Personal Care", "Digital Wallet",  25.0, "Movie Night", pastDate2, "Tickets for movie night", "350 Northridge Shopping Ctr", Transaction.Type.EXPENSE, 1),
+                new DigitalWalletTransaction(1, "Housing", "Digital Wallet", 80.0, "Supermarket", "Weekly grocery shopping", "123 Main St", Transaction.Type.EXPENSE, 5),
+                new DigitalWalletTransaction(1, "Transportation", "Digital Wallet",  30.0, "Public Transit", "Public transportation fare", "101 Pine St", Transaction.Type.EXPENSE , 2),
+                new DigitalWalletTransaction(1, "Dining", "Crypto", 16.75, "Popeyes", pastDate3, "Purchased lunch for the day", "590 Auto Center Dr Unit 1A", Transaction.Type.EXPENSE, 1),
+                new DigitalWalletTransaction(1, "Debt", "Crypto", 10000.0, "Student Loans", "", "", Transaction.Type.EXPENSE, 1)
+
         };
     }
 
@@ -183,7 +194,31 @@ public class PrepopulateDb {
         return new Notification[]{
                 new Notification(1, "Expense Alert", "You've exceeded your allocated budget for this month. Consider adjusting your spending habits to stay on track", Notification.Type.ALERT),
                 new Notification(1, "Categorization Reminder", "You have unclassified expenses from last week. Categorize them to gain better insights into your spending patterns", Notification.Type.REMINDER),
-                new Notification(2, "Week Insights", "Income: $N\nExpenses: $N\nStay mindful of your spending to maintain a balanced budget.", Notification.Type.WEEKLY_INSIGHT)
+                new Notification(2, "Week Insights", "Income: $NExpenses: $NStay mindful of your spending to maintain a balanced budget.", Notification.Type.WEEKLY_INSIGHT)
+        };
+    }
+
+    public static DigitalWallet[] populateDigitalWalletData() {
+        return new DigitalWallet[]{
+                new DigitalWallet("Crypto Debit Card", "https://drive.google.com/file/d/1-ehGbraL448k8wT5Z-vYhvm1Vwx03rDW/view?usp=sharing", DigitalWallet.Type.CRYPTO),
+                new DigitalWallet("Hardware Wallet", "https://drive.google.com/file/d/1OHjAuJLsnZDp2kyEqKwuYF6zvRmFBIds/view?usp=sharing", DigitalWallet.Type.CRYPTO),
+                new DigitalWallet("Software Wallet", "https://drive.google.com/file/d/1ldv97aU8mqRA67p69t5_gnDr8NQvOExf/view?usp=sharing", DigitalWallet.Type.CRYPTO),
+                new DigitalWallet("Google Wallet", "https://drive.google.com/file/d/1KpvUJmacWrBVLVAfuS9SlpkJEBqZr1uH/view?usp=sharing", DigitalWallet.Type.DIGITAL),
+                new DigitalWallet("Paypal", "https://drive.google.com/file/d/1C1DGUX7tkbGzwkY_RxjeRdRgqIgBE-kH/view?usp=sharing", DigitalWallet.Type.DIGITAL),
+                new DigitalWallet("Venmo Debit Card", "https://drive.google.com/file/d/1MY2-rtaPbbCcJqfsgiGmvf1q7xVJPaP1/view?usp=sharing", DigitalWallet.Type.DIGITAL),
+                new DigitalWallet("Samsung Wallet","https://drive.google.com/file/d/17K7TLYL7Hd7NoaIaiRhWngK8ztYPJeSR/view?usp=sharing", DigitalWallet.Type.DIGITAL),
+                new DigitalWallet("Credit Card","https://drive.google.com/file/d/1IQjGTtmrPqdnieqHD4cbm5hSFMKbrvhj/view?usp=sharing", DigitalWallet.Type.BANK),
+                new DigitalWallet("Debit Card","https://drive.google.com/file/d/11K-ZnfAgDJMCUZ7gqFKZ_vOx1ALAg9Z6/view?usp=sharing", DigitalWallet.Type.BANK)
+        };
+    }
+
+    public static UserDigitalWallet[] populateUserDigitalWalletData() {
+        return new UserDigitalWallet[] {
+                new UserDigitalWallet(1, "Crypto Debit Card", "CT8752-ABD36-PLK98-TGY21", false),
+                new UserDigitalWallet(1, "Hardware Wallet", "", false),
+                new UserDigitalWallet(2, "Venmo Debit Card", "4485 7298 1037 6621", false),
+                new UserDigitalWallet(2, "Credit Card", "5271 8943 2156 7798", false),
+                new UserDigitalWallet(1, "Software Wallet", "7a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6", false)
         };
     }
 }

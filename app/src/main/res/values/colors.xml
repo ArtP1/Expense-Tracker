@@ -17,4 +17,5 @@
     <color name="progressGreen">#00FF00</color>
     <color name="progressYellow">#FFFF00</color>
     <color name="progressRed">#FF0000</color>
+    <color name="domedBckgrnd">#80000000</color>
 </resources>

@@ -15,15 +15,12 @@ public class Category {
     @PrimaryKey
     private String name;
 
-    // COLUMNS
-    private String color_hex;
-
+    // COLUMN(S)
     @NonNull
     private String icon;
 
 
-    public Category(String name, String color_hex, @NonNull String icon) {
-        this.color_hex = color_hex;
+    public Category(String name, @NonNull String icon) {
         this.name = name;
         this.icon = icon;
     }
@@ -31,15 +28,6 @@ public class Category {
     @Ignore
     public Category(@NonNull String name) {
         this.name = name;
-    }
-
-
-    public String getColor_hex() {
-        return color_hex;
-    }
-
-    public void setColor_hex(String color_hex) {
-        this.color_hex = color_hex;
     }
 
     @NonNull

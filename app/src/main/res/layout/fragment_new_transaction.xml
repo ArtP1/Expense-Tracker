@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newTransactionScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -11,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="12dp"
         tools:context=".Fragments.NewTransactionFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,6 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:orientation="vertical"
+                android:padding="12dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/newTransactionHeader"
                 app:layout_constraintVertical_bias="0.186"
@@ -48,8 +50,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Title"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editTextTransTitle"
@@ -69,9 +71,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="* required"
                         android:layout_weight="1"
-                        android:gravity="end"/>
+                        android:gravity="end"
+                        android:text="* required" />
                 </LinearLayout>
 
                 <Space
@@ -79,7 +81,7 @@
                     android:layout_height="12dp" />
 
                 <TextView
-                    android:id="@+id/textView9"
+                    android:id="@+id/transDescriptionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description"
@@ -87,14 +89,13 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/editTextTransDescrip"
+                    android:id="@+id/transDescriptionInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_edittext1"
                     android:hint="Enter transaction description"
                     android:inputType="text"
                     android:padding="10dp" />
-
 
 
                 <Space
@@ -106,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:text="Location"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editTextTransLocation"
@@ -115,7 +116,7 @@
                     android:background="@drawable/custom_edittext1"
                     android:hint="Enter transaction location"
                     android:inputType="text"
-                    android:padding="10dp"/>
+                    android:padding="10dp" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -132,14 +133,14 @@
                 <TextView
                     android:id="@+id/transactionDateTextView"
                     android:layout_width="match_parent"
-                    android:textSize="17sp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_edittext1"
-                    android:hint="Select transaction date"
-                    android:padding="13dp"
                     android:clickable="true"
                     android:focusable="false"
-                    android:onClick="showDatePicker" />
+                    android:hint="Select transaction date"
+                    android:onClick="showDatePicker"
+                    android:padding="13dp"
+                    android:textSize="17sp" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -166,11 +167,11 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="* required"
                         android:layout_weight="1"
-                        android:gravity="end"/>
+                        android:gravity="end"
+                        android:text="* required" />
                 </LinearLayout>
 
                 <Space
@@ -189,7 +190,7 @@
                     android:id="@+id/paymentMethodsSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:background="@drawable/custom_spinners"/>
+                    android:background="@drawable/custom_spinners" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -197,11 +198,64 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="* required" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/digitalWalletPopupInputsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="* required"
-                        android:layout_weight="1"
-                        android:gravity="end"/>
+                        android:text="Your Wallets"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/userDigitalWalletsSpinner"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@drawable/custom_spinners" />
+
+                        <Button
+                            android:id="@+id/createDigitalWalletBtn"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/black_new_transaction_dw_btn"
+                            android:gravity="center"
+                            android:text="+"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="* required" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <Space
@@ -219,19 +273,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginTop="10dp"
-                    android:layout_gravity="center_vertical">
+                    android:orientation="horizontal">
 
                     <CheckBox
                         android:id="@+id/checkBoxTransExpense"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:layout_weight="1"
                         android:padding="8dp"
                         android:text="Expense"
-                        android:layout_marginLeft="50dp"
                         android:textSize="15sp"
-                        android:layout_weight="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.237"
@@ -243,10 +297,10 @@
                         android:id="@+id/checkBoxTransEarning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:padding="8dp"
                         android:text="Earning"
                         android:textSize="15sp"
-                        android:layout_weight="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.682"
@@ -263,9 +317,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="* required"
                         android:layout_weight="1"
-                        android:gravity="end"/>
+                        android:gravity="end"
+                        android:text="* required" />
                 </LinearLayout>
 
                 <Space
@@ -287,8 +341,8 @@
                     android:background="@drawable/custom_edittext1"
                     android:hint="Enter transaction amount"
                     android:inputType="numberDecimal"
-                    android:padding="10dp"
                     android:maxLines="1"
+                    android:padding="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -304,9 +358,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="* required"
                         android:layout_weight="1"
-                        android:gravity="end"/>
+                        android:gravity="end"
+                        android:text="* required" />
                 </LinearLayout>
 
                 <Space
@@ -318,12 +372,12 @@
                     android:layout_width="175dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/black_new_transaction_btn"
                     android:gravity="center"
                     android:padding="18dp"
                     android:text="Create"
                     android:textAllCaps="false"
-                    android:layout_marginBottom="10dp"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -332,5 +386,129 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/newDigitalWalletForm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+           >
+
+            <!-- Background overlay to dim the existing layout -->
+            <View
+                android:id="@+id/newDigitalWalletFormBckgrd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/domedBckgrnd"
+                android:clickable="true" />
+
+            <!-- CardView as the overlay for creating DigitalWallet -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/digitalWalletCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/addDigitalWalletHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Add Digital Wallet"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/addDigitalWalletLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/digitalWalletTypeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Type"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/newDigitalWalletTypeSpinnerInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:background="@drawable/custom_spinners" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end"
+                                android:text="* required" />
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp" />
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Wallet Number/token"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/newDigitalWalletNumberTokenInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/custom_edittext1"
+                            android:hint="Enter wallet number/token"
+                            android:inputType="text"
+                            android:padding="10dp" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp" />
+
+                        <CheckBox
+                            android:id="@+id/newDigitalWalletIsDefaultInput"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="Set as Default Wallet" />
+
+                        <Button
+                            android:id="@+id/addNewDigitalWalletBtn"
+                            android:layout_width="175dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="25dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/black_new_transaction_btn"
+                            android:gravity="center"
+                            android:padding="18dp"
+                            android:text="Create"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
     </FrameLayout>
 </ScrollView>

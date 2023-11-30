@@ -43,7 +43,7 @@ import java.time.LocalDate;
                 @Index("payment_method")
         }
 )
-public class Transaction {
+public abstract class Transaction {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -56,7 +56,6 @@ public class Transaction {
     private String payment_method;
 
     // COLUMNS
-    @NonNull
     private double amount;
 
     @NonNull
@@ -78,20 +77,8 @@ public class Transaction {
     @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
     private Type transType;
 
-    /**
-     * Constructs a Transaction object with specified parameters, setting the submission date to the current system date
-     *
-     * @param user_id
-     * @param category_name
-     * @param payment_method
-     * @param amount
-     * @param title
-     * @param description
-     * @param location
-     * @param transType
-     */
     @Ignore
-    public Transaction(long user_id, String category_name, String payment_method, @NonNull double amount, @NonNull String title, String description, String location, @NonNull Type transType) {
+    public Transaction(long user_id, String category_name, String payment_method, double amount, @NonNull String title, String description, String location, @NonNull Type transType) {
         LocalDate currDate = LocalDate.now();
         this.user_id = user_id;
         this.category_name = category_name;
@@ -136,11 +123,12 @@ public class Transaction {
         this.amount = amount;
     }
 
+    @NonNull
     public LocalDate getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(LocalDate dateSubmitted) {
+    public void setDateSubmitted(@NonNull LocalDate dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 

@@ -22,8 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.expensetracker.Components.TransactionAdapter;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.PhysicalTransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.Preferences;
@@ -64,7 +65,7 @@ public class TransactionsFragment extends Fragment {
 
     private CardView mAllTransactionsCardView;
 
-    private TransactionDAO transactionDAO;
+    private PhysicalTransactionDAO physicalTransactionDAO;
     private UserDAO userDAO;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -139,7 +140,7 @@ public class TransactionsFragment extends Fragment {
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         userDAO = expenseTrackerDatabase.userDAO();
-        transactionDAO = expenseTrackerDatabase.transactionDAO();
+        physicalTransactionDAO = expenseTrackerDatabase.physicalTransactionDAO();
     }
 
     private void displayData() {
@@ -169,8 +170,8 @@ public class TransactionsFragment extends Fragment {
 
             String yearMonth = String.format(Locale.US, "%04d-%02d", year, month);
 
-            double income = transactionDAO.getMonthlyIncomeForMonth(currUserID, yearMonth);
-            double expense = transactionDAO.getMonthlyExpenseForMonth(currUserID, yearMonth);
+            double income = physicalTransactionDAO.getMonthlyIncomeForMonth(currUserID, yearMonth);
+            double expense = physicalTransactionDAO.getMonthlyExpenseForMonth(currUserID, yearMonth);
             incomeList.add((float) income);
             expenseList.add((float) expense);
         }
@@ -247,11 +248,11 @@ public class TransactionsFragment extends Fragment {
         mBarChart.invalidate();
 
 
-        mIncomeAmountTextView.setText("$" + transactionDAO.getTotalMonthlyEarningsByUserID(currUserID));
-        mExpenseAmountTextView.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+        mIncomeAmountTextView.setText("$" + physicalTransactionDAO.getTotalMonthlyEarningsByUserID(currUserID));
+        mExpenseAmountTextView.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
         try {
-            LiveData<List<Transaction>> allUserTransactionsLiveData = transactionDAO.getMonthMostRecentTransactionsByUserID(currUserID);
+            LiveData<List<PhysicalTransaction>> allUserTransactionsLiveData = physicalTransactionDAO.getMonthMostRecentPhysicalTransactionsByUserID(currUserID);
 
             allUserTransactionsLiveData.observe(getViewLifecycleOwner(), userTransactions -> {
                 if (userTransactions != null && !userTransactions.isEmpty()) {
@@ -289,11 +290,11 @@ public class TransactionsFragment extends Fragment {
                         @Override
                         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                             int position = viewHolder.getBindingAdapterPosition();
-                            Transaction transaction = transactionAdapter.getTransaction(position);
+                            PhysicalTransaction transaction = transactionAdapter.getTransaction(position);
 
                             if (direction == ItemTouchHelper.LEFT) {
                                 // Handle delete action
-                                transactionDAO.deleteTransaction(transaction);
+                                physicalTransactionDAO.deletePhysicalTransaction(transaction);
                                 transactionAdapter.removeTransaction(position);
                                 transactionAdapter.notifyItemRemoved(position);
 
@@ -302,21 +303,21 @@ public class TransactionsFragment extends Fragment {
                                             @Override
                                             public void onClick(View view) {
                                                 userTransactions.add(position, transaction);
-                                                transactionDAO.insertTransaction(transaction);
+                                                physicalTransactionDAO.insertPhysicalTransaction(transaction);
 
                                                 if (transaction.getTransType().equals(Transaction.Type.EXPENSE)) {
-                                                    mExpenseAmountTextView.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                                    mExpenseAmountTextView.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
                                                 } else if (transaction.getTransType().equals(Transaction.Type.EARNING)) {
-                                                    mIncomeAmountTextView.setText("$" + transactionDAO.getTotalMonthlyEarningsByUserID(currUserID));
+                                                    mIncomeAmountTextView.setText("$" + physicalTransactionDAO.getTotalMonthlyEarningsByUserID(currUserID));
                                                 }
                                                 transactionAdapter.notifyItemInserted(position);
                                             }
                                         }).show();
 
                                 if (transaction.getTransType().equals(Transaction.Type.EXPENSE)) {
-                                    mExpenseAmountTextView.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                    mExpenseAmountTextView.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
                                 } else if (transaction.getTransType().equals(Transaction.Type.EARNING)) {
-                                    mIncomeAmountTextView.setText("$" + transactionDAO.getTotalMonthlyEarningsByUserID(currUserID));
+                                    mIncomeAmountTextView.setText("$" + physicalTransactionDAO.getTotalMonthlyEarningsByUserID(currUserID));
                                 }
                             }
                         }

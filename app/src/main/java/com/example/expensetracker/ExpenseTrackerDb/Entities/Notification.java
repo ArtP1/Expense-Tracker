@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -18,7 +19,9 @@ import java.time.LocalDateTime;
                 parentColumns = "id",
                 childColumns = "user_id",
                 onDelete = ForeignKey.CASCADE,
-                onUpdate = ForeignKey.CASCADE))
+                onUpdate = ForeignKey.CASCADE),
+        indices = @Index("user_id")
+)
 public class Notification {
     @PrimaryKey(autoGenerate = true)
     private int id;

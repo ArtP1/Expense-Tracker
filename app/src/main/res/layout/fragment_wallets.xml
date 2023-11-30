@@ -13,7 +13,7 @@
         <View
             android:id="@+id/view2"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="290dp"
             android:background="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -21,6 +21,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:layout_width="291dp"
+            android:layout_height="185dp"
+            android:text="No Wallets"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="@+id/view2"
+            app:layout_constraintStart_toStartOf="@+id/view2"
+            app:layout_constraintTop_toTopOf="@+id/view2" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -59,7 +69,7 @@
             app:layout_constraintVertical_bias="0.861" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/walletNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Jaime"
@@ -70,6 +80,19 @@
             app:layout_constraintStart_toStartOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="@+id/imageView3"
             app:layout_constraintVertical_bias="0.861" />
+
+        <TextView
+            android:id="@+id/walletTypeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="@+id/view2"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/view2"
+            app:layout_constraintTop_toTopOf="@+id/view2"
+            app:layout_constraintVertical_bias="0.944" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -104,6 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:cardCornerRadius="16dp"
+            android:layout_marginTop="50dp"
             app:cardElevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

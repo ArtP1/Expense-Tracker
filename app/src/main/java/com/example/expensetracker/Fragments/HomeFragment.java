@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.expensetracker.Components.TransactionAdapter;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.PhysicalTransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.FragmentContainerActivity;
@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     private CardView mRecentTransactionsCardView;
     private ImageView mNotificationImg;
     private RecyclerView mTransactionsRecyclerView;
-    private TransactionDAO transactionDAO;
+    private PhysicalTransactionDAO physicalTransactionDAO;
     private UserDAO userDAO;
 
     private final LocalDate currDate = LocalDate.now();
@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment {
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         userDAO = expenseTrackerDatabase.userDAO();
-        transactionDAO = expenseTrackerDatabase.transactionDAO();
+        physicalTransactionDAO = expenseTrackerDatabase.physicalTransactionDAO();
     }
 
     private void displayData() {
@@ -175,10 +175,10 @@ public class HomeFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+        mMonthsExpenses.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
         try {
-            LiveData<List<Transaction>> recentTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
+            LiveData<List<PhysicalTransaction>> recentTransactionsLiveData = physicalTransactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
 
             recentTransactionsLiveData.observe(getViewLifecycleOwner(), recentTransactionsList -> {
                 if (recentTransactionsList != null && !recentTransactionsList.isEmpty()) {
@@ -217,21 +217,21 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                             int position = viewHolder.getBindingAdapterPosition();
-                            Transaction transaction = transactionAdapter.getTransaction(position);
+                            PhysicalTransaction transaction = transactionAdapter.getTransaction(position);
 
                             if (direction == ItemTouchHelper.LEFT) {
                                 // Handle delete action
-                                transactionDAO.deleteTransaction(transaction);
+                                physicalTransactionDAO.deletePhysicalTransaction(transaction);
 
                                 Snackbar.make(mTransactionsRecyclerView, "Deleted: " + transaction.getTitle(), Snackbar.LENGTH_LONG)
                                         .setAction("Undo", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                transactionDAO.insertTransaction(transaction);
+                                                physicalTransactionDAO.insertPhysicalTransaction(transaction);
                                                 recentTransactionsList.add(position, transaction);
                                                 transactionAdapter.notifyItemInserted(position);
 
-                                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                                mMonthsExpenses.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
                                                 if (recentTransactionsList.isEmpty()) {
                                                     mEmptyExpensesTextView.setVisibility(View.VISIBLE);
@@ -247,7 +247,7 @@ public class HomeFragment extends Fragment {
                                 transactionAdapter.notifyItemRemoved(position);
                                 transactionAdapter.notifyItemRangeChanged(position, transactionAdapter.getItemCount());
 
-                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                mMonthsExpenses.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
                                 if (recentTransactionsList.isEmpty()) {
                                     mEmptyExpensesTextView.setVisibility(View.VISIBLE);

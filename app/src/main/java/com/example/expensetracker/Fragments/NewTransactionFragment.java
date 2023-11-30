@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +24,16 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.DigitalWalletDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.PaymentMethodDAO;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.PhysicalTransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDigitalWalletDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.DigitalWallet;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.UserDigitalWallet;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
@@ -41,23 +49,30 @@ import java.util.List;
  */
 public class NewTransactionFragment extends Fragment {
 
+    private SharedPreferences sharedPreferences;
     private EditText mEditTextTransTitle;
     private EditText mEditTextTransDescrip;
     private EditText mEditTextTransLocation;
     private EditText mEditTextTransAmount;
-
     TextView mTransactionDateTextView;
-
     private Spinner mCategorySpinner;
     private Spinner mPaymentMethodsSpinner;
+    private Spinner mUserDigitalWalletsSpinner;
+    private LinearLayout mDigitalWalletPopupInputsContainer;
+    private RelativeLayout mNewDigitalWalletForm;
+
     private CheckBox mCheckBoxTransExpense;
     private CheckBox mCheckBoxTransEarning;
-    private Button mCreateTransactionBtn;
 
     private CategoryDAO categoryDAO;
-    private TransactionDAO transactionDAO;
+    private PhysicalTransactionDAO physicalTransactionDAO;
 
     private PaymentMethodDAO paymentMethodDAO;
+
+    private UserDigitalWalletDAO userDigitalWalletDAO;
+
+    private DigitalWalletDAO digitalWalletDAO;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -110,20 +125,26 @@ public class NewTransactionFragment extends Fragment {
 
         initializeDatabase();
 
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
+        this.sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
         long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
 
 
         mEditTextTransTitle = mNewTransactionBinding.editTextTransTitle;
-        mEditTextTransDescrip = mNewTransactionBinding.editTextTransDescrip;
+        mEditTextTransDescrip = mNewTransactionBinding.transDescriptionInput;
         mEditTextTransLocation = mNewTransactionBinding.editTextTransLocation;
         mEditTextTransAmount = mNewTransactionBinding.editTextTransAmount;
         mCategorySpinner = mNewTransactionBinding.categorySpinner;
         mCheckBoxTransExpense = mNewTransactionBinding.checkBoxTransExpense;
         mCheckBoxTransEarning = mNewTransactionBinding.checkBoxTransEarning;
-        mCreateTransactionBtn = mNewTransactionBinding.createTransactionBtn;
+        Button mCreateTransactionBtn = mNewTransactionBinding.createTransactionBtn;
         mPaymentMethodsSpinner = mNewTransactionBinding.paymentMethodsSpinner;
         mTransactionDateTextView = mNewTransactionBinding.transactionDateTextView;
+        mDigitalWalletPopupInputsContainer = mNewTransactionBinding.digitalWalletPopupInputsContainer;
+        mUserDigitalWalletsSpinner = mNewTransactionBinding.userDigitalWalletsSpinner;
+        Button mCreateDigitalWalletBtn = mNewTransactionBinding.createDigitalWalletBtn;
+        mNewDigitalWalletForm = mNewTransactionBinding.newDigitalWalletForm;
+        View mNewDigitalWalletFormBckgrd = mNewTransactionBinding.newDigitalWalletFormBckgrd;
+        Button mAddNewDigitalWalletBtn = mNewTransactionBinding.addNewDigitalWalletBtn;
 
         displayData();
 
@@ -133,7 +154,87 @@ public class NewTransactionFragment extends Fragment {
                 showDatePicker();
             }
         });
+        mPaymentMethodsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
 
+                if (selectedItem.equals("Digital Wallet")) {
+                    // Show the digitalWalletSpinner
+                    mDigitalWalletPopupInputsContainer.setVisibility(View.VISIBLE);
+
+                    List<UserDigitalWallet> userDigitalWalletsList = userDigitalWalletDAO.getUserDigitalWalletsByUserID(currUserID);
+
+
+                    if(userDigitalWalletsList.size() > 0) {
+                        UserDigitalWallet userDefaultDigitalWalletSelection = userDigitalWalletDAO.getDefaultUserDigitalWalletByUserID(currUserID);
+
+                        userDigitalWalletsList.add(0, userDefaultDigitalWalletSelection);
+
+                        ArrayAdapter<UserDigitalWallet> userDigitalWalletArrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, userDigitalWalletsList);
+                        userDigitalWalletArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        mUserDigitalWalletsSpinner.setAdapter(userDigitalWalletArrayAdapter);
+                        mUserDigitalWalletsSpinner.setSelection(0);
+
+                    } else {
+                        Toast.makeText(requireContext(), "You have no digital wallet(s)!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    mDigitalWalletPopupInputsContainer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle the case where nothing is selected
+            }
+        });
+
+        mCreateDigitalWalletBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.domedBckgrnd));
+                requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+                mNewDigitalWalletForm.setVisibility(View.VISIBLE);
+
+                List<DigitalWallet> digitalWallets = digitalWalletDAO.getAllDigitalWallets();
+
+                Spinner mNewDigitalWalletTypeSpinner = mNewTransactionBinding.newDigitalWalletTypeSpinnerInput;
+
+                ArrayAdapter<DigitalWallet> digitalWalletArrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, digitalWallets);
+                digitalWalletArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                mNewDigitalWalletTypeSpinner.setAdapter(digitalWalletArrayAdapter);
+                EditText mNewDigitalWalletNumberToken = mNewTransactionBinding.newDigitalWalletNumberTokenInput;
+                CheckBox mNewDigitalWalletIsDefault = mNewTransactionBinding.newDigitalWalletIsDefaultInput;
+
+                DigitalWallet selectedDigitalWallet = (DigitalWallet) mNewDigitalWalletTypeSpinner.getSelectedItem();
+                String digitalWalletName = selectedDigitalWallet.getName();
+
+                String cardNumberOrToken = mNewDigitalWalletNumberToken.getText().toString();
+                boolean isSetDefaultWalletInput = mNewDigitalWalletIsDefault.isChecked();
+
+                userDigitalWalletDAO.insertUserDigitalWallet(new UserDigitalWallet(currUserID, digitalWalletName, cardNumberOrToken, isSetDefaultWalletInput));
+            }
+        });
+
+        mAddNewDigitalWalletBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNewDigitalWalletForm.setVisibility(View.GONE);
+                Toast.makeText(requireContext(), "Successfully registered new Digital Wallet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mNewDigitalWalletFormBckgrd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
+                requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                mNewDigitalWalletForm.setVisibility(View.GONE);
+            }
+        });
         mCreateTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,19 +257,21 @@ public class NewTransactionFragment extends Fragment {
                 PaymentMethod selectedPaymentMethod = (PaymentMethod) mPaymentMethodsSpinner.getSelectedItem();
                 String transPaymentMethod = selectedPaymentMethod.getMethod();
 
-                Transaction newTransaction = null;
+                PhysicalTransaction newTransaction = null;
                 if(!transTitle.isEmpty() && !transCategoryName.equals("N/A") && !transPaymentMethod.equals("N/A") && (transIsExpense || transIsEarning) && transAmount > 0) {
                     if (transIsExpense) {
-                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
-                    } else if (transIsEarning) {
-                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                        newTransaction = new PhysicalTransaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
+                    }
+
+                    if (transIsEarning) {
+                        newTransaction = new PhysicalTransaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
                     }
                 } else {
                     Toast.makeText(requireContext(), "Fill out all required inputs!", Toast.LENGTH_SHORT).show();
                 }
 
                 if (newTransaction != null) {
-                    transactionDAO.insertTransaction(newTransaction);
+                    physicalTransactionDAO.insertPhysicalTransaction(newTransaction);
 
                     getParentFragmentManager().beginTransaction()
                             .replace(R.id.frameLayout, new HomeFragment())
@@ -186,8 +289,10 @@ public class NewTransactionFragment extends Fragment {
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         categoryDAO = expenseTrackerDatabase.categoryDAO();
-        transactionDAO = expenseTrackerDatabase.transactionDAO();
+        physicalTransactionDAO = expenseTrackerDatabase.physicalTransactionDAO();
         paymentMethodDAO = expenseTrackerDatabase.paymentMethodDAO();
+        userDigitalWalletDAO = expenseTrackerDatabase.userDigitalWalletDAO();
+        digitalWalletDAO = expenseTrackerDatabase.digitalWalletDAO();
     }
 
     private void displayData() {

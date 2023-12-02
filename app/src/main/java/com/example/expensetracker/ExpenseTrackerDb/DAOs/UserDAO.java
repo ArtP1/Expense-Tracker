@@ -37,7 +37,7 @@ public interface UserDAO {
     @Query("SELECT * FROM user_table")
     List<User> getAllUsers();
 
-    @Query("SELECT * FROM user_table WHERE id==:userId")
+    @Query("SELECT * FROM user_table WHERE id = :userId")
     User getUserById(long userId);
 
     @Query("SELECT * FROM user_table WHERE username==:username")

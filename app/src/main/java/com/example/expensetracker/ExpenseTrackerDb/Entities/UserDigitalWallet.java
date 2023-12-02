@@ -55,8 +55,11 @@ public class UserDigitalWallet {
         this.isDefault = isDefault;
     }
 
-    public UserDigitalWallet(@NonNull String wallet_type) {
+    public UserDigitalWallet(long user_id, @NonNull String wallet_type, String card_number_or_token) {
+        this.user_id = user_id;
         this.wallet_type = wallet_type;
+        this.card_number_or_token = card_number_or_token;
+        this.isDefault = false;
     }
 
     public long getId() {
@@ -104,7 +107,7 @@ public class UserDigitalWallet {
     @Override
     public String toString() {
         if(card_number_or_token.length() >= 4) {
-            return wallet_type + "  - ...." + card_number_or_token.substring(card_number_or_token.length() - 4);
+            return wallet_type + "      ...." + card_number_or_token.substring(card_number_or_token.length() - 4);
         }
 
         return wallet_type;

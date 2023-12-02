@@ -95,6 +95,16 @@
                 app:layout_constraintTop_toBottomOf="@id/welcomeMsg"
                 app:layout_constraintVertical_bias="0.0" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Top 3 Spent Categories"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/recentTransactions"
+                app:layout_constraintEnd_toEndOf="@+id/transactionsPieChart"
+                app:layout_constraintStart_toStartOf="@+id/transactionsPieChart"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.414" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/transactionsPieChart"
@@ -105,7 +115,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transactionsProgressBar"
-                app:layout_constraintVertical_bias="0.093" />
+                app:layout_constraintVertical_bias="0.18" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/recentTransactions"
@@ -118,45 +128,45 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transactionsPieChart"
-                app:layout_constraintVertical_bias="0.373">
+                app:layout_constraintVertical_bias="0.204">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="13dp">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="13dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:text="Top Spending Categories"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingBottom="10dp"
+                                        android:text="Top Spending Categories"
+                                        android:textColor="@color/black"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
 
 
-                    <TextView
-                        android:id="@+id/emptyExpensesTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="320dp"
-                        android:gravity="center"
-                        android:text="No Transactions"
-                        tools:layout_editor_absoluteX="-16dp"
-                        tools:layout_editor_absoluteY="342dp" />
+                                    <TextView
+                                        android:id="@+id/emptyExpensesTextView"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="320dp"
+                                        android:gravity="center"
+                                        android:text="No Transactions"
+                                        tools:layout_editor_absoluteX="-16dp"
+                                        tools:layout_editor_absoluteY="342dp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/transactionsCategoriesRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.491"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
-                        app:layout_constraintVertical_bias="0.529" />
-                </LinearLayout>
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/transactionsCategoriesRecyclerView"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/white"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintHorizontal_bias="0.491"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/spendingWallet"
+                                        app:layout_constraintVertical_bias="0.529" />
+                                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <Button
@@ -164,6 +174,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="100dp"
+                android:layout_marginBottom="70dp"
                 android:background="@drawable/black_new_transaction_btn"
                 android:gravity="center"
                 android:padding="20dp"
@@ -171,8 +183,6 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:layout_marginTop="100dp"
-                android:layout_marginBottom="70dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

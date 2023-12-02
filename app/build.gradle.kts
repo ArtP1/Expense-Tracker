@@ -38,6 +38,10 @@ dependencies {
     annotationProcessor ("androidx.room:room-compiler:2.6.0")
     androidTestImplementation ("androidx.room:room-testing:2.6.0")
 
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+
+
     // Graph views
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 

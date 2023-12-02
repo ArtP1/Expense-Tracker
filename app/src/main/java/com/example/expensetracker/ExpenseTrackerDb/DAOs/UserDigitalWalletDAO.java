@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.expensetracker.ExpenseTrackerDb.Entities.UserDigitalWallet;
+import com.example.expensetracker.ExpenseTrackerDb.Models.UserDigitalWalletWithInformation;
 
 import java.util.List;
 
@@ -29,5 +30,13 @@ public interface UserDigitalWalletDAO {
 
     @Query("SELECT * FROM user_digital_wallet_table WHERE user_id = :user_id AND isDefault = 1")
     UserDigitalWallet getDefaultUserDigitalWalletByUserID(long user_id);
+
+    @Query("SELECT * FROM user_digital_wallet_table ud " +
+            "INNER JOIN digital_wallet_table d ON ud.wallet_type = d.name " +
+            "WHERE user_id = :user_id AND isDefault = 1")
+    UserDigitalWalletWithInformation getDefaultUserDigitalWalletAndInformationByUserID(long user_id);
+
+    @Query("SELECT d.img FROM user_digital_wallet_table ud INNER JOIN digital_wallet_table d ON ud.wallet_type = d.name WHERE user_id = :user_id AND isDefault = 1")
+    String getUserDefaultDigitalWalletImg(long user_id);
 
 }

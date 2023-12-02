@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.expensetracker.Components.TransactionAdapter;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.PhysicalTransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
+import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.FragmentContainerActivity;
@@ -56,9 +56,8 @@ public class HomeFragment extends Fragment {
     private CardView mRecentTransactionsCardView;
     private ImageView mNotificationImg;
     private RecyclerView mTransactionsRecyclerView;
-    private PhysicalTransactionDAO physicalTransactionDAO;
+    private TransactionDAO transactionDAO;
     private UserDAO userDAO;
-
     private final LocalDate currDate = LocalDate.now();
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, d MMM", Locale.ENGLISH);
 
@@ -161,11 +160,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void initializeDatabase() {
-        ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(
-                requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
+        ExpenseTrackerDatabase expenseTrackerDatabase = Room.databaseBuilder(requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         userDAO = expenseTrackerDatabase.userDAO();
-        physicalTransactionDAO = expenseTrackerDatabase.physicalTransactionDAO();
+        this.transactionDAO = expenseTrackerDatabase.transactionDAO();
     }
 
     private void displayData() {
@@ -175,10 +173,10 @@ public class HomeFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        mMonthsExpenses.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+        mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
         try {
-            LiveData<List<PhysicalTransaction>> recentTransactionsLiveData = physicalTransactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
+            LiveData<List<Transaction>> recentTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
 
             recentTransactionsLiveData.observe(getViewLifecycleOwner(), recentTransactionsList -> {
                 if (recentTransactionsList != null && !recentTransactionsList.isEmpty()) {
@@ -217,21 +215,19 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                             int position = viewHolder.getBindingAdapterPosition();
-                            PhysicalTransaction transaction = transactionAdapter.getTransaction(position);
+                            Transaction transaction = transactionAdapter.getTransaction(position);
 
                             if (direction == ItemTouchHelper.LEFT) {
                                 // Handle delete action
-                                physicalTransactionDAO.deletePhysicalTransaction(transaction);
-
+                                transactionDAO.deleteTransaction(transaction);                                                recentTransactionsList.add(position, transaction);
                                 Snackbar.make(mTransactionsRecyclerView, "Deleted: " + transaction.getTitle(), Snackbar.LENGTH_LONG)
                                         .setAction("Undo", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                physicalTransactionDAO.insertPhysicalTransaction(transaction);
-                                                recentTransactionsList.add(position, transaction);
+                                                transactionDAO.insertTransaction(transaction);                                                recentTransactionsList.add(position, transaction);
                                                 transactionAdapter.notifyItemInserted(position);
 
-                                                mMonthsExpenses.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
                                                 if (recentTransactionsList.isEmpty()) {
                                                     mEmptyExpensesTextView.setVisibility(View.VISIBLE);
@@ -247,7 +243,7 @@ public class HomeFragment extends Fragment {
                                 transactionAdapter.notifyItemRemoved(position);
                                 transactionAdapter.notifyItemRangeChanged(position, transactionAdapter.getItemCount());
 
-                                mMonthsExpenses.setText("$" + physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
+                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
                                 if (recentTransactionsList.isEmpty()) {
                                     mEmptyExpensesTextView.setVisibility(View.VISIBLE);
@@ -283,10 +279,10 @@ public class HomeFragment extends Fragment {
                 }
             });
         } catch (Exception e) {
+            e.printStackTrace();
             mTransactionsRecyclerView.setVisibility(View.GONE);
             mEmptyExpensesTextView.setVisibility(View.VISIBLE);
             mMonthsExpenses.setText("$0");
-
         }
 
 

@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.bumptech.glide.Glide;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.R;
@@ -23,11 +23,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
     CategoryDAO categoryDAO;
 
     Context context;
-    List<PhysicalTransaction> physicalTransactionList;
+    List<Transaction> transactionList;
 
-    public TransactionAdapter(Context context, List<PhysicalTransaction> physicalTransactionList) {
+    public TransactionAdapter(Context context, List<Transaction> transactionList) {
         this.context = context;
-        this.physicalTransactionList = physicalTransactionList;
+        this.transactionList = transactionList;
         this.categoryDAO = Room.databaseBuilder(context, ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
                 .build()
@@ -44,52 +44,50 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH);
 
-        String categoryName = physicalTransactionList.get(position).getCategory_name();
-        Transaction.Type transType = physicalTransactionList.get(position).getTransType();
+        String categoryName = transactionList.get(position).getCategory_name();
+        Transaction.Type transType = transactionList.get(position).getTransType();
 
         Category category = categoryDAO.getCategoryByName(categoryName);
 
-        if (category != null) {
-//            holder.mExpenseImage.setImageResource((category.getIcon()));
-            String resourceName = category.getIcon();
-            int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
-
-            if (resourceId != 0) {
-                holder.mTransactionImage.setImageResource(resourceId);
-            } else {
-                holder.mTransactionImage.setImageResource(R.drawable.default_expense_icon);
-            }
+        String iconUrl  = category.getIcon();
+        if (iconUrl != null && !iconUrl.isEmpty()) {
+            // Load image using Glide
+            Glide.with(context)
+                    .load(iconUrl) // Load image from the URL string
+                    .placeholder(R.drawable.default_expense_icon) // Placeholder while loading
+                    .error(R.drawable.error_icon) // Error placeholder if loading fails
+                    .into(holder.mTransactionImage); // Set the loaded image to ImageView
         } else {
             holder.mTransactionImage.setImageResource(R.drawable.default_expense_icon);
         }
 
-        holder.mTransactionTitle.setText(physicalTransactionList.get(position).getTitle());
-        holder.mTransactionDate.setText(physicalTransactionList.get(position).getDateSubmitted().format(formatter));
+        holder.mTransactionTitle.setText(transactionList.get(position).getTitle());
+        holder.mTransactionDate.setText(transactionList.get(position).getDateSubmitted().format(formatter));
         Locale locale = Locale.US;
-        String formattedAmount = String.format(locale, "$%.2f", physicalTransactionList.get(position).getAmount());
+        String formattedAmount = String.format(locale, "$%.2f", transactionList.get(position).getAmount());
 
-        if (transType.equals(PhysicalTransaction.Type.EXPENSE)) {
+        if (transType.equals(Transaction.Type.EXPENSE)) {
 //            holder.mTransactionAmount.setTextColor(ContextCompat.getColor(context, R.color.expense_color));
             holder.mTransactionAmount.setText(context.getString(R.string.expense_amount_format, formattedAmount));
-        } else if (transType.equals(PhysicalTransaction.Type.EARNING)) {
+        } else if (transType.equals(Transaction.Type.EARNING)) {
 //            holder.mTransactionAmount.setTextColor(ContextCompat.getColor(context, R.color.earning_color));
             holder.mTransactionAmount.setText(context.getString(R.string.earning_amount_format, formattedAmount));
         }
     }
 
-    public PhysicalTransaction getTransaction(int position) {
-        return physicalTransactionList.get(position);
+    public Transaction getTransaction(int position) {
+        return transactionList.get(position);
     }
 
     public void removeTransaction(int position) {
-        if (position < physicalTransactionList.size() && position >= 0) {
-            physicalTransactionList.remove(position);
+        if (position < transactionList.size() && position >= 0) {
+            transactionList.remove(position);
             notifyItemRemoved(position);
         }
     }
 
     @Override
     public int getItemCount() {
-        return physicalTransactionList.size();
+        return transactionList.size();
     }
 }

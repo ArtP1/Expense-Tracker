@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.expensetracker.Components.CategoryTransactionAdapter;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.PhysicalTransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
@@ -67,7 +67,7 @@ public class AccountFragment extends Fragment {
 
     private RecyclerView mCategoryTransactionsRecyclerView;
 
-    private PhysicalTransactionDAO physicalTransactionDAO;
+    private TransactionDAO transactionDAO;
     private UserDAO userDAO;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -148,7 +148,7 @@ public class AccountFragment extends Fragment {
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         this.userDAO = expenseTrackerDatabase.userDAO();
-        this.physicalTransactionDAO = expenseTrackerDatabase.physicalTransactionDAO();
+        this.transactionDAO = expenseTrackerDatabase.transactionDAO();
     }
 
     private void displayData() {
@@ -156,7 +156,7 @@ public class AccountFragment extends Fragment {
 
         User currUser = userDAO.getUserById(currUserID);
 
-        Double loggedInUserTotalExpenses = physicalTransactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
+        Double loggedInUserTotalExpenses = transactionDAO.getTotalMonthlyExpensesByUserID(currUserID);
 
         mWelcomeMsg.setText(getString(R.string.welcome_message, currUser.getUsername()));
 
@@ -188,9 +188,9 @@ public class AccountFragment extends Fragment {
         }
 
         try {
-            LiveData<List<TransactionCategoryWithAmount>> categoryWithAmountLiveData = physicalTransactionDAO.getExpenseCategoriesWithAmount(currUserID);
+            LiveData<List<TransactionCategoryWithAmount>> categoryTopThreeExpensesWithAmountLiveData = transactionDAO.getTopThreeExpenseCategoriesWithAmount(currUserID);
 
-            categoryWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
+            categoryTopThreeExpensesWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
                 if (transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
                     mEmptyExpensesTextView.setVisibility(View.GONE);
 

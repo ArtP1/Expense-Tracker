@@ -14,7 +14,6 @@ import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 
 import java.time.LocalDate;
 
-
 @Entity(tableName = ExpenseTrackerDatabase.TRANSACTION_TABLE,
         foreignKeys = {
                 @ForeignKey(
@@ -35,15 +34,23 @@ import java.time.LocalDate;
                         parentColumns = "method",
                         childColumns = "payment_method",
                         onUpdate = ForeignKey.CASCADE
+                ),
+                @ForeignKey(
+                        entity = UserDigitalWallet.class,
+                        parentColumns = "id",
+                        childColumns = "wallet_id",
+                        onDelete = ForeignKey.SET_NULL,
+                        onUpdate = ForeignKey.CASCADE
                 )
         },
         indices = {
                 @Index("user_id"),
                 @Index("category_name"),
-                @Index("payment_method")
+                @Index("payment_method"),
+                @Index("wallet_id")
         }
 )
-public abstract class Transaction {
+public class Transaction {
     // PRIMARY KEY
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -54,6 +61,7 @@ public abstract class Transaction {
     private String category_name;
 
     private String payment_method;
+    private Integer wallet_id;
 
     // COLUMNS
     private double amount;
@@ -77,12 +85,13 @@ public abstract class Transaction {
     @ColumnInfo(collate = ColumnInfo.NOCASE) // Case-Insensitive Collation
     private Type transType;
 
-    @Ignore
+
     public Transaction(long user_id, String category_name, String payment_method, double amount, @NonNull String title, String description, String location, @NonNull Type transType) {
         LocalDate currDate = LocalDate.now();
         this.user_id = user_id;
         this.category_name = category_name;
         this.payment_method = payment_method;
+        this.wallet_id = null;
         this.amount = amount;
         this.title = title;
         this.dateSubmitted = currDate;
@@ -91,6 +100,7 @@ public abstract class Transaction {
         this.transType = transType;
     }
 
+    @Ignore
     /**
      * Constructs a Transaction object with specified parameters, setting the submission date to a specified date (future, past, present).
      *
@@ -107,6 +117,48 @@ public abstract class Transaction {
         this.user_id = user_id;
         this.category_name = category_name;
         this.payment_method = payment_method;
+        this.wallet_id = null;
+        this.amount = amount;
+        this.title = title;
+        this.dateSubmitted = dateSubmitted;
+        this.description = description;
+        this.location = location;
+        this.transType = transType;
+    }
+
+    @Ignore
+    public Transaction(long user_id, String category_name, String payment_method, Integer wallet_id, double amount, @NonNull String title, String description, String location, @NonNull Type transType) {
+        LocalDate currDate = LocalDate.now();
+        this.user_id = user_id;
+        this.category_name = category_name;
+        this.payment_method = payment_method;
+        this.wallet_id = wallet_id;
+        this.amount = amount;
+        this.title = title;
+        this.dateSubmitted = currDate;
+        this.description = description;
+        this.location = location;
+        this.transType = transType;
+    }
+
+    @Ignore
+    /**
+     * Constructs a Transaction object with specified parameters, setting the submission date to a specified date (future, past, present).
+     *
+     * @param user_id
+     * @param category_name
+     * @param payment_method
+     * @param amount
+     * @param title
+     * @param description
+     * @param location
+     * @param transType
+     */
+    public Transaction(long user_id, String category_name, String payment_method, Integer wallet_id, double amount, @NonNull String title, @NonNull LocalDate dateSubmitted, String description, String location, @NonNull Type transType) {
+        this.user_id = user_id;
+        this.category_name = category_name;
+        this.payment_method = payment_method;
+        this.wallet_id = wallet_id;
         this.amount = amount;
         this.title = title;
         this.dateSubmitted = dateSubmitted;
@@ -182,6 +234,14 @@ public abstract class Transaction {
 
     public void setPayment_method(String payment_method) {
         this.payment_method = payment_method;
+    }
+
+    public Integer getWallet_id() {
+        return wallet_id;
+    }
+
+    public void setWallet_id(Integer wallet_id) {
+        this.wallet_id = wallet_id;
     }
 
     @NonNull

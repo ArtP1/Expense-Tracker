@@ -26,12 +26,11 @@ import androidx.room.Room;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.DigitalWalletDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.PaymentMethodDAO;
-import com.example.expensetracker.ExpenseTrackerDb.DAOs.PhysicalTransactionDAO;
+import com.example.expensetracker.ExpenseTrackerDb.DAOs.TransactionDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDigitalWalletDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Category;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.DigitalWallet;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.PaymentMethod;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.PhysicalTransaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.UserDigitalWallet;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
@@ -65,7 +64,7 @@ public class NewTransactionFragment extends Fragment {
     private CheckBox mCheckBoxTransEarning;
 
     private CategoryDAO categoryDAO;
-    private PhysicalTransactionDAO physicalTransactionDAO;
+    private TransactionDAO transactionDAO;
 
     private PaymentMethodDAO paymentMethodDAO;
 
@@ -257,21 +256,21 @@ public class NewTransactionFragment extends Fragment {
                 PaymentMethod selectedPaymentMethod = (PaymentMethod) mPaymentMethodsSpinner.getSelectedItem();
                 String transPaymentMethod = selectedPaymentMethod.getMethod();
 
-                PhysicalTransaction newTransaction = null;
+                Transaction newTransaction = null;
                 if(!transTitle.isEmpty() && !transCategoryName.equals("N/A") && !transPaymentMethod.equals("N/A") && (transIsExpense || transIsEarning) && transAmount > 0) {
                     if (transIsExpense) {
-                        newTransaction = new PhysicalTransaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
+                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
                     }
 
                     if (transIsEarning) {
-                        newTransaction = new PhysicalTransaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
                     }
                 } else {
                     Toast.makeText(requireContext(), "Fill out all required inputs!", Toast.LENGTH_SHORT).show();
                 }
 
                 if (newTransaction != null) {
-                    physicalTransactionDAO.insertPhysicalTransaction(newTransaction);
+                    transactionDAO.insertTransaction(newTransaction);
 
                     getParentFragmentManager().beginTransaction()
                             .replace(R.id.frameLayout, new HomeFragment())
@@ -289,7 +288,7 @@ public class NewTransactionFragment extends Fragment {
                 requireContext(), ExpenseTrackerDatabase.class, ExpenseTrackerDatabase.DATABASE_NAME).allowMainThreadQueries().build();
 
         categoryDAO = expenseTrackerDatabase.categoryDAO();
-        physicalTransactionDAO = expenseTrackerDatabase.physicalTransactionDAO();
+        transactionDAO = expenseTrackerDatabase.transactionDAO();
         paymentMethodDAO = expenseTrackerDatabase.paymentMethodDAO();
         userDigitalWalletDAO = expenseTrackerDatabase.userDigitalWalletDAO();
         digitalWalletDAO = expenseTrackerDatabase.digitalWalletDAO();

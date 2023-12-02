@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="recent_expenses_cardview_height">340dp</dimen>
+    <dimen name="recent_expenses_cardview_height">360dp</dimen>
 </resources>

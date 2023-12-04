@@ -28,7 +28,7 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/noUserWalletsTextView"
                 android:layout_width="291dp"
                 android:layout_height="185dp"
                 android:gravity="center"
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="@+id/view2" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/userWalletNumberOrTokenPlaceholderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="...."
@@ -119,7 +119,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchBiometricAuth"
+                        android:id="@+id/setDigitalWalletDefault"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="13dp"

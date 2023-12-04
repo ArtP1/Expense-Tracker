@@ -391,8 +391,7 @@
             android:id="@+id/newDigitalWalletForm"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-           >
+            android:visibility="gone">
 
             <!-- Background overlay to dim the existing layout -->
             <View

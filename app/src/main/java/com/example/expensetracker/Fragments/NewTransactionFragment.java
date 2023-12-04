@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.CategoryDAO;
@@ -62,14 +63,13 @@ public class NewTransactionFragment extends Fragment {
 
     private CheckBox mCheckBoxTransExpense;
     private CheckBox mCheckBoxTransEarning;
-
+    EditText mNewDigitalWalletNumberToken;
+    private CheckBox mNewDigitalWalletIsDefault;
+    private Spinner mNewDigitalWalletTypeSpinner;
     private CategoryDAO categoryDAO;
     private TransactionDAO transactionDAO;
-
     private PaymentMethodDAO paymentMethodDAO;
-
     private UserDigitalWalletDAO userDigitalWalletDAO;
-
     private DigitalWalletDAO digitalWalletDAO;
 
 
@@ -128,22 +128,25 @@ public class NewTransactionFragment extends Fragment {
         long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
 
 
-        mEditTextTransTitle = mNewTransactionBinding.editTextTransTitle;
-        mEditTextTransDescrip = mNewTransactionBinding.transDescriptionInput;
-        mEditTextTransLocation = mNewTransactionBinding.editTextTransLocation;
-        mEditTextTransAmount = mNewTransactionBinding.editTextTransAmount;
-        mCategorySpinner = mNewTransactionBinding.categorySpinner;
-        mCheckBoxTransExpense = mNewTransactionBinding.checkBoxTransExpense;
-        mCheckBoxTransEarning = mNewTransactionBinding.checkBoxTransEarning;
+        this.mEditTextTransTitle = mNewTransactionBinding.editTextTransTitle;
+        this.mEditTextTransDescrip = mNewTransactionBinding.transDescriptionInput;
+        this.mEditTextTransLocation = mNewTransactionBinding.editTextTransLocation;
+        this.mEditTextTransAmount = mNewTransactionBinding.editTextTransAmount;
+        this.mCategorySpinner = mNewTransactionBinding.categorySpinner;
+        this.mCheckBoxTransExpense = mNewTransactionBinding.checkBoxTransExpense;
+        this.mCheckBoxTransEarning = mNewTransactionBinding.checkBoxTransEarning;
         Button mCreateTransactionBtn = mNewTransactionBinding.createTransactionBtn;
-        mPaymentMethodsSpinner = mNewTransactionBinding.paymentMethodsSpinner;
-        mTransactionDateTextView = mNewTransactionBinding.transactionDateTextView;
-        mDigitalWalletPopupInputsContainer = mNewTransactionBinding.digitalWalletPopupInputsContainer;
-        mUserDigitalWalletsSpinner = mNewTransactionBinding.userDigitalWalletsSpinner;
+        this.mPaymentMethodsSpinner = mNewTransactionBinding.paymentMethodsSpinner;
+        this.mTransactionDateTextView = mNewTransactionBinding.transactionDateTextView;
+        this.mDigitalWalletPopupInputsContainer = mNewTransactionBinding.digitalWalletPopupInputsContainer;
+        this.mUserDigitalWalletsSpinner = mNewTransactionBinding.userDigitalWalletsSpinner;
         Button mCreateDigitalWalletBtn = mNewTransactionBinding.createDigitalWalletBtn;
-        mNewDigitalWalletForm = mNewTransactionBinding.newDigitalWalletForm;
+        this.mNewDigitalWalletForm = mNewTransactionBinding.newDigitalWalletForm;
         View mNewDigitalWalletFormBckgrd = mNewTransactionBinding.newDigitalWalletFormBckgrd;
         Button mAddNewDigitalWalletBtn = mNewTransactionBinding.addNewDigitalWalletBtn;
+        this.mNewDigitalWalletIsDefault = mNewTransactionBinding.newDigitalWalletIsDefaultInput;
+        this.mNewDigitalWalletNumberToken = mNewTransactionBinding.newDigitalWalletNumberTokenInput;
+        this.mNewDigitalWalletTypeSpinner = mNewTransactionBinding.newDigitalWalletTypeSpinnerInput;
 
         displayData();
 
@@ -162,23 +165,17 @@ public class NewTransactionFragment extends Fragment {
                     // Show the digitalWalletSpinner
                     mDigitalWalletPopupInputsContainer.setVisibility(View.VISIBLE);
 
-                    List<UserDigitalWallet> userDigitalWalletsList = userDigitalWalletDAO.getUserDigitalWalletsByUserID(currUserID);
+                    LiveData<List<UserDigitalWallet>> userDigitalWalletsLiveDataList = userDigitalWalletDAO.getUserDigitalWalletsByUserID(currUserID);
+                    userDigitalWalletsLiveDataList.observe(getViewLifecycleOwner(), userDigitalWalletsList -> {
+                        if(userDigitalWalletsList != null && !userDigitalWalletsList.isEmpty()) {
+                            ArrayAdapter<UserDigitalWallet> userDigitalWalletArrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, userDigitalWalletsList);
+                            userDigitalWalletArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
-                    if(userDigitalWalletsList.size() > 0) {
-                        UserDigitalWallet userDefaultDigitalWalletSelection = userDigitalWalletDAO.getDefaultUserDigitalWalletByUserID(currUserID);
-
-                        userDigitalWalletsList.add(0, userDefaultDigitalWalletSelection);
-
-                        ArrayAdapter<UserDigitalWallet> userDigitalWalletArrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, userDigitalWalletsList);
-                        userDigitalWalletArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        mUserDigitalWalletsSpinner.setAdapter(userDigitalWalletArrayAdapter);
-                        mUserDigitalWalletsSpinner.setSelection(0);
-
-                    } else {
-                        Toast.makeText(requireContext(), "You have no digital wallet(s)!", Toast.LENGTH_SHORT).show();
-                    }
+                            mUserDigitalWalletsSpinner.setAdapter(userDigitalWalletArrayAdapter);
+                        } else {
+                            Toast.makeText(getContext(), "You have no digital wallet(s)!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
                     mDigitalWalletPopupInputsContainer.setVisibility(View.GONE);
                 }
@@ -200,15 +197,16 @@ public class NewTransactionFragment extends Fragment {
 
                 List<DigitalWallet> digitalWallets = digitalWalletDAO.getAllDigitalWallets();
 
-                Spinner mNewDigitalWalletTypeSpinner = mNewTransactionBinding.newDigitalWalletTypeSpinnerInput;
-
                 ArrayAdapter<DigitalWallet> digitalWalletArrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, digitalWallets);
                 digitalWalletArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                 mNewDigitalWalletTypeSpinner.setAdapter(digitalWalletArrayAdapter);
-                EditText mNewDigitalWalletNumberToken = mNewTransactionBinding.newDigitalWalletNumberTokenInput;
-                CheckBox mNewDigitalWalletIsDefault = mNewTransactionBinding.newDigitalWalletIsDefaultInput;
+            }
+        });
 
+        mAddNewDigitalWalletBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 DigitalWallet selectedDigitalWallet = (DigitalWallet) mNewDigitalWalletTypeSpinner.getSelectedItem();
                 String digitalWalletName = selectedDigitalWallet.getName();
 
@@ -216,14 +214,9 @@ public class NewTransactionFragment extends Fragment {
                 boolean isSetDefaultWalletInput = mNewDigitalWalletIsDefault.isChecked();
 
                 userDigitalWalletDAO.insertUserDigitalWallet(new UserDigitalWallet(currUserID, digitalWalletName, cardNumberOrToken, isSetDefaultWalletInput));
-            }
-        });
 
-        mAddNewDigitalWalletBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 mNewDigitalWalletForm.setVisibility(View.GONE);
-                Toast.makeText(requireContext(), "Successfully registered new Digital Wallet!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Successfully registered new Digital Wallet!", Toast.LENGTH_SHORT).show();
             }
         });
         mNewDigitalWalletFormBckgrd.setOnClickListener(new View.OnClickListener() {
@@ -256,22 +249,41 @@ public class NewTransactionFragment extends Fragment {
                 PaymentMethod selectedPaymentMethod = (PaymentMethod) mPaymentMethodsSpinner.getSelectedItem();
                 String transPaymentMethod = selectedPaymentMethod.getMethod();
 
+
                 Transaction newTransaction = null;
                 if(!transTitle.isEmpty() && !transCategoryName.equals("N/A") && !transPaymentMethod.equals("N/A") && (transIsExpense || transIsEarning) && transAmount > 0) {
-                    if (transIsExpense) {
-                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
-                    }
+                    if(transIsExpense && transIsEarning) {
+                        Toast.makeText(getContext(), "Transaction can only be either an expense or an earning!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if(transPaymentMethod.equals("Digital Wallet")) {
+                            UserDigitalWallet selectedUserWallet = (UserDigitalWallet) mUserDigitalWalletsSpinner.getSelectedItem();
+                            Integer walletId = (int) selectedUserWallet.getId();
 
-                    if (transIsEarning) {
-                        newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                            if (transIsExpense) {
+                                newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, walletId, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
+                            }
+
+                            if (transIsEarning) {
+                                newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, walletId, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                            }
+                        } else {
+                            if (transIsExpense) {
+                                newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EXPENSE);
+                            }
+
+                            if (transIsEarning) {
+                                newTransaction = new Transaction(currUserID, transCategoryName, transPaymentMethod, transAmount, transTitle, transDescrip, transLocation, Transaction.Type.EARNING);
+                            }
+                        }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Fill out all required inputs!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Fill out all required inputs!", Toast.LENGTH_SHORT).show();
                 }
 
                 if (newTransaction != null) {
                     transactionDAO.insertTransaction(newTransaction);
 
+                    Toast.makeText(getContext(), "Successfully logged new transaction!", Toast.LENGTH_SHORT).show();
                     getParentFragmentManager().beginTransaction()
                             .replace(R.id.frameLayout, new HomeFragment())
                             .addToBackStack(null)

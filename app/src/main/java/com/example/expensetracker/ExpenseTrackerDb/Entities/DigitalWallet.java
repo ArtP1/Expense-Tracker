@@ -64,6 +64,7 @@ public class DigitalWallet {
         this.type = type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;

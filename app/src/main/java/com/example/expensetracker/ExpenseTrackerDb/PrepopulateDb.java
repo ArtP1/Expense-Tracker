@@ -202,7 +202,7 @@ public class PrepopulateDb {
 
     public static UserDigitalWallet[] populateUserDigitalWalletData() {
         return new UserDigitalWallet[] {
-                new UserDigitalWallet(1, "Crypto Debit Card", "CT8752-ABD36-PLK98-TGY21", true),
+                new UserDigitalWallet(1, "Crypto Debit Card", "CT8752-ABD36-PLK98-TGY21"),
                 new UserDigitalWallet(1, "Hardware Wallet", ""),
                 new UserDigitalWallet(2, "Venmo Debit Card", "4485 7298 1037 6621"),
                 new UserDigitalWallet(2, "Credit Card", "5271 8943 2156 7798"),

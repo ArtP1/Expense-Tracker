@@ -10,7 +10,6 @@ import androidx.room.Update;
 
 import com.example.expensetracker.ExpenseTrackerDb.DateConverter;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.UserDigitalWallet;
 import com.example.expensetracker.ExpenseTrackerDb.Models.TransactionCategoryWithAmount;
 
 import java.util.List;
@@ -33,10 +32,12 @@ public interface TransactionDAO {
     @Delete
     void deleteTransaction(Transaction... digitalWalletTransactions);
 
-    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND wallet_id IS NULL ORDER BY dateSubmitted DESC LIMIT 5")
-    LiveData<List<Transaction>> getMonthMostRecentExpensesByUserID(long user_id);
+    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND wallet_id IS NULL ORDER BY dateSubmitted DESC")
+    LiveData<List<Transaction>> getMonthMostRecentTransactionsByUserID(long user_id);
 
-    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND wallet_id IS NOT NULL ORDER BY dateSubmitted DESC LIMIT 10")
+    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND transType = 'EXPENSE' AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND wallet_id IS NULL ORDER BY dateSubmitted DESC")
+    LiveData<List<Transaction>> getMonthMostRecentExpensesByUserID(long user_id);
+    @Query("SELECT * FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND wallet_id IS NOT NULL ORDER BY dateSubmitted DESC")
     LiveData<List<Transaction>> getMonthMostRecentWalletTransactionsByUserID(long user_id);
 
     /**
@@ -46,7 +47,7 @@ public interface TransactionDAO {
     @Query("SELECT c.name AS category_name, SUM(t.amount) AS total_amount, c.icon AS icon FROM " +
             "category_table c LEFT JOIN transaction_table t ON c.name = t.category_name " +
             "WHERE t.user_id = :userId AND t.transType = 'EXPENSE' AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') " +
-            "GROUP BY category_name ORDER BY total_amount DESC LIMIT 5")
+            "GROUP BY category_name ORDER BY total_amount DESC LIMIT 10")
     LiveData<List<TransactionCategoryWithAmount>> getExpenseCategoriesWithAmount(long userId);
 
     @Query("SELECT c.name AS category_name, SUM(t.amount) AS total_amount, c.icon AS icon FROM " +
@@ -59,14 +60,14 @@ public interface TransactionDAO {
      * @param user_id
      * @return The total month's earnings amount for the specified user
      */
-    @Query("SELECT SUM(amount) TotalEarningsAmount FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND transType = 'EARNING'")
+    @Query("SELECT SUM(amount) AS TotalEarningsAmount FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND transType = 'EARNING'")
     double getTotalMonthlyEarningsByUserID(long user_id);
 
     /**
      * @param user_id
      * @return The total month's expenses amount for the specified user
      */
-    @Query("SELECT SUM(amount) TotalExpensesAmount FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND transType = 'EXPENSE'")
+    @Query("SELECT SUM(amount) AS TotalExpensesAmount FROM transaction_table WHERE user_id = :user_id AND STRFTIME('%Y-%m', dateSubmitted / 1000, 'unixepoch') = STRFTIME('%Y-%m', 'now') AND transType = 'EXPENSE'")
     double getTotalMonthlyExpensesByUserID(long user_id);
 
 

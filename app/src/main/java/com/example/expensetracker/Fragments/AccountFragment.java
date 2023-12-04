@@ -188,13 +188,11 @@ public class AccountFragment extends Fragment {
         }
 
         try {
-            LiveData<List<TransactionCategoryWithAmount>> categoryTopThreeExpensesWithAmountLiveData = transactionDAO.getTopThreeExpenseCategoriesWithAmount(currUserID);
+            LiveData<List<TransactionCategoryWithAmount>> categoryTopTenExpensesWithAmountLiveData = transactionDAO.getExpenseCategoriesWithAmount(currUserID);
 
-            categoryTopThreeExpensesWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
+            categoryTopTenExpensesWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
                 if (transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
                     mEmptyExpensesTextView.setVisibility(View.GONE);
-
-                    setPieChart(transactionCategoryWithAmountList);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext()) {
                         @Override
                         public boolean canScrollVertically() {
@@ -212,6 +210,18 @@ public class AccountFragment extends Fragment {
             });
         } catch (Exception e) {
             mEmptyExpensesTextView.setVisibility(View.GONE);
+            e.printStackTrace();
+        }
+
+        try {
+            LiveData<List<TransactionCategoryWithAmount>> categoryTopThreeExpensesWithAmountLiveData = transactionDAO.getTopThreeExpenseCategoriesWithAmount(currUserID);
+
+            categoryTopThreeExpensesWithAmountLiveData.observe(getViewLifecycleOwner(), transactionCategoryWithAmountList -> {
+                if(transactionCategoryWithAmountList != null && !transactionCategoryWithAmountList.isEmpty()) {
+                    setPieChart(transactionCategoryWithAmountList);
+                }
+            });
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }

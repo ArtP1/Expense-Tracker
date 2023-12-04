@@ -1,5 +1,6 @@
 package com.example.expensetracker.ExpenseTrackerDb.DAOs;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -26,7 +27,7 @@ public interface UserDigitalWalletDAO {
     void deleteUserDigitalWallet(UserDigitalWallet... userDigitalWallets);
 
     @Query("SELECT * FROM user_digital_wallet_table WHERE user_id = :user_id")
-    List<UserDigitalWallet> getUserDigitalWalletsByUserID(long user_id);
+    LiveData<List<UserDigitalWallet>> getUserDigitalWalletsByUserID(long user_id);
 
     @Query("SELECT * FROM user_digital_wallet_table WHERE user_id = :user_id AND isDefault = 1")
     UserDigitalWallet getDefaultUserDigitalWalletByUserID(long user_id);
@@ -39,4 +40,9 @@ public interface UserDigitalWalletDAO {
     @Query("SELECT d.img FROM user_digital_wallet_table ud INNER JOIN digital_wallet_table d ON ud.wallet_type = d.name WHERE user_id = :user_id AND isDefault = 1")
     String getUserDefaultDigitalWalletImg(long user_id);
 
+    @Query("UPDATE user_digital_wallet_table SET isDefault = 0 WHERE user_id = :user_id AND isDefault = 1")
+    void updateUserDefaultWalletStatus(long user_id);
+
+    @Query("SELECT COUNT(*) == 1 FROM user_digital_wallet_table WHERE user_id = :user_id AND isDefault = 1")
+    boolean userHasDefaultDigitalWallet(long user_id);
 }

@@ -53,7 +53,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
  * create an instance of this fragment.
  */
 public class TransactionsFragment extends Fragment {
-
+    SharedPreferences sharedPreferences;
     private TextView mIncomeAmountTextView;
     private TextView mExpenseAmountTextView;
 
@@ -142,7 +142,7 @@ public class TransactionsFragment extends Fragment {
     }
 
     private void displayData() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
+        this.sharedPreferences = requireActivity().getSharedPreferences(Preferences.EXPENSE_TRACKER_PREFERENCES, MODE_PRIVATE);
         long currUserID = sharedPreferences.getLong(Preferences.USER_ID_KEY, -1);
 
         // Fetch data for the last 6 months (adjust logic as per your requirements)
@@ -181,7 +181,6 @@ public class TransactionsFragment extends Fragment {
 
 
         // Inside onCreateView or another appropriate method in your Fragment
-
         ArrayList<BarEntry> incomeEntries = new ArrayList<>();
         ArrayList<BarEntry> expenseEntries = new ArrayList<>();
 
@@ -250,7 +249,7 @@ public class TransactionsFragment extends Fragment {
         mExpenseAmountTextView.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
         try {
-            LiveData<List<Transaction>> allUserTransactionsLiveData = transactionDAO.getMonthMostRecentExpensesByUserID(currUserID);
+            LiveData<List<Transaction>> allUserTransactionsLiveData = transactionDAO.getMonthMostRecentTransactionsByUserID(currUserID);
 
             allUserTransactionsLiveData.observe(getViewLifecycleOwner(), userTransactions -> {
                 if (userTransactions != null && !userTransactions.isEmpty()) {

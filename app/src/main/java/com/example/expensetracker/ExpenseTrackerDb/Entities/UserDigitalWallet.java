@@ -106,10 +106,10 @@ public class UserDigitalWallet {
     @NonNull
     @Override
     public String toString() {
-        if(card_number_or_token.length() >= 4) {
+        if (card_number_or_token != null && card_number_or_token.length() >= 4) {
             return wallet_type + "      ...." + card_number_or_token.substring(card_number_or_token.length() - 4);
+        } else {
+            return wallet_type; // Provide a default representation or handle null case accordingly
         }
-
-        return wallet_type;
     }
 }

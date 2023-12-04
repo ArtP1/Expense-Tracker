@@ -3,17 +3,22 @@ package com.example.expensetracker.Fragments;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -25,14 +30,16 @@ import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDAO;
 import com.example.expensetracker.ExpenseTrackerDb.DAOs.UserDigitalWalletDAO;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.Transaction;
 import com.example.expensetracker.ExpenseTrackerDb.Entities.User;
-import com.example.expensetracker.ExpenseTrackerDb.Entities.UserDigitalWallet;
 import com.example.expensetracker.ExpenseTrackerDb.ExpenseTrackerDatabase;
 import com.example.expensetracker.ExpenseTrackerDb.Models.UserDigitalWalletWithInformation;
 import com.example.expensetracker.Preferences;
 import com.example.expensetracker.R;
 import com.example.expensetracker.databinding.FragmentWalletsBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,10 +54,13 @@ public class WalletsFragment extends Fragment {
     private TextView mWalletUserFirstNameTextView;
     private TextView mEmptyTransactionsTextView;
     private TextView mCardNumberOrToken;
+    private TextView mNoUserWalletsTextView;
+    private SwitchCompat mSetDigitalWalletDefault;
 
     private ImageView mDigitalWalletImageView;
     private TextView mWalletTypeTextView;
 
+    private TextView mUserWalletNumberOrTokenPlaceholderTextView;
     private TransactionDAO transactionDAO;
     private UserDAO userDAO;
     private UserDigitalWalletDAO userDigitalWalletDAO;
@@ -117,21 +127,48 @@ public class WalletsFragment extends Fragment {
         this.mWalletUserFirstNameTextView = mWalletFragmentBinding.walletUserFirstNameTextView;
         this.mCardNumberOrToken = mWalletFragmentBinding.cardNumberOrToken;
         this.mWalletTypeTextView = mWalletFragmentBinding.walletTypeTextView;
+        this.mNoUserWalletsTextView = mWalletFragmentBinding.noUserWalletsTextView;
+        this.mUserWalletNumberOrTokenPlaceholderTextView = mWalletFragmentBinding.userWalletNumberOrTokenPlaceholderTextView;
+        this.mSetDigitalWalletDefault = mWalletFragmentBinding.setDigitalWalletDefault;
 
-        UserDigitalWalletWithInformation userDigitalWalletWithInformation  = userDigitalWalletDAO.getDefaultUserDigitalWalletAndInformationByUserID(currUserID);
-        if(userDigitalWalletWithInformation.getImg() != null && !userDigitalWalletWithInformation.getImg().isEmpty()) {
-            Glide.with(getContext())
-                    .load(userDigitalWalletWithInformation.getImg()) // Load image from the URL string
-                    .placeholder(R.drawable.default_expense_icon) // Placeholder while loading
-                    .error(R.drawable.error_icon) // Error placeholder if loading fails
-                    .into(mDigitalWalletImageView); // Set the loaded image to ImageView
+        UserDigitalWalletWithInformation userDigitalWalletWithInformation = userDigitalWalletDAO.getDefaultUserDigitalWalletAndInformationByUserID(currUserID);
+        if (userDigitalWalletWithInformation != null) {
+            if(userDigitalWalletWithInformation.getImg() != null && !userDigitalWalletWithInformation.getImg().isEmpty()) {
+                Glide.with(getContext())
+                        .load(userDigitalWalletWithInformation.getImg()) // Load image from the URL string
+                        .placeholder(R.drawable.default_expense_icon) // Placeholder while loading
+                        .error(R.drawable.error_icon) // Error placeholder if loading fails
+                        .into(mDigitalWalletImageView); // Set the loaded image to ImageView
+            } else {
+                mDigitalWalletImageView.setImageResource(R.drawable.default_expense_icon);
+            }
+
+            mSetDigitalWalletDefault.setChecked(true);
+            mWalletUserFirstNameTextView.setText(currUser.getFirstName());
+            mCardNumberOrToken.setText(userDigitalWalletWithInformation.getCard_number_or_token().substring(userDigitalWalletWithInformation.getCard_number_or_token().length() - 4));
+            mWalletTypeTextView.setText(userDigitalWalletWithInformation.getWallet_type());
         } else {
-            mDigitalWalletImageView.setImageResource(R.drawable.default_expense_icon);
+            mDigitalWalletImageView.setVisibility(View.GONE);
+            mWalletUserFirstNameTextView.setText("");
+            mCardNumberOrToken.setText("");
+            mWalletTypeTextView.setText("");
+            mNoUserWalletsTextView.setVisibility(View.VISIBLE);
+            mUserWalletNumberOrTokenPlaceholderTextView.setVisibility(View.GONE);
         }
 
-        mWalletUserFirstNameTextView.setText(currUser.getFirstName());
-        mCardNumberOrToken.setText(userDigitalWalletWithInformation.getCard_number_or_token().substring(userDigitalWalletWithInformation.getCard_number_or_token().length() - 4));
-        mWalletTypeTextView.setText(userDigitalWalletWithInformation.getWallet_type());
+        mSetDigitalWalletDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userDigitalWalletDAO.userHasDefaultDigitalWallet(currUserID)) {
+                    if(mSetDigitalWalletDefault.isChecked()) {
+                        Toast.makeText(getContext(), "Defaul wallet is already set!", Toast.LENGTH_SHORT).show();
+                    } else if(!mSetDigitalWalletDefault.isChecked()) {
+                        userDigitalWalletDAO.updateUserDefaultWalletStatus(currUserID);
+                    }
+                }
+            }
+        });
+
         try {
             LiveData<List<Transaction>> digitalTransactionLiveDataList = transactionDAO.getMonthMostRecentWalletTransactionsByUserID(currUserID);
             digitalTransactionLiveDataList.observe(getViewLifecycleOwner(), digitalTransactionList -> {
@@ -158,6 +195,70 @@ public class WalletsFragment extends Fragment {
                     mRecentWalletTransactionsRecyclerView.setLayoutManager(layoutManager);
                     TransactionAdapter transactionAdapter = new TransactionAdapter(requireContext(), digitalTransactionList);
                     mRecentWalletTransactionsRecyclerView.setAdapter(transactionAdapter);
+
+                    ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                        @Override
+                        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                            return false;
+                        }
+
+                        @Override
+                        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                            int position = viewHolder.getBindingAdapterPosition();
+                            Transaction transaction = transactionAdapter.getTransaction(position);
+
+                            if (direction == ItemTouchHelper.LEFT) {
+                                // Handle delete action
+                                transactionDAO.deleteTransaction(transaction);
+                                digitalTransactionList.add(position, transaction);
+                                Snackbar.make(mRecentWalletTransactionsRecyclerView, "Deleted: " + transaction.getTitle(), Snackbar.LENGTH_LONG)
+                                        .setAction("Undo", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                transactionDAO.insertTransaction(transaction);
+                                                digitalTransactionList.add(position, transaction);
+                                                transactionAdapter.notifyItemInserted(position);
+
+                                                if (digitalTransactionList.isEmpty()) {
+                                                    mEmptyTransactionsTextView.setVisibility(View.VISIBLE);
+                                                    mRecentWalletTransactionsRecyclerView.setVisibility(View.GONE);
+                                                } else {
+                                                    mEmptyTransactionsTextView.setVisibility(View.GONE);
+                                                    mRecentWalletTransactionsRecyclerView.setVisibility(View.VISIBLE);
+                                                }
+                                            }
+                                        }).show();
+
+                                transactionAdapter.removeTransaction(position);
+                                transactionAdapter.notifyItemRemoved(position);
+                                transactionAdapter.notifyItemRangeChanged(position, transactionAdapter.getItemCount());
+
+
+                                if (digitalTransactionList.isEmpty()) {
+                                    mEmptyTransactionsTextView.setVisibility(View.VISIBLE);
+                                    mRecentWalletTransactionsRecyclerView.setVisibility(View.GONE);
+                                } else {
+                                    mEmptyTransactionsTextView.setVisibility(View.GONE);
+                                    mRecentWalletTransactionsRecyclerView.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+
+                        // Additional method to customize swipe appearance
+                        @Override
+                        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.adminRed))
+                                    .addSwipeLeftActionIcon(R.drawable.recycler_view_delete_swipe_icon)
+                                    .create()
+                                    .decorate();
+
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                        }
+                    };
+
+                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallback);
+                    itemTouchHelper.attachToRecyclerView(mRecentWalletTransactionsRecyclerView);
                 } else {
                     mEmptyTransactionsTextView.setVisibility(View.VISIBLE);
                     mRecentWalletTransactionsRecyclerView.setVisibility(View.GONE);

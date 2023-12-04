@@ -224,10 +224,9 @@ public class HomeFragment extends Fragment {
                                         .setAction("Undo", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                transactionDAO.insertTransaction(transaction);                                                recentTransactionsList.add(position, transaction);
+                                                transactionDAO.insertTransaction(transaction);
+                                                recentTransactionsList.add(position, transaction);
                                                 transactionAdapter.notifyItemInserted(position);
-
-                                                mMonthsExpenses.setText("$" + transactionDAO.getTotalMonthlyExpensesByUserID(currUserID));
 
                                                 if (recentTransactionsList.isEmpty()) {
                                                     mEmptyExpensesTextView.setVisibility(View.VISIBLE);
@@ -273,16 +272,13 @@ public class HomeFragment extends Fragment {
 
                 } else {
                     mEmptyExpensesTextView.setVisibility(View.VISIBLE);
-
                     mTransactionsRecyclerView.setVisibility(View.GONE);
-                    mMonthsExpenses.setText("$0");
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
             mTransactionsRecyclerView.setVisibility(View.GONE);
             mEmptyExpensesTextView.setVisibility(View.VISIBLE);
-            mMonthsExpenses.setText("$0");
         }
 
 
